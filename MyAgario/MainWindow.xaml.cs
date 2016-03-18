@@ -24,16 +24,16 @@ namespace MyAgario
         private void Draw(WorldState world)
         {
             _canvas.Children.Clear();
-            _scale.CenterX = _canvas.ActualWidth / 2;
-            _scale.CenterY = _canvas.ActualHeight/2;
-            _scale.ScaleX = .1;
-            _scale.ScaleY = .1;
+            //_scale.CenterX = _canvas.ActualWidth / 2;
+            //_scale.CenterY = _canvas.ActualHeight/2;
+            _scale.ScaleX = .2;
+            _scale.ScaleY = .2;
             _tanslate.X = _canvas.ActualWidth/2;
             _tanslate.Y = _canvas.ActualHeight/2;
             foreach (var entry in world.Balls)
             {
                 var ball = entry.Value;
-                var size = Math.Max(15.0, ball.Size);
+                var size = Math.Max(25.0, ball.Size);
                 var ellipse = new Ellipse
                 {
                     Fill = new SolidColorBrush
