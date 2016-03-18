@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace AgarioSharp
+namespace MyAgario
 {
     public class WorldState
     {
@@ -166,6 +165,9 @@ namespace AgarioSharp
                 case 17:
                     ProcessSpectate(buffer);
                     break;
+                case 18:
+                    DestroyAllBalls();
+                    break;
                 case 20:
                     break;
                 case 32:
@@ -199,6 +201,11 @@ namespace AgarioSharp
                     Console.WriteLine("Unknown packet id {0}", buffer[0]);
                     break;
             }
+        }
+
+        private void DestroyAllBalls()
+        {
+            Balls.Clear();
         }
 
         private void Leaders(byte[] buffer)

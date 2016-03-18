@@ -3,19 +3,23 @@ using System.Text;
 using System.Windows.Threading;
 using WebSocketSharp;
 
-namespace AgarioSharp
+namespace MyAgario
 {
     public class AgarioClient
     {
+        private readonly Action<WorldState> _draw;
         private readonly ServerCredentials _credentials;
-        public readonly WorldState State;
+        private readonly WorldState _state;
 
         private readonly WebSocket _ws;
+        private readonly Dispatcher _dispatcher;
 
-        public AgarioClient()
+        public AgarioClient(Action<WorldState> draw)
         {
+            _dispatcher = Dispatcher.CurrentDispatcher;
+            _draw = draw;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            State = new WorldState();
+            _state = new WorldState();
             _credentials = Servers.GetFfaServer();
 
             Console.WriteLine("Server {0}", _credentials.Server);
@@ -28,7 +32,7 @@ namespace AgarioSharp
 
             _ws.OnOpen += OnOpen;
             _ws.OnError += (s, e) => Console.WriteLine("OnError");
-          //  _ws.OnMessage += OnMessageReceived;
+            _ws.OnMessage += OnMessageReceived;
             _ws.OnClose += (s, e) => Console.WriteLine("OnClose");
             _ws.Connect();
         }
@@ -72,8 +76,11 @@ namespace AgarioSharp
 
         private void OnMessageReceived(object sender, EventArgs e)
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-                State.ProcessMessage(((MessageEventArgs)e).RawData)));
+            _dispatcher.BeginInvoke(new Action(() =>
+            {
+                _state.ProcessMessage(((MessageEventArgs) e).RawData);
+                _draw(_state);
+            }));
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace AgarioSharp
+namespace MyAgario
 {
     public class ServerCredentials
     {

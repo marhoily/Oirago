@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace AgarioSharp
+namespace MyAgario
 {
     public static class Servers
     {

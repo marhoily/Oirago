@@ -1,6 +1,6 @@
 using System;
 
-namespace AgarioSharp
+namespace MyAgario
 {
     internal static class Packet
     {
