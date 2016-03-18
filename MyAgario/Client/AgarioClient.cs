@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using WebSocketSharp;
 
@@ -7,17 +8,17 @@ namespace MyAgario
 {
     public class AgarioClient
     {
-        private readonly Action<WorldState> _draw;
+        private readonly Canvas _canvas;
         private readonly ServerCredentials _credentials;
         private readonly WorldState _state;
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
 
-        public AgarioClient(Action<WorldState> draw)
+        public AgarioClient(Canvas canvas)
         {
+            _canvas = canvas;
             _dispatcher = Dispatcher.CurrentDispatcher;
-            _draw = draw;
             Console.WriteLine(BitConverter.IsLittleEndian);
             _state = new WorldState();
             _credentials = Servers.GetFfaServer();
@@ -78,8 +79,7 @@ namespace MyAgario
         {
             _dispatcher.BeginInvoke(new Action(() =>
             {
-                _state.ProcessMessage(((MessageEventArgs) e).RawData);
-                _draw(_state);
+                _state.ProcessMessage(((MessageEventArgs) e).RawData, _canvas);
             }));
         }
     }

@@ -17,36 +17,17 @@ namespace MyAgario
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _agarioClient = new AgarioClient(Draw);
+            _agarioClient = new AgarioClient(_canvas);
             _agarioClient.Spectate();
         }
+        
 
-        private void Draw(WorldState world)
+        private void _canvas_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _canvas.Children.Clear();
-            //_scale.CenterX = _canvas.ActualWidth / 2;
-            //_scale.CenterY = _canvas.ActualHeight/2;
             _scale.ScaleX = .2;
             _scale.ScaleY = .2;
-            _tanslate.X = _canvas.ActualWidth/2;
-            _tanslate.Y = _canvas.ActualHeight/2;
-            foreach (var entry in world.Balls)
-            {
-                var ball = entry.Value;
-                var size = Math.Max(25.0, ball.Size);
-                var ellipse = new Ellipse
-                {
-                    Fill = new SolidColorBrush
-                    {
-                        Color = Color.FromRgb(ball.R, ball.G, ball.B),
-                    },
-                    Width = size,
-                    Height = size
-                };
-                _canvas.Children.Add(ellipse);
-                Canvas.SetLeft(ellipse, ball.X - world.X - size/2);
-                Canvas.SetTop (ellipse, ball.Y - world.Y - size / 2);
-            }
+            _tanslate.X = _canvas.ActualWidth / 2;
+            _tanslate.Y = _canvas.ActualHeight / 2;
         }
     }
 }
