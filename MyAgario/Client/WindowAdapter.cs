@@ -1,13 +1,11 @@
-using System;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace MyAgario
 {
     public interface IWindowAdapter
     {
-        void Update(Ball newGuy, Updates appears, Spectate world);
+        void Appears(Ball newGuy);
+        void Update(Ball newGuy, Spectate world);
         void Eats(Ball eater, Ball eaten);
         void Remove(Ball dying);
     }
@@ -28,9 +26,9 @@ namespace MyAgario
             _canvas.Children.Add(ballUi.Ellipse);
             _canvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Updates appears, Spectate world)
+        public void Update(Ball newGuy, Spectate world)
         {
-            ((BallUi) newGuy.Tag).Update(appears, world);
+            ((BallUi) newGuy.Tag).Update(newGuy.State, world);
         }
 
         public void Eats(Ball eater, Ball eaten)

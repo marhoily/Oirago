@@ -4,6 +4,7 @@ namespace MyAgario
     {
         public readonly bool IsMine;
         public object Tag;
+        public Updates State;
 
         public Ball(bool isMine)
         {

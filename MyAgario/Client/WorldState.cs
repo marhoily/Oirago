@@ -5,14 +5,14 @@ namespace MyAgario
 {
     public sealed class WorldState
     {
-        private readonly WindowAdapter _windowAdapter;
+        private readonly IWindowAdapter _windowAdapter;
 
         public readonly Dictionary<uint, Ball> Balls = new Dictionary<uint, Ball>();
         public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
         public Spectate SpectateViewPort = new Spectate(0, 0, 1);
         public WorldSize WorldSize;
 
-        public WorldState(WindowAdapter windowAdapter)
+        public WorldState(IWindowAdapter windowAdapter)
         {
             _windowAdapter = windowAdapter;
         }
@@ -69,16 +69,17 @@ namespace MyAgario
 
         private void ProcessUpdating(Tick tick)
         {
-            foreach (var appears in tick.Updateses)
+            foreach (var state in tick.Updates)
             {
                 Ball newGuy;
-                if (!Balls.TryGetValue(appears.Id, out newGuy))
+                if (!Balls.TryGetValue(state.Id, out newGuy))
                 {
                     newGuy = new Ball(false);
-                    Balls.Add(appears.Id, newGuy);
+                    Balls.Add(state.Id, newGuy);
                     _windowAdapter.Appears(newGuy);
                 }
-                _windowAdapter.Update(newGuy, appears, SpectateViewPort);
+                newGuy.State = state;
+                _windowAdapter.Update(newGuy, SpectateViewPort);
             }
         }
 
@@ -100,8 +101,8 @@ namespace MyAgario
             var me = new Ball(true);
             Balls.Add(msg.Id, me);
             MyBalls.Add(me);
-            //var noRealInfo = new Updates(
-            //    msg.Id, 0, 0, 10, 200, 0, 100, false, "me");
+            me.State = new Updates(
+                msg.Id, 0, 0, 10, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }
 
