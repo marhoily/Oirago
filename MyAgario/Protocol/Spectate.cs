@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace MyAgario
 {
+    [DebuggerDisplay("{X}, {Y}: {Zoom}")]
     public sealed class Spectate : Message
     {
         public readonly double X;

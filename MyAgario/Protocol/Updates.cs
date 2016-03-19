@@ -1,6 +1,6 @@
 namespace MyAgario
 {
-    public sealed class Appearance
+    public sealed class Updates
     {
         public readonly uint Id;
         public readonly int X, Y;
@@ -9,7 +9,7 @@ namespace MyAgario
         public readonly bool IsVirus;
         public readonly string Name;
 
-        public Appearance(
+        public Updates(
             uint id, int x, int y, 
             short size, byte r, byte g, byte b, 
             bool isVirus, string name)

@@ -20,7 +20,7 @@ namespace MyAgario
             _canvas = canvas;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            _state = new WorldState();
+            _state = new WorldState(new WindowAdapter(_canvas));
             _credentials = Servers.GetFfaServer();
 
             Console.WriteLine("Server {0}", _credentials.Server);
@@ -82,13 +82,13 @@ namespace MyAgario
                 var p = new Packet(((MessageEventArgs)e).RawData);
                 var msg = p.ReadMessage();
                 if (msg == null) Console.WriteLine("buffer of length 0");
-                else _state.ProcessMessage(msg, _canvas);
+                else _state.ProcessMessage(msg);
             }));
         }
 
         public void Purge()
         {
-            _state.Purge();
+            _state.ProcessMessage(new DestroyAllBalls());
             _canvas.Children.Clear();
         }
     }

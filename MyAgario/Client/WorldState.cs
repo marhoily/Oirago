@@ -1,121 +1,116 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 
 namespace MyAgario
 {
-    public class WorldState
+    public sealed class WorldState
     {
-        public readonly Dictionary<uint, Ball> Balls;
-        public readonly List<Ball> MyBalls;
-        public double X;
-        public double Y;
-        public double Zoom;
+        private readonly WindowAdapter _windowAdapter;
+
+        public readonly Dictionary<uint, Ball> Balls = new Dictionary<uint, Ball>();
+        public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
+        public Spectate SpectateViewPort = new Spectate(0, 0, 1);
         public WorldSize WorldSize;
 
-        public WorldState()
+        public WorldState(WindowAdapter windowAdapter)
         {
-            Balls = new Dictionary<uint, Ball>();
-            MyBalls = new List<Ball>();
+            _windowAdapter = windowAdapter;
         }
 
-        public void ProcessMessage(Message msg, Canvas canvas)
+        public void ProcessMessage(Message msg)
         {
             var tick = msg as Tick;
-            if (tick != null) Process(tick, canvas);
+            if (tick != null) Process(tick);
 
             var newId = msg as NewId;
-            if (newId != null) Process(newId, canvas);
+            if (newId != null) Process(newId);
 
             var spectate = msg as Spectate;
-            if (spectate != null) Process(spectate);
+            if (spectate != null) SpectateViewPort = spectate;
 
             var worldSize = msg as WorldSize;
-            if (worldSize != null) Process(worldSize);
+            if (worldSize != null) WorldSize = worldSize;
 
             var destroyAllBalls = msg as DestroyAllBalls;
-            if (destroyAllBalls != null) Process();
+            if (destroyAllBalls != null) DestroyAll();
 
             var unknown = msg as Unknown;
             if (unknown != null) Console.WriteLine(
                 "Unknown packet id {0}", unknown.PacketId);
         }
 
-        private void Process(WorldSize msg)
+        private void Process(Tick tick)
         {
-            WorldSize = msg;
+            ProcessEating(tick);
+            ProcessUpdating(tick);
+            ProcessDisappearances(tick);
         }
-        private void Process(Tick tick, Canvas canvas)
+
+        private void ProcessEating(Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
-                if (!Balls.ContainsKey(e.Eater))
-                    Balls.Add(e.Eater, new Ball(canvas));
-                if (!Balls.ContainsKey(e.Eaten))
-                    Remove(Balls, e.Eaten);
+                Ball eater;
+                if (!Balls.TryGetValue(e.Eater, out eater))
+                {
+                    eater = new Ball(false);
+                    Balls.Add(e.Eater, eater);
+                    _windowAdapter.Appears(eater);
+                }
+                Ball eaten;
+                if (Balls.TryGetValue(e.Eaten, out eaten))
+                {
+                    _windowAdapter.Eats(eater, eaten);
+                    Balls.Remove(e.Eaten);
+                    _windowAdapter.Remove(eaten);
+                }
             }
-            foreach (var appears in tick.Appearances)
+        }
+
+        private void ProcessUpdating(Tick tick)
+        {
+            foreach (var appears in tick.Updateses)
             {
-                if (!Balls.ContainsKey(appears.Id))
-                    Balls.Add(appears.Id, new Ball(canvas));
-
-                var ball = Balls[appears.Id];
-                ball.SetColor(appears.R, appears.G, appears.B, appears.IsVirus);
-                ball.SetCoordinates(appears.X, appears.Y, appears.Size, this);
-                ball.SetName(appears.Name);
+                Ball newGuy;
+                if (!Balls.TryGetValue(appears.Id, out newGuy))
+                {
+                    newGuy = new Ball(false);
+                    Balls.Add(appears.Id, newGuy);
+                    _windowAdapter.Appears(newGuy);
+                }
+                _windowAdapter.Update(newGuy, appears, SpectateViewPort);
             }
+        }
 
+        private void ProcessDisappearances(Tick tick)
+        {
             foreach (var ballId in tick.Disappearances)
             {
-                var b = Balls.ContainsKey(ballId)
-                    ? Balls[ballId]
-                    : new Ball(canvas);
-                if (b.Mine)
-                {
-                    MyBalls.Remove(b);
-                    b.Destroy();
-                }
-
+                Ball dying;
+                if (!Balls.TryGetValue(ballId, out dying))
+                    continue;
+                if (dying.IsMine) MyBalls.Remove(dying);
                 Balls.Remove(ballId);
+                _windowAdapter.Remove(dying);
             }
-            //Console.Clear();
-            //Console.WriteLine("x: {0}..{1} | {2:F1}..{3:F1}", 
-            //    Balls.Min(b => b.Value.X),
-            //    Balls.Max(b => b.Value.X), MinX, MaxX);
-            //Console.WriteLine("y: {0}..{1} | {2:F1}..{3:F1}",
-            //    Balls.Min(b => b.Value.Y),
-            //    Balls.Max(b => b.Value.Y), MinY, MaxY);
         }
-        private void Process()
+
+        private void Process(NewId msg)
+        {
+            var me = new Ball(true);
+            Balls.Add(msg.Id, me);
+            MyBalls.Add(me);
+            //var noRealInfo = new Updates(
+            //    msg.Id, 0, 0, 10, 200, 0, 100, false, "me");
+            _windowAdapter.Appears(me);
+        }
+
+        private void DestroyAll()
         {
             foreach (var ball in Balls)
-                ball.Value.Destroy();
+                _windowAdapter.Remove(ball.Value);
             Balls.Clear();
-        }
-        private void Process(Spectate msg)
-        {
-            X = msg.X;
-            Y = msg.Y;
-            Zoom = msg.Zoom;
-        }
-        private void Process(NewId msg, Canvas canvas)
-        {
-            var b = new Ball(canvas) { Mine = true };
-            Balls.Add(msg.Id, b);
-            MyBalls.Add(b);
-        }
-
-        public void Purge()
-        {
-            Process();
-        }
-        private void Remove(Dictionary<uint, Ball> balls, uint eatenId)
-        {
-            Ball ball;
-            if (balls.TryGetValue(eatenId, out ball))
-                ball.Destroy();
-            balls.Remove(eatenId);
-
+            MyBalls.Clear();
         }
     }
 }

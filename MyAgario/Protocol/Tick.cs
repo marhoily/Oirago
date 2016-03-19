@@ -3,14 +3,14 @@ namespace MyAgario
     public sealed class Tick : Message
     {
         public readonly Eating[] Eatings;
-        public readonly Appearance[] Appearances;
+        public readonly Updates[] Updateses;
         public readonly uint[] Disappearances;
 
         public Tick(Eating[] eatings, 
-            Appearance[] appearances, uint[] disappearances)
+            Updates[] updateses, uint[] disappearances)
         {
             Eatings = eatings;
-            Appearances = appearances;
+            Updateses = updateses;
             Disappearances = disappearances;
         }
     }

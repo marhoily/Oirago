@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MyAgario
@@ -33,7 +31,7 @@ namespace MyAgario
         {
             return new Tick(
                 p.ReadEatings().ToArray(),
-                p.ReadAppearances().ToArray(),
+                p.ReadUpdates().ToArray(),
                 p.ReadDisappearances().ToArray());
         }
 
@@ -47,7 +45,7 @@ namespace MyAgario
                 yield return new Eating(eaterId, eatenId);
             }
         }
-        private static IEnumerable<Appearance> ReadAppearances(this Packet p)
+        private static IEnumerable<Updates> ReadUpdates(this Packet p)
         {
             while (true)
             {
@@ -64,7 +62,7 @@ namespace MyAgario
                 if ((opt & 2) != 0) p.Forward(p.ReadUInt());
                 if ((opt & 4) != 0) p.ReadAsciiString();
                 var name = p.ReadUnicodeString();
-                yield return new Appearance(ballId,
+                yield return new Updates(ballId,
                     coordinateX, coordinateY, size,
                     colorR, colorG, colorB, isVirus, name);
             }
