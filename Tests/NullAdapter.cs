@@ -19,5 +19,10 @@ namespace Tests
         public void Remove(Ball dying)
         {
         }
+
+        public void DrawCenter(double zoom)
+        {
+            
+        }
     }
 }

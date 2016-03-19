@@ -29,9 +29,9 @@ namespace MyAgario
                 ? Colors.Green : Color.FromRgb(appears.R, appears.G, appears.B);
 
             var s = Math.Max(25.0, appears.Size);
-            Ellipse.Width = Ellipse.Height = s;
-            Canvas.SetLeft(Ellipse, appears.X - world.X - s / 2);
-            Canvas.SetTop(Ellipse, appears.Y - world.Y - s / 2);
+            Ellipse.Width = Ellipse.Height = s*2;
+            Canvas.SetLeft(Ellipse, appears.X - world.X - s);
+            Canvas.SetTop(Ellipse, appears.Y - world.Y - s);
             Canvas.SetLeft(TextBlock, appears.X - world.X - TextBlock.ActualWidth / 2);
             Canvas.SetTop(TextBlock, appears.Y - world.Y - TextBlock.ActualHeight / 2);
 

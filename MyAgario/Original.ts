@@ -1,17 +1,41 @@
-﻿(function (c, e) {
-    function qa(a, b) {
+﻿class Ball {
+    id: number;
+    s: number; x: number; L: number; J: number;
+    u: number; y: number; M: number; K: number;
+    o: number; size: number;
+    color: any; a: any; name: any;
+    i: any; R: any; ja: number;
+    ka: number; g: number; ea: number; T: number;
+    ta: number; G: boolean = !1; c: boolean = !1;
+    h: boolean = !1; V: boolean = !0; da: number;
+    C: any; ia: number; wa: boolean = !1; I: boolean = !1;
+
+    constructor(id, x, y, size, color, nick) {
+        this.id = id;
+        this.s = this.x = this.L = this.J = x;
+        this.u = this.y = this.M = this.K = y;
+        this.o = this.size = size;
+        this.color = color;
+        this.a = [];
+        this.ba();
+        this.A(nick);
+    }
+}
+
+(function (c: Window, e) {
+    function setCookie(a, b) {
+        var expires = "";
         if (b) {
             var d = new Date;
             d.setTime(d.getTime() + 864E5 * b);
-            d = "; expires=" + d.toGMTString();
-        } else
-            d = "";
-        document.cookie = "agario_redirect=" + a + d + "; path=/";
+            expires = "; expires=" + d.getTime();
+        }
+        document.cookie = "agario_redirect=" + a + expires + "; path=/";
     }
 
     function vc() {
         for (var a = document.cookie.split(";"), b = 0; b < a.length; b++) {
-            for (var d = a[b]; " " == d.charAt(0) ;)
+            for (var d = a[b]; " " == d.charAt(0);)
                 d = d.substring(1, d.length);
             if (0 == d.indexOf("agario_redirect="))
                 return d.substring(16, d.length);
@@ -19,11 +43,12 @@
         return null;
     }
 
-    function Lb() {
-        c.onkeydown = function (a) {
-            32 != a.keyCode || ra || ("nick" != a.target.id && a.preventDefault(),
-                Za(),
-                ra = !0);
+    function subscribeForMouseAndKeyboard() {
+        c.onkeydown = a => {
+            32 != a.keyCode || ra ||
+                ("nick" != a.target.id && a.preventDefault(),
+                    Za(),
+                    ra = !0);
             81 == a.keyCode && (X(18),
                 sa = !0);
             87 != a.keyCode || ta || (Mb(),
@@ -33,7 +58,7 @@
                 e("#oferwallContainer").is(":visible") && c.closeOfferwall(),
                 e("#videoContainer").is(":visible") && c.closeVideoContainer());
         };
-        c.onkeyup = function (a) {
+        c.onkeyup = a => {
             32 == a.keyCode && (ra = !1);
             87 == a.keyCode && (ta = !1);
             81 == a.keyCode && sa && (X(19),
@@ -73,13 +98,18 @@
                     for (a = 0; a < e.a.length; ++a)
                         b = e.a[a].x,
                             d = e.a[a].y,
-                            b < A - q / 2 / r || d < B - u / 2 / r || b > A + q / 2 / r || d > B + u / 2 / r || ia.va(e.a[a]);
+                            b < A - width / 2 / r || d < B - height / 2 / r || b > A + width / 2 / r || d > B + height / 2 / r || ia.va(e.a[a]);
         }
     }
 
+    var mouseDirX: number;
+    var mouseDirY: number;
+    var mouseX: number;
+    var mouseY: number;
+
     function $a() {
-        va = (Y - q / 2) / r + A;
-        wa = (Z - u / 2) / r + B;
+        mouseDirX = (mouseX - width / 2) / r + A;
+        mouseDirY = (mouseY - height / 2) / r + B;
     }
 
     function Ob() {
@@ -113,8 +143,8 @@
     }
 
     function za(a) {
-        a && (a == K ? e(".btn-needs-server").prop("disabled", !1) : (e("#region").val() != a && e("#region").val(a),
-            K = c.localStorage.location = a,
+        a && (a == localStorageLocation ? e(".btn-needs-server").prop("disabled", !1) : (e("#region").val() != a && e("#region").val(a),
+            localStorageLocation = c.localStorage.location = a,
             e(".region-message").hide(),
             e(".region-message." + a).show(),
             e(".btn-needs-server").prop("disabled", !1),
@@ -150,7 +180,11 @@
     }
 
     function cb(a) {
-        "env_local" in EnvConfig ? "true" == EnvConfig.load_local_configuration ? c.MC.updateConfigurationID("base") : c.MC.updateConfigurationID(EnvConfig.configID) : c.MC.updateConfigurationID(a);
+        "env_local" in EnvConfig ?
+            "true" == EnvConfig.load_local_configuration
+                ? c.MC.updateConfigurationID("base")
+                : c.MC.updateConfigurationID(EnvConfig.configID)
+            : c.MC.updateConfigurationID(a);
     }
 
     function yc() {
@@ -169,12 +203,12 @@
     }
 
     function zc() {
-        e.get(db + "//gc.agar.io", function (a) {
+        e.get(netProtocol + "//gc.agar.io", function (a) {
             var b = a.split(" ");
             a = b[0];
             b = b[1] || "";
             -1 == ["UA"].indexOf(a) && Rb.push("ussr");
-            la.hasOwnProperty(a) && ("string" == typeof la[a] ? K || za(la[a]) : la[a].hasOwnProperty(b) && (K || za(la[a][b])));
+            la.hasOwnProperty(a) && ("string" == typeof la[a] ? localStorageLocation || za(la[a]) : la[a].hasOwnProperty(b) && (localStorageLocation || za(la[a][b])));
         }, "text");
     }
 
@@ -186,7 +220,7 @@
         var a = ++eb;
         Tb();
         e.ajax(ya + "findServer", {
-            error: function () {
+            error() {
                 console.log("Failed to get server. Will retry in 30 seconds");
                 setTimeout(Sb, 3E4);
             },
@@ -202,12 +236,12 @@
             method: "POST",
             cache: !1,
             crossDomain: !0,
-            data: (K + Ca || "?") + "\n154669603"
+            data: (localStorageLocation + Ca || "?") + "\n154669603"
         });
     }
 
     function Q() {
-        ab && K && (e("#connecting").show(),
+        ab && localStorageLocation && (e("#connecting").show(),
             Sb());
     }
 
@@ -223,12 +257,13 @@
             x = null;
         }
     }
-
     var now;
     var prevInstant;
     var m;
     var ma;
-    var Balls;
+    var allBalls: { [s: number]: Ball; } = {};
+    var myBalls: Ball[];
+    var notMyBalls: Ball[];
 
     function fb(a, b) {
         Tb();
@@ -243,9 +278,9 @@
             var c = a.split(":");
             a = "wss://ip-" + c[1].replace(/\./g, "-").replace(/\//g, "") + ".tech.agar.io:" + +c[2];
         }
-        MyBalls = [];
+        myBalls = [];
         notMyBalls = [];
-        Balls = {};
+        allBalls = {};
         z = [];
         ba = [];
         D = [];
@@ -261,19 +296,19 @@
             na = 120;
             Ea = 0;
             console.log("socket open");
-            a = U(5);
+            a = newBuffer(5);
             a.setUint8(0, 254);
             a.setUint32(1, 5, !0);
-            V(a);
-            a = U(5);
+            SendToServer(a);
+            a = newBuffer(5);
             a.setUint8(0, 255);
             a.setUint32(1, 154669603, !0);
-            V(a);
-            a = U(1 + b.length);
+            SendToServer(a);
+            a = newBuffer(1 + b.length);
             a.setUint8(0, 80);
             for (var d = 0; d < b.length; ++d)
                 a.setUint8(d + 1, b.charCodeAt(d));
-            V(a);
+            SendToServer(a);
             m.core.proxy.onSocketOpen();
         };
         x.onmessage = Ac;
@@ -283,11 +318,11 @@
         };
     }
 
-    function U(a) {
+    function newBuffer(a) {
         return new DataView(new ArrayBuffer(a));
     }
 
-    function V(a) {
+    function SendToServer(a) {
         x.send(a.buffer);
     }
 
@@ -332,14 +367,14 @@
                     d += 4;
                     break;
                 case 18:
-                    MyBalls = [];
+                    myBalls = [];
                     notMyBalls = [];
-                    Balls = {};
+                    allBalls = {};
                     z = [];
                     break;
                 case 20:
                     notMyBalls = [];
-                    MyBalls = [];
+                    myBalls = [];
                     break;
                 case 21:
                     lb = a.getInt16(d, !0);
@@ -351,7 +386,7 @@
                         Ia = mb);
                     break;
                 case 32:
-                    MyBalls.push(a.getUint32(d, !0));
+                    myBalls.push(a.getUint32(d, !0));
                     d += 4;
                     break;
                 case 49:
@@ -434,7 +469,7 @@
         Ea = Gc * Ea + Hc * Math.abs(timeDelta - na);
 
         m.core.debug && (
-        m.debug.updateChart("networkUpdate", now, timeDelta),
+            m.debug.updateChart("networkUpdate", now, timeDelta),
             m.debug.updateChart("rttMean", now, na),
             m.debug.updateChart("rttSDev", now, Ea));
 
@@ -448,8 +483,8 @@
         var eatings = source.getUint16(offset, !0);
         offset += 2;
         for (var i = 0; i < eatings; ++i) {
-            var eater = Balls[source.getUint32(offset, !0)];
-            var eaten = Balls[source.getUint32(offset + 4, !0)];
+            var eater = allBalls[source.getUint32(offset, !0)];
+            var eaten = allBalls[source.getUint32(offset + 4, !0)];
             offset += 8;
             eater && eaten && (eaten.Destroy__(),
                 eaten.s = eaten.x,
@@ -484,17 +519,17 @@
             var isVirus = !!(opt & 1);
             var opt16 = !!(opt & 16);
             var ball = null;
-            if (Balls.hasOwnProperty(apppearedIndex))
-                (ball = Balls[apppearedIndex],
+            if (allBalls.hasOwnProperty(apppearedIndex))
+                (ball = allBalls[apppearedIndex],
                     ball.S(),
                     ball.s = ball.x,
                     ball.u = ball.y,
                     ball.o = ball.size,
                     ball.color = color);
-            else 
-            (ball = new CreateBall(apppearedIndex, coordX, coordY, size, color, nick),
-                                                    z.push(ball),
-                                                    Balls[apppearedIndex] = ball);
+            else
+            (ball = new Ball(apppearedIndex, coordX, coordY, size, color, nick),
+                z.push(ball),
+                allBalls[apppearedIndex] = ball);
             ball.c = isVirus;
             ball.h = opt16;
             ball.pa(coordX, coordY);
@@ -503,7 +538,7 @@
             ball.ea = opt;
             asciiStr && (ball.C = asciiStr);
             nick && ball.A(nick);
-            -1 != MyBalls.indexOf(apppearedIndex) && -1 == notMyBalls.indexOf(ball) && (notMyBalls.push(ball),
+            -1 != myBalls.indexOf(apppearedIndex) && -1 == notMyBalls.indexOf(ball) && (notMyBalls.push(ball),
                 ball.I = !0,
                 1 == notMyBalls.length && (ball.wa = !0,
                     A = ball.x,
@@ -522,32 +557,40 @@
         for (idx = 0; idx < coordX; idx++)
             apppearedIndex = source.getUint32(offset, !0),
                 offset += 4,
-                ball = Balls[apppearedIndex],
+                ball = allBalls[apppearedIndex],
                 null != ball && ball.Destroy__();
         ub && 0 == notMyBalls.length && (0 == c.MC.isUserLoggedIn() ? Ga() : Xb = setTimeout(Ga, 2E3));
     }
 
+    var prevMouseDirX: number;
+    var prevMouseDirY: number;
+
     function Ka() {
-        if (da()) {
-            var a = Y - q / 2, b = Z - u / 2;
-            64 > a * a + b * b || .01 > Math.abs(Yb - va) && .01 > Math.abs(Zb - wa) || (Yb = va,
-                Zb = wa,
-                a = U(13),
-                a.setUint8(0, 16),
-                a.setInt32(1, va, !0),
-                a.setInt32(5, wa, !0),
-                a.setUint32(9, 0, !0),
-                V(a));
+        if (isConnected()) {
+            var offX = mouseX - width / 2;
+            var offY = mouseY - height / 2;
+            if (64 > offX * offX + offY * offY) return;
+            if (.01 > Math.abs(prevMouseDirX - mouseDirX))
+                if (.01 > Math.abs(prevMouseDirY - mouseDirY))
+                    return;
+            prevMouseDirX = mouseDirX;
+            prevMouseDirY = mouseDirY;
+            var buffer = newBuffer(13);
+            buffer.setUint8(0, 16);
+            buffer.setInt32(1, mouseDirX, true);
+            buffer.setInt32(5, mouseDirY, true);
+            buffer.setUint32(9, 0, true);
+            SendToServer(buffer);
         }
     }
 
     function Vb() {
-        if (da() && ma && null != N) {
-            var a = U(1 + 2 * N.length);
+        if (isConnected() && ma && null != N) {
+            var a = newBuffer(1 + 2 * N.length);
             a.setUint8(0, 0);
             for (var b = 0; b < N.length; ++b)
                 a.setUint16(1 + 2 * b, N.charCodeAt(b), !0);
-            V(a);
+            SendToServer(a);
             N = null;
             Ba = !0;
         }
@@ -563,15 +606,15 @@
         X(21);
     }
 
-    function da() {
+    function isConnected() {
         return null != x && x.readyState == x.OPEN;
     }
 
     function X(a) {
-        if (da()) {
-            var b = U(1);
+        if (isConnected()) {
+            var b = newBuffer(1);
             b.setUint8(0, a);
-            V(b);
+            SendToServer(b);
         }
     }
 
@@ -581,23 +624,22 @@
     }
 
     function $b() {
-        q = 1 * c.innerWidth;
-        u = 1 * c.innerHeight;
-        Ab.width = O.width = q;
-        Ab.height = O.height = u;
+        width = 1 * c.innerWidth;
+        height = 1 * c.innerHeight;
+        Ab.width = O.width = width;
+        Ab.height = O.height = height;
         var a = e("#helloContainer");
         a.css("transform", "none");
         var b = a.height(), d = c.innerHeight;
-        0 != b / 2 % 2 && (b++,
+        0 != b / 2 % 2 && (b++ ,
             a.height(b));
         b > d / 1.1 ? a.css("transform", "translate(-50%, -50%) scale(" + d / b / 1.1 + ")") : a.css("transform", "translate(-50%, -50%)");
         ac();
     }
 
     function bc() {
-        var a;
-        a = 1 * Math.max(u / 1080, q / 1920);
-        return a *= P;
+        var a = 1 * Math.max(height / 1080, width / 1920);
+        return a * P;
     }
 
     function Lc() {
@@ -632,16 +674,16 @@
                 r = (9 * r + kb * bc()) / 10;
         wc();
         $a();
-        Bb || f.clearRect(0, 0, q, u);
-        Bb ? (f.fillStyle = ea ? "#111111" : "#F2FBFF",
+        Bb || f.clearRect(0, 0, width, height);
+        Bb ? (f.fillStyle = blackTheme ? "#111111" : "#F2FBFF",
             f.globalAlpha = .05,
-            f.fillRect(0, 0, q, u),
+            f.fillRect(0, 0, width, height),
             f.globalAlpha = 1) : Nc();
         z.sort(function (a, b) {
             return a.size == b.size ? a.id - b.id : a.size - b.size;
         });
         f.save();
-        f.translate(q / 2, u / 2);
+        f.translate(width / 2, height / 2);
         f.scale(r, r);
         f.translate(-A, -B);
         for (c = 0; c < ba.length; c++)
@@ -665,18 +707,18 @@
             f.restore();
         }
         f.restore();
-        H && H.width && f.drawImage(H, q - H.width - 10, 10);
+        H && H.width && f.drawImage(H, width - H.width - 10, 10);
         highestMass = Math.max(highestMass, dc());
         0 != highestMass && (null == Ma && (Ma = new Na(24, "#FFFFFF")),
             Ma.B(R("score") + ": " + ~~(highestMass / 100)),
             d = Ma.N(),
             a = d.width,
             f.globalAlpha =
-                .2,
+            .2,
             f.fillStyle = "#000000",
-            f.fillRect(10, u - 10 - 24 - 10, a + 10, 34),
+            f.fillRect(10, height - 10 - 24 - 10, a + 10, 34),
             f.globalAlpha = 1,
-            f.drawImage(d, 15, u - 10 - 24 - 5));
+            f.drawImage(d, 15, height - 10 - 24 - 5));
         Oc();
         b = Date.now() - b;
         b > 1E3 / 60 ? h.detail -= .01 : b < 1E3 / 65 && (h.detail += .001);
@@ -685,22 +727,22 @@
         h.detail > h.selected.maxDetail && (h.auto && h.upgrade(),
             h.detail = h.selected.maxDetail);
         b = now - ec;
-        !da() || ja || aa ? (C += b / 2E3,
+        !isConnected() || ja || aa ? (C += b / 2E3,
             1 < C && (C = 1)) : (C -= b / 300,
-            0 > C && (C = 0));
+                0 > C && (C = 0));
         0 < C ? (f.fillStyle = "#000000",
             fc ? (f.globalAlpha = C,
-                f.fillRect(0, 0, q, u),
+                f.fillRect(0, 0, width, height),
                 J.complete && J.width && (J.width /
-                        J.height < q / u ? (b = q,
-                            a = J.height * q / J.width) : (b = J.width * u / J.height,
-                            a = u),
-                    f.drawImage(J, (q - b) / 2, (u - a) / 2, b, a),
+                    J.height < width / height ? (b = width,
+                        a = J.height * width / J.width) : (b = J.width * height / J.height,
+                            a = height),
+                    f.drawImage(J, (width - b) / 2, (height - a) / 2, b, a),
                     f.globalAlpha = .5 * C,
-                    f.fillRect(0, 0, q, u))) : (f.globalAlpha = .5 * C,
-                f.fillRect(0, 0, q, u)),
+                    f.fillRect(0, 0, width, height))) : (f.globalAlpha = .5 * C,
+                        f.fillRect(0, 0, width, height)),
             f.globalAlpha = 1) : fc = !1;
-        h.selected.ma && Ba && (Oa++,
+        h.selected.ma && Ba && (Oa++ ,
             Oa > 10 * h.selected.warnFps ? (h.selected.ma = !1,
                 Oa = -1,
                 Pa = 0) : Pc());
@@ -708,34 +750,32 @@
     }
 
     function Pc() {
-        var a = document.createElement("canvas"),
-            b = a.getContext("2d"),
-            d = Math.min(800, .6 * q) / 800;
-        a.width = 800 * d;
-        a.height = 60 * d;
-        b.globalAlpha = .3;
-        b.fillStyle = "#000000";
-        b.fillRect(0, 0, 800, 60);
-        b.globalAlpha =
-            1;
-        b.fillStyle = "#FFFFFF";
-        b.scale(d, d);
-        d = null;
-        d = "Your computer is running slow,";
-        b.font = "18px Ubuntu";
-        b.fillText(d, 400 - b.measureText(d).width / 2, 25);
-        d = "please close other applications or tabs in your browser for better game performance.";
-        b.fillText(d, 400 - b.measureText(d).width / 2, 45);
-        f.drawImage(a, (q - a.width) / 2, u - a.height - 10);
+        var canvas = document.createElement("canvas"),
+            context2D = canvas.getContext("2d"),
+            scale = Math.min(800, .6 * width) / 800;
+        canvas.width = 800 * scale;
+        canvas.height = 60 * scale;
+        context2D.globalAlpha = .3;
+        context2D.fillStyle = "#000000";
+        context2D.fillRect(0, 0, 800, 60);
+        context2D.globalAlpha = 1;
+        context2D.fillStyle = "#FFFFFF";
+        context2D.scale(scale, scale);
+        var blah = "Your computer is running slow,";
+        context2D.font = "18px Ubuntu";
+        context2D.fillText(blah, 400 - context2D.measureText(blah).width / 2, 25);
+        blah = "please close other applications or tabs in your browser for better game performance.";
+        context2D.fillText(blah, 400 - context2D.measureText(blah).width / 2, 45);
+        f.drawImage(canvas, (width - canvas.width) / 2, height - canvas.height - 10);
     }
 
     function Nc() {
-        f.fillStyle = ea ? "#111111" : "#F2FBFF";
-        f.fillRect(0, 0, q, u);
+        f.fillStyle = blackTheme ? "#111111" : "#F2FBFF";
+        f.fillRect(0, 0, width, height);
         f.save();
-        f.strokeStyle = ea ? "#AAAAAA" : "#000000";
+        f.strokeStyle = blackTheme ? "#AAAAAA" : "#000000";
         f.globalAlpha = .2 * r;
-        for (var a = q / r, b = u / r, d = (-A + a / 2) % 50; d < a; d += 50)
+        for (var a = width / r, b = height / r, d = (-A + a / 2) % 50; d < a; d += 50)
             f.beginPath(),
                 f.moveTo(d * r - .5, 0),
                 f.lineTo(d * r - .5, b * r),
@@ -750,7 +790,7 @@
 
     function Oc() {
         if (gc && Cb.width) {
-            var a = q / 5;
+            var a = width / 5;
             f.drawImage(Cb, 5, 5, a, a);
         }
     }
@@ -764,12 +804,12 @@
     function Ub() {
         H = null;
         if (null != I || 0 != D.length)
-            if (null != I || fa) {
+            if (null != I || namesEnabled) {
                 H = document.createElement("canvas");
                 var a = H.getContext("2d"),
                     b = 60,
                     b = null == I ? b + 24 * D.length : b + 180,
-                    d = Math.min(200, .3 * q) / 200;
+                    d = Math.min(200, .3 * width) / 200;
                 H.width = 200 * d;
                 H.height = b * d;
                 a.scale(d, d);
@@ -787,8 +827,8 @@
                     for (a.font = "20px Ubuntu",
                         b = 0; b < D.length; ++b)
                         d = D[b].name || R("unnamed_cell"),
-                            fa || (d = R("unnamed_cell")),
-                            1 == D[b].id || -1 != MyBalls.indexOf(D[b].id) ? (notMyBalls[0].name && (d = notMyBalls[0].name),
+                            namesEnabled || (d = R("unnamed_cell")),
+                            1 == D[b].id || -1 != myBalls.indexOf(D[b].id) ? (notMyBalls[0].name && (d = notMyBalls[0].name),
                                 a.fillStyle = "#FFAAAA") : a.fillStyle = "#FFFFFF",
                             d = b + 1 + ". " + d,
                             e = a.measureText(d).width,
@@ -815,7 +855,7 @@
             a = c.MC.getSkinInfo("skin_" + a.slice(1));
             if (null == a)
                 return null;
-            for (a = (+a.color).toString(16) ; 6 > a.length;)
+            for (a = (+a.color).toString(16); 6 > a.length;)
                 a = "0" + a;
             return "#" + a;
         }
@@ -850,19 +890,9 @@
         this.b = e;
     }
 
-    function CreateBall(a, b, d, c, e, p) {
-        this.id = a;
-        this.s = this.x = this.L = this.J = b;
-        this.u = this.y = this.M = this.K = d;
-        this.o = this.size = c;
-        this.color = e;
-        this.a = [];
-        this.ba();
-        this.A(p);
-    }
 
     function toColor(a) {
-        for (a = a.toString(16) ; 6 > a.length;)
+        for (a = a.toString(16); 6 > a.length;)
             a = "0" + a;
         return "#" + a;
     }
@@ -877,7 +907,7 @@
     function Sc(a) {
         for (var b = a.length, d, c; 0 < b;)
             c = Math.floor(Math.random() * b),
-                b--,
+                b-- ,
                 d = a[b],
                 a[b] = a[c],
                 a[c] = d;
@@ -898,7 +928,7 @@
         c.storageInfo = k;
         "google" == k.context ? (e("#gPlusShare").show(),
             e("#fbShare").hide()) : (e("#gPlusShare").hide(),
-            e("#fbShare").show());
+                e("#fbShare").show());
     }
 
     function jc(a) {
@@ -982,21 +1012,21 @@
     function kc(a) {
         if ("connected" == a.status) {
             var b = a.authResponse.accessToken;
-            null == b || "undefined" == b || "" == b ? (3 > lc && (lc++,
-                    c.facebookRelogin()),
+            null == b || "undefined" == b || "" == b ? (3 > lc && (lc++ ,
+                c.facebookRelogin()),
                 c.logout()) : (c.MC.doLoginWithFB(b),
-                m.cache.login_info = [b, "facebook"],
-                c.FB.api("/me/picture?width=180&height=180", function (b) {
-                    k.userInfo.picture = b.data.url;
-                    c.updateStorage();
-                    e(".agario-profile-picture").attr("src", b.data.url);
-                    k.userInfo.socialId = a.authResponse.userID;
-                    Sa();
-                }),
-                e("#helloContainer").attr("data-logged-in", "1"),
-                k.context = "facebook",
-                k.loginIntent = "1",
-                c.updateStorage());
+                    m.cache.login_info = [b, "facebook"],
+                    c.FB.api("/me/picture?width=180&height=180", function (b) {
+                        k.userInfo.picture = b.data.url;
+                        c.updateStorage();
+                        e(".agario-profile-picture").attr("src", b.data.url);
+                        k.userInfo.socialId = a.authResponse.userID;
+                        Sa();
+                    }),
+                    e("#helloContainer").attr("data-logged-in", "1"),
+                    k.context = "facebook",
+                    k.loginIntent = "1",
+                    c.updateStorage());
         }
     }
 
@@ -1039,8 +1069,8 @@
     }
 
     function updateEatingStats(eater, eaten) {
-        var eaterIsMine = -1 != MyBalls.indexOf(eater.id),
-            eatenIsMine = -1 != MyBalls.indexOf(eaten.id),
+        var eaterIsMine = -1 != myBalls.indexOf(eater.id),
+            eatenIsMine = -1 != myBalls.indexOf(eaten.id),
             eatenIsFood = 30 > eaten.size;
         if (eaterIsMine && eatenIsFood)
             ++foodEaten;
@@ -1108,8 +1138,10 @@
         }
     }
 
+    var statsEnabled: boolean;
+
     function Uc() {
-        ja || aa || (Ta ? (c.refreshAd(c.adSlots.ab),
+        ja || aa || (statsEnabled ? (c.refreshAd(c.adSlots.ab),
             Wc(),
             aa = !0,
             setTimeout(function () {
@@ -1129,7 +1161,7 @@
 
     function Xc() {
         c.open("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", "width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=" +
-        (c.screenX + c.innerWidth / 2 - 242) + ",top=" + (c.innerHeight - 580) / 2);
+            (c.screenX + c.innerWidth / 2 - 242) + ",top=" + (c.innerHeight - 580) / 2);
     }
 
     var pc = document.createElement("canvas");
@@ -1148,30 +1180,30 @@
         c.queryString = E;
         var qc = "fb" in E,
             Yc = "miniclip" in E,
-            w = {
-                skinsEnabled: "0",
-                namesEnabled: "0",
-                noColors: "0",
-                blackTheme: "0",
-                showMass: "0",
-                statsEnabled: "0"
+            Settings = {
+                skinsEnabled: false,
+                namesEnabled: false,
+                noColors: false,
+                blackTheme: false,
+                showMass: false,
+                statsEnabled: false
             },
             Zc = function () {
-                qa("", -1);
+                setCookie("", -1);
             },
             rc = "http:" != c.location.protocol,
             $c = "1" == vc(),
             sc = !1;
-        qc || Yc || (rc && !$c ? (qa("1", 1),
+        qc || Yc || (rc && !$c ? (setCookie("1", 1),
             c.location.href = "http:" + c.location.href.substring(c.location.protocol.length),
-            sc = !0) : qa("", -1));
-        rc || qa("", -1);
+            sc = !0) : setCookie("", -1));
+        rc || setCookie("", -1);
         sc || setTimeout(Zc, 3E3);
         if (!c.agarioNoInit) {
-            var db = c.location.protocol, gb = "https:" == db;
+            var netProtocol = c.location.protocol, gb = "https:" == netProtocol;
             E.master && (EnvConfig.master_url = E.master);
-            var ya = db + "//" +
-                    EnvConfig.master_url + "/",
+            var ya = netProtocol + "//" +
+                EnvConfig.master_url + "/",
                 Ua = c.navigator.userAgent;
             if (-1 != Ua.indexOf("Android"))
                 c.ga && c.ga("send", "event", "MobileRedirect", "PlayStore"),
@@ -1190,27 +1222,44 @@
                 prevInstant = 0;
                 ma = !1;
                 ub = !1;
-                Balls = {};
-                var Ab, f, O, q, u, ia = null, x = null,
-                    A = 0, B = 0, MyBalls = [], notMyBalls = [], z = [], ba = [], D = [],
-                    Y = 0, Z = 0, va = -1, wa = -1,
+                allBalls = {};
+                mouseDirX = -1;
+                mouseDirY = -1;
+                mouseX = 0;
+                mouseY = 0;
+                myBalls = [];
+                notMyBalls = [];
+                var Ab: HTMLElement, f, O: HTMLElement, width: number, height: number, ia = null, x = null,
+                    A: number = 0, B = 0, z = [], ba = [], D = [],
                     Mc = 0, ec = 0, N = null, ob = 0,
                     pb = 0, qb = 1E4, rb = 1E4, r = 1,
-                    K = null, Va = !0, fa = !0, pa = !1, highestMass = 0, ea = !1, Wa = !1, ib = A = ~~((ob + qb) / 2), jb = B = ~~((pb + rb) / 2), kb = 1, Ca = "", I = null, ab = !1, nb = !1, lb = 0, mb = 0, Ha = 0, Ia = 0, Qc = ["#333333", "#FF3333", "#33FF33", "#3333FF"], Bb = !1, P = 1, C = 1, ja = !1, eb = 0, fc = !0, tb = null, sb = !1, J = new Image;
+                    localStorageLocation = null,
+                    skinsEnabled = !0, namesEnabled = !0,
+                    noColors = !1,
+                    highestMass = 0, blackTheme = !1,
+                    showMass = !1, ib = A = ~~((ob + qb) / 2),
+                    jb = B = ~~((pb + rb) / 2), kb = 1,
+                    Ca = "", I = null, ab = !1,
+                    nb = !1, lb = 0, mb = 0,
+                    Ha = 0, Ia = 0,
+                    Qc = ["#333333", "#FF3333", "#33FF33", "#3333FF"],
+                    Bb = !1, P = 1, C = 1, ja = !1,
+                    eb = 0, fc = !0, tb = null, sb = !1,
+                    J = new Image;
                 J.src = "/img/background.png";
                 var gc = "ontouchstart" in c && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(c.navigator.userAgent),
                     Cb = new Image;
                 Cb.src = "/img/split.png";
                 var ra = !1, sa = !1, ta = !1, Xa = !1, Hb, Ib;
                 "gamepad" in E && setInterval(function () {
-                    Xa && (Y = Ya.ha(Y, Hb),
-                        Z = Ya.ha(Z, Ib));
+                    Xa && (mouseX = Ya.ha(mouseX, Hb),
+                        mouseY = Ya.ha(mouseY, Ib));
                 }, 25);
                 c.gamepadAxisUpdate = function (a, b) {
                     var d = .1 > b * b;
-                    0 == a && (d ? Hb = q / 2 : (Hb = (b + 1) / 2 * q,
+                    0 == a && (d ? Hb = width / 2 : (Hb = (b + 1) / 2 * width,
                         Xa = !0));
-                    1 == a && (d ? Ib = u / 2 : (Ib = (b + 1) / 2 * u,
+                    1 == a && (d ? Ib = height / 2 : (Ib = (b + 1) / 2 * height,
                         Xa = !0));
                 };
                 c.agarioInit = function () {
@@ -1218,41 +1267,42 @@
                     zc();
                     yc();
                     m.core.init();
-                    null != c.localStorage.settings && (w = JSON.parse(c.localStorage.settings),
-                        Wa = w.showMass,
-                        ea = w.blackTheme,
-                        fa = w.namesEnabled,
-                        pa = w.noColors,
-                        Ta = w.statsEnabled,
-                        Va = w.skinsEnabled);
-                    e("#showMass").prop("checked",
-                        w.showMass);
-                    e("#noSkins").prop("checked", !w.skinsEnabled);
-                    e("#skipStats").prop("checked", !w.statsEnabled);
-                    e("#noColors").prop("checked", w.noColors);
-                    e("#noNames").prop("checked", !w.namesEnabled);
-                    e("#darkTheme").prop("checked", w.blackTheme);
+                    if (c.localStorage.settings != null) {
+                        Settings = JSON.parse(c.localStorage.settings);
+                        showMass = Settings.showMass;
+                        blackTheme = Settings.blackTheme;
+                        namesEnabled = Settings.namesEnabled;
+                        noColors = Settings.noColors;
+                        statsEnabled = Settings.statsEnabled;
+                        skinsEnabled = Settings.skinsEnabled;
+                    }
+                    e("#showMass").prop("checked", Settings.showMass);
+                    e("#noSkins").prop("checked", !Settings.skinsEnabled);
+                    e("#skipStats").prop("checked", !Settings.statsEnabled);
+                    e("#noColors").prop("checked", Settings.noColors);
+                    e("#noNames").prop("checked", !Settings.namesEnabled);
+                    e("#darkTheme").prop("checked", Settings.blackTheme);
                     Ob();
                     setInterval(Ob, 18E4);
                     O = Ab = document.getElementById("canvas");
                     null != O && (f = O.getContext("2d"),
                         O.onmousedown = function (a) {
                             if (gc) {
-                                var b = a.clientX - (5 + q / 5 / 2), d = a.clientY - (5 + q / 5 / 2);
-                                if (Math.sqrt(b * b + d * d) <= q / 5 / 2) {
+                                var b = a.clientX - (5 + width / 5 / 2), d = a.clientY - (5 + width / 5 / 2);
+                                if (Math.sqrt(b * b + d * d) <= width / 5 / 2) {
                                     Za();
                                     return;
                                 }
                             }
-                            Y = 1 * a.clientX;
-                            Z = 1 * a.clientY;
+                            mouseX = 1 * a.clientX;
+                            mouseY = 1 * a.clientY;
                             $a();
                             Ka();
                         },
                         O.onmousemove = function (a) {
                             Xa = !1;
-                            Y = 1 * a.clientX;
-                            Z = 1 * a.clientY;
+                            mouseX = 1 * a.clientX;
+                            mouseY = 1 * a.clientY;
                             $a();
                         },
                         O.onmouseup = function () { },
@@ -1264,10 +1314,10 @@
                         c.onresize = $b,
                         c.requestAnimationFrame(tc),
                         setInterval(Ka, 40),
-                        K && e("#region").val(K),
+                        localStorageLocation && e("#region").val(localStorageLocation),
                         Qb(),
                         za(e("#region").val()),
-                        0 == eb && K && Q(),
+                        0 == eb && localStorageLocation && Q(),
                         ua(0),
                         $b(),
                         c.location.hash && 6 <= c.location.hash.length && mc(c.location.hash));
@@ -1279,33 +1329,33 @@
                     N = a;
                     Vb();
                     highestMass = 0;
-                    w.skinsEnabled = Va;
-                    w.namesEnabled = fa;
-                    w.noColors = pa;
-                    w.blackTheme = ea;
-                    w.showMass = Wa;
-                    w.statsEnabled = Ta;
-                    c.localStorage.settings = JSON.stringify(w);
-                    Lb();
+                    Settings.skinsEnabled = skinsEnabled;
+                    Settings.namesEnabled = namesEnabled;
+                    Settings.noColors = noColors;
+                    Settings.blackTheme = blackTheme;
+                    Settings.showMass = showMass;
+                    Settings.statsEnabled = statsEnabled;
+                    c.localStorage.settings = JSON.stringify(Settings);
+                    subscribeForMouseAndKeyboard();
                 };
                 c.setSkins = function (a) {
-                    Va = a;
+                    skinsEnabled = a;
                 };
                 c.setNames = function (a) {
-                    fa = a;
+                    namesEnabled = a;
                 };
                 c.setDarkTheme = function (a) {
-                    ea = a;
+                    blackTheme = a;
                 };
                 c.setColors = function (a) {
-                    pa = a;
+                    noColors = a;
                 };
                 c.setShowMass = function (a) {
-                    Wa = a;
+                    showMass = a;
                 };
                 c.spectate = function () {
                     N = null;
-                    Lb();
+                    subscribeForMouseAndKeyboard();
                     X(1);
                     Pb();
                 };
@@ -1354,7 +1404,7 @@
                         return v;
                     });
                     return a;
-                }({});
+                } ({});
                 m.core = ad;
                 m.cache = {};
                 var bd = function (a) {
@@ -1417,16 +1467,16 @@
                                 minValue: 0,
                                 maxValue: 120
                             }, [
-                                {
-                                    strokeStyle: "rgba(255, 0, 0, 1)",
-                                    fillStyle: "rgba(0, 255, 0, 0.2)",
-                                    lineWidth: 2
-                                }, {
-                                    strokeStyle: "rgba(0, 255, 0, 1)",
-                                    fillStyle: "rgba(0, 255, 0, 0)",
-                                    lineWidth: 2
-                                }
-                            ]),
+                                    {
+                                        strokeStyle: "rgba(255, 0, 0, 1)",
+                                        fillStyle: "rgba(0, 255, 0, 0.2)",
+                                        lineWidth: 2
+                                    }, {
+                                        strokeStyle: "rgba(0, 255, 0, 1)",
+                                        fillStyle: "rgba(0, 255, 0, 0)",
+                                        lineWidth: 2
+                                    }
+                                ]),
                             g = !0);
                         m.core.debug = !0;
                         p.show();
@@ -1445,7 +1495,7 @@
                         return f = a;
                     });
                     return a;
-                }({});
+                } ({});
                 m.debug = bd;
                 var la = {
                     AF: "JP-Tokyo",
@@ -1699,13 +1749,13 @@
                     Ba = !1,
                     Xb;
                 c.connect = fb;
+                prevMouseDirX = -1;
+                prevMouseDirY = -1;
                 var Fa = 500,
                     Ec = .875,
                     Gc = .75,
                     Hc = .25,
-                    Fc = .125,
-                    Yb = -1,
-                    Zb = -1;
+                    Fc = .125;
                 c.sendMitosis = Za;
                 c.sendEject = Mb;
                 m.networking = function (a) {
@@ -1714,19 +1764,19 @@
                         FB: "facebook"
                     };
                     a.sendMessage = function (a) {
-                        if (da()) {
+                        if (isConnected()) {
                             var d = a.byteView;
                             if (null != d) {
-                                a = U(1 + a.length);
+                                a = newBuffer(1 + a.length);
                                 a.setUint8(0, 102);
                                 for (var c = 0; c < d.length; ++c)
                                     a.setUint8(1 + c, d[c]);
-                                V(a);
+                                SendToServer(a);
                             }
                         }
                     };
                     return a;
-                }({});
+                } ({});
                 var H = null,
                     Ma = null,
                     h = m.renderSettings = {
@@ -1754,7 +1804,7 @@
                         upgrade: function () {
                             h.selected == h.low ? (h.selected = h.medium,
                                 h.detail = h.medium.maxDetail) : h.selected == h.medium && (h.selected = h.high,
-                                h.detail = h.high.maxDetail);
+                                    h.detail = h.high.maxDetail);
                         },
                         downgrade: function () {
                             h.selected == h.high ? h.selected = h.medium : h.selected == h.medium && (h.selected = h.low);
@@ -1774,15 +1824,15 @@
                             if (e > b) {
                                 a = d - e % b;
                                 var g = Date.now();
-                                !da() || 240 > g - prevInstant || !m.core.config.skipDraw ? ac() : console.warn("Skipping draw");
+                                !isConnected() || 240 > g - prevInstant || !m.core.config.skipDraw ? ac() : console.warn("Skipping draw");
                                 cd();
                                 Jb = 1E3 / e;
                                 m.debug.updateChart("fps", d, Jb);
-                                Jb < h.selected.warnFps ? 0 == Oa && (Pa++,
+                                Jb < h.selected.warnFps ? 0 == Oa && (Pa++ ,
                                     Pa > 2 * h.selected.warnFps && (h.selected.ma = !0)) : Pa = 0;
                             }
                         };
-                    }();
+                    } ();
                 c.setQuality = Kc;
                 var ha = {},
                     Rb = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;chaplin;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;ea;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;venezuela;blatter;chavez;cuba;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";"),
@@ -1834,12 +1884,12 @@
                                 z.splice(a, 1);
                                 break;
                             }
-                        delete Balls[this.id];
+                        delete allBalls[this.id];
                         a = notMyBalls.indexOf(this);
                         -1 != a && (ub = !0,
                             notMyBalls.splice(a, 1));
-                        a = MyBalls.indexOf(this.id);
-                        -1 != a && MyBalls.splice(a, 1);
+                        a = myBalls.indexOf(this.id);
+                        -1 != a && myBalls.splice(a, 1);
                         this.G = !0;
                         0 < this.da && ba.push(this);
                     },
@@ -1852,11 +1902,11 @@
                                 this.i.B(this.name);
                     },
                     ba: function () {
-                        for (var a = this.H() ; this.a.length > a;) {
+                        for (var a = this.H(); this.a.length > a;) {
                             var b = ~~(Math.random() * this.a.length);
                             this.a.splice(b, 1);
                         }
-                        for (0 == this.a.length && 0 < a && this.a.push(new Db(this, this.x, this.y, this.size, Math.random() - .5)) ; this.a.length < a;)
+                        for (0 == this.a.length && 0 < a && this.a.push(new Db(this, this.x, this.y, this.size, Math.random() - .5)); this.a.length < a;)
                             b = ~~(Math.random() * this.a.length),
                                 b = this.a[b],
                                 this.a.push(new Db(this, b.x, b.y, b.f, b.b));
@@ -1932,8 +1982,8 @@
                         return a;
                     },
                     P: function () {
-                        return 0 >= this.id ? !0 : this.x + this.size + 40 < A - q / 2 / r || this.y + this.size + 40 < B - u / 2 / r || this.x - this.size - 40 > A + q / 2 / r || this.y - this.size -
-                            40 > B + u / 2 / r ? !1 : !0;
+                        return 0 >= this.id ? !0 : this.x + this.size + 40 < A - width / 2 / r || this.y + this.size + 40 < B - height / 2 / r || this.x - this.size - 40 > A + width / 2 / r || this.y - this.size -
+                            40 > B + height / 2 / r ? !1 : !0;
                     },
                     sa: function (a) {
                         a.beginPath();
@@ -1968,11 +2018,11 @@
                                 d = !1,
                                 f = this.color,
                                 l = !1;
-                            this.h || !Va || sb || (-1 != Rb.indexOf(e) ? (ha.hasOwnProperty(e) || (ha[e] = new Image,
-                                        ha[e].src = c.ASSETS_ROOT + "skins/" + e + ".png"),
-                                    g = 0 != ha[e].width && ha[e].complete ? ha[e] : null) : g = null,
+                            this.h || !skinsEnabled || sb || (-1 != Rb.indexOf(e) ? (ha.hasOwnProperty(e) || (ha[e] = new Image,
+                                ha[e].src = c.ASSETS_ROOT + "skins/" + e + ".png"),
+                                g = 0 != ha[e].width && ha[e].complete ? ha[e] : null) : g = null,
                                 null != g ? -1 != dd.indexOf(e) && (d = !0) : (this.I && "%starball" == this.C && "shenron" == e && 7 <= notMyBalls.length && (cc = d = !0,
-                                        p = hc("%starball1")),
+                                    p = hc("%starball1")),
                                     g = hc(this.C),
                                     null != g && (l = !0,
                                         f = Rc(this.C) || f)));
@@ -1986,25 +2036,25 @@
                                 a.arc(this.J, this.K, this.size + 5, 0, 2 * Math.PI, !1),
                                 a.closePath(),
                                 a.stroke());
-                            pa && !sb ? (a.fillStyle = "#FFFFFF",
+                            noColors && !sb ? (a.fillStyle = "#FFFFFF",
                                 a.strokeStyle = "#AAAAAA") : (a.fillStyle = f,
-                                a.strokeStyle = f);
+                                    a.strokeStyle = f);
                             b ? (a.beginPath(),
                                 a.arc(this.x, this.y, this.size + 5, 0, 2 * Math.PI, !1),
                                 a.closePath()) : (this.Da(),
-                                this.sa(a));
+                                    this.sa(a));
                             l || a.fill();
                             null != g && (this.na(a, g),
                                 null != p && this.na(a, p, {
                                     alpha: Math.sin(.0174 * La)
                                 }));
-                            (pa || 20 < this.size) && !b && (a.strokeStyle = "#000000",
+                            (noColors || 20 < this.size) && !b && (a.strokeStyle = "#000000",
                                 a.globalAlpha *= .1,
                                 a.stroke());
                             a.globalAlpha = 1;
                             e = -1 != notMyBalls.indexOf(this);
                             b = ~~this.y;
-                            0 != this.id && (fa || e) && this.name && this.i && !d && (g = this.i,
+                            0 != this.id && (namesEnabled || e) && this.name && this.i && !d && (g = this.i,
                                 g.B(this.name),
                                 g.O(this.m()),
                                 d = 0 >= this.id ? 1 : Math.ceil(10 * r) / 10,
@@ -2014,7 +2064,7 @@
                                 f = Math.ceil(g.height / d),
                                 a.drawImage(g, ~~this.x - ~~(p / 2), b - ~~(f / 2), p, f),
                                 b += g.height / 2 / d + 4);
-                            0 < this.id && Wa && (e || 0 == notMyBalls.length && (!this.c || this.h) && 20 < this.size) && (null == this.R && (this.R = new Na(this.m() / 2, "#FFFFFF", !0, "#000000")),
+                            0 < this.id && showMass && (e || 0 == notMyBalls.length && (!this.c || this.h) && 20 < this.size) && (null == this.R && (this.R = new Na(this.m() / 2, "#FFFFFF", !0, "#000000")),
                                 e = this.R,
                                 e.O(this.m() / 2),
                                 e.B(~~(this.size * this.size /
@@ -2054,7 +2104,7 @@
                             c) / c;
                     };
                     return a;
-                }({});
+                } ({});
                 c.Maths = Ya;
                 var hb = function (a) {
                     a.la = function () {
@@ -2063,7 +2113,7 @@
                         return "[" + d.join("/") + " " + a.join(":") + "]";
                     };
                     return a;
-                }({});
+                } ({});
                 c.Utils = hb;
                 Na.prototype = {
                     F: "",
@@ -2196,7 +2246,7 @@
                             g.setAttribute("href", canvas.toDataURL("image/png"));
                             e.parentNode.replaceChild(g, e);
                         };
-                    }();
+                    } ();
                 e(function () {
                     Wb();
                 });
@@ -2296,7 +2346,7 @@
                         ga(a);
                     };
                     return a;
-                }({});
+                } ({});
                 var lc = 0;
                 c.fbAsyncInit = function () {
                     function a() {
@@ -2305,8 +2355,8 @@
                             c.FB.login(function (a) {
                                 kc(a);
                             }, {
-                                scope: "public_profile, email"
-                            }));
+                                    scope: "public_profile, email"
+                                }));
                     }
 
                     c.FB.init({
@@ -2412,7 +2462,7 @@
                                         a && (k.userInfo.picture = a.image.url),
                                         k.userInfo.socialId = h.getId(),
                                         Sa()) : (alert("Please add Google+ to your Google account and try again.\nOr you can login with another account."),
-                                        c.logout());
+                                            c.logout());
                                 }) : (d(a),
                                     k.userInfo.picture = a,
                                     k.userInfo.socialId = h.getId(),
@@ -2428,7 +2478,7 @@
                         }
                     };
                     return a;
-                }(m);
+                } (m);
                 c.gplusModule = ed;
                 var uc = function () {
                     m.fa.ya();
@@ -2480,7 +2530,7 @@
                                 a(g[b], this, "", g[b].size, g[b].color);
                         });
                     };
-                }();
+                } ();
                 c.createParty = function () {
                     ka(":party");
                     S = function (a) {
@@ -2497,6 +2547,7 @@
                     ka("");
                     Q();
                 };
+                statsEnabled = !0;
                 var F = [],
                     foodEaten = 0,
                     xb = "#000000",
@@ -2506,8 +2557,7 @@
                     Started = 0,
                     LeaderboardTime = 0,
                     cellsEaten = 0,
-                    topPosition = 0,
-                    Ta = !0;
+                    topPosition = 0;
                 c.onPlayerDeath = Ga;
                 setInterval(function () {
                     Aa && F.push(dc() / 100);
@@ -2525,14 +2575,14 @@
                     ua(0);
                 };
                 c.setSkipStats = function (a) {
-                    Ta = !a;
+                    statsEnabled = !a;
                 };
                 c.getStatsString = oc;
                 c.gPlusShare = Xc;
                 c.twitterShareStats = function () {
                     var a = c.getStatsString("tt_share_stats");
                     c.open("https://twitter.com/intent/tweet?text=" + a, "Agar.io", "width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=" +
-                    (c.screenX + c.innerWidth / 2 - 330) + ",top=" + (c.innerHeight - 310) / 2);
+                        (c.screenX + c.innerWidth / 2 - 330) + ",top=" + (c.innerHeight - 310) / 2);
                 };
                 c.fbShareStats = function () {
                     var a = c.getStatsString("fb_matchresults_subtitle");

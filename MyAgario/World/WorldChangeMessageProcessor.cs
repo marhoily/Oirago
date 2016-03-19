@@ -22,7 +22,7 @@ namespace MyAgario
             if (newId != null) Process(newId);
 
             var spectate = msg as Message.Spectate;
-            if (spectate != null) _world.SpectateViewPort = spectate;
+            if (spectate != null) Spectate(spectate);
 
             var worldSize = msg as Message.WorldSize;
             if (worldSize != null) _world.WorldSize = worldSize;
@@ -33,6 +33,21 @@ namespace MyAgario
             var unknown = msg as Message.Unknown;
             if (unknown != null) Console.WriteLine(
                 "Unknown packet id {0}", unknown.PacketId);
+        }
+
+        private void Spectate(Message.Spectate spectate)
+        {
+            var zoom = spectate.Zoom;
+            var dx = _world.SpectateViewPort.X - spectate.X;
+            var dy = _world.SpectateViewPort.Y - spectate.Y;
+            _world.SpectateViewPort = spectate;
+            foreach (var ball in _world.Balls.Values)
+                if (ball.IsFood || ball.State.IsVirus)
+                {
+                    ball.Move((int)(dx * zoom), (int)(dy * zoom));
+                    _windowAdapter.Update(ball, spectate);
+                }
+            _windowAdapter.DrawCenter(zoom);
         }
 
         private void Process(Message.Tick tick)

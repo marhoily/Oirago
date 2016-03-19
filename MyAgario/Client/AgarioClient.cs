@@ -8,20 +8,18 @@ namespace MyAgario
 {
     public class AgarioClient
     {
-        private readonly Canvas _canvas;
         private readonly ServerCredentials _credentials;
         private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
 
-        public AgarioClient(Canvas canvas)
+        public AgarioClient(Canvas outer, Canvas inner)
         {
-            _canvas = canvas;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
             _worldChangeMessageProcessor = new WorldChangeMessageProcessor(
-                new WindowAdapter(_canvas),
+                new WindowAdapter(outer, inner),
                 new World());
             _credentials = Servers.GetFfaServer();
 
@@ -88,11 +86,5 @@ namespace MyAgario
             }));
         }
 
-        public void Purge()
-        {
-            _worldChangeMessageProcessor
-                .ProcessMessage(new Message.DestroyAllBalls());
-            _canvas.Children.Clear();
-        }
     }
 }
