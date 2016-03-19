@@ -1,6 +1,6 @@
 namespace MyAgario
 {
-    public class Ball
+    public sealed class Ball
     {
         public readonly bool IsMine;
         public object Tag;

@@ -10,7 +10,7 @@ namespace MyAgario
     {
         private readonly Canvas _canvas;
         private readonly ServerCredentials _credentials;
-        private readonly WorldState _state;
+        private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
@@ -20,7 +20,9 @@ namespace MyAgario
             _canvas = canvas;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            _state = new WorldState(new WindowAdapter(_canvas));
+            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(
+                new WindowAdapter(_canvas),
+                new World());
             _credentials = Servers.GetFfaServer();
 
             Console.WriteLine("Server {0}", _credentials.Server);
@@ -82,13 +84,13 @@ namespace MyAgario
                 var p = new Packet(((MessageEventArgs)e).RawData);
                 var msg = p.ReadMessage();
                 if (msg == null) Console.WriteLine("buffer of length 0");
-                else _state.ProcessMessage(msg);
+                else _worldChangeMessageProcessor.ProcessMessage(msg);
             }));
         }
 
         public void Purge()
         {
-            _state.ProcessMessage(new DestroyAllBalls());
+            _worldChangeMessageProcessor.ProcessMessage(new DestroyAllBalls());
             _canvas.Children.Clear();
         }
     }
