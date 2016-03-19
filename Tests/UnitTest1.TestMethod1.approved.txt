@@ -1,0 +1,251 @@
+﻿{
+  "Balls": {
+    "3910776500": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910776500,
+        "X": 2628,
+        "Y": -2909,
+        "Size": 611,
+        "R": 255,
+        "G": 7,
+        "B": 226,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910765447": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910765447,
+        "X": 2363,
+        "Y": -2938,
+        "Size": 471,
+        "R": 255,
+        "G": 7,
+        "B": 173,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910681681": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910681681,
+        "X": 3501,
+        "Y": -2225,
+        "Size": 10,
+        "R": 255,
+        "G": 7,
+        "B": 226,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910683865": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910683865,
+        "X": 3659,
+        "Y": -2321,
+        "Size": 10,
+        "R": 7,
+        "G": 255,
+        "B": 223,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910681345": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910681345,
+        "X": 3566,
+        "Y": -2423,
+        "Size": 10,
+        "R": 165,
+        "G": 7,
+        "B": 255,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910679073": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910679073,
+        "X": 4023,
+        "Y": -3289,
+        "Size": 10,
+        "R": 7,
+        "G": 255,
+        "B": 37,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910680906": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910680906,
+        "X": 3514,
+        "Y": -2415,
+        "Size": 47,
+        "R": 255,
+        "G": 234,
+        "B": 7,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910682651": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910682651,
+        "X": 4884,
+        "Y": -2472,
+        "Size": 58,
+        "R": 7,
+        "G": 255,
+        "B": 14,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910681077": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910681077,
+        "X": 3460,
+        "Y": -2419,
+        "Size": 10,
+        "R": 7,
+        "G": 255,
+        "B": 107,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910682175": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910682175,
+        "X": 4378,
+        "Y": -2915,
+        "Size": 11,
+        "R": 7,
+        "G": 255,
+        "B": 234,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910680833": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910680833,
+        "X": 3229,
+        "Y": -2174,
+        "Size": 10,
+        "R": 168,
+        "G": 255,
+        "B": 7,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910680940": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910680940,
+        "X": 4482,
+        "Y": -2854,
+        "Size": 10,
+        "R": 220,
+        "G": 255,
+        "B": 7,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910679224": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910679224,
+        "X": 3382,
+        "Y": -2723,
+        "Size": 10,
+        "R": 7,
+        "G": 168,
+        "B": 255,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910681841": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910681841,
+        "X": 4369,
+        "Y": -2524,
+        "Size": 10,
+        "R": 188,
+        "G": 7,
+        "B": 255,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910681856": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910681856,
+        "X": 4191,
+        "Y": -2594,
+        "Size": 10,
+        "R": 7,
+        "G": 46,
+        "B": 255,
+        "IsVirus": false,
+        "Name": ""
+      }
+    },
+    "3910688460": {
+      "IsMine": false,
+      "Tag": null,
+      "State": {
+        "Id": 3910688460,
+        "X": 4166,
+        "Y": -2258,
+        "Size": 117,
+        "R": 255,
+        "G": 26,
+        "B": 7,
+        "IsVirus": false,
+        "Name": ""
+      }
+    }
+  },
+  "MyBalls": [],
+  "SpectateViewPort": {
+    "X": 0.0,
+    "Y": 0.0,
+    "Zoom": 1.0
+  },
+  "WorldSize": null
+}

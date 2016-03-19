@@ -1,14 +1,26 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using FluentAssertions;
+using ApprovalTests;
+using ApprovalTests.Reporters;
 using MyAgario;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Tests
 {
+    [UseReporter(typeof(AraxisMergeReporter))]
     public class UnitTest1
     {
+        private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
+        private readonly World _world;
+
+        public UnitTest1()
+        {
+            _world = new World();
+            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(
+                new NullAdapter(), _world);
+        }
+
         [Fact]
         public void TestMethod1()
         {
@@ -20,26 +32,11 @@ namespace Tests
                 if (line == "") continue;
                 var parts = line.Split('|');
                 var input = parts[0].Split(',').Select(byte.Parse).ToArray();
-                var milestones = parts[1].Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(int.Parse).ToArray();
-                Test(input, milestones);
-                break;
+                var packet = new Packet(input);
+                _worldChangeMessageProcessor
+                    .ProcessMessage(packet.ReadMessage());
             }
-        }
-
-        private void Test(byte[] input, int[] milestones)
-        {/*
-            var report = new Uint8Array(a.buffer).toString() + "|";
-            report += b + ", ";
-            //$.post( "http://localhost:12627/api/values", report);
-    */
-
-            var packet = new Packet(input);
-            packet.ReadByte();
-            //var tick = packet.ReadTick();
-            //tick.Milestone1.Should().Be(milestones[0]);
-            //tick.Milestone2.Should().Be(milestones[1]);
-            //tick.Milestone3.Should().Be(milestones[2]);
+            Approvals.Verify(JsonConvert.SerializeObject(_world, Formatting.Indented));
         }
     }
 }
