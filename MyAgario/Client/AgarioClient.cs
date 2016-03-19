@@ -82,5 +82,11 @@ namespace MyAgario
                 _state.ProcessMessage(((MessageEventArgs) e).RawData, _canvas);
             }));
         }
+
+        public void Purge()
+        {
+            _state.Purge();
+            _canvas.Children.Clear();
+        }
     }
 }

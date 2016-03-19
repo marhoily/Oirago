@@ -41,6 +41,8 @@ namespace MyAgario
             offset = EatEvents(buffer, canvas, offset);
             offset = ReadActionsOfBalls(buffer, canvas, offset);
             RemoveBalls(buffer, canvas, offset);
+            if (offset != buffer.Length)
+                1.ToString();
             //Console.Clear();
             //Console.WriteLine("x: {0}..{1} | {2:F1}..{3:F1}", 
             //    Balls.Min(b => b.Value.X),
@@ -74,8 +76,7 @@ namespace MyAgario
             while (true)
             {
                 var ballId = Packet.ReadUInt32Le(buffer, ref offset);
-                if (ballId == 0)
-                    break;
+                if (ballId == 0) break;
                 var coordinateX = Packet.ReadSInt32Le(buffer, ref offset);
                 var coordinateY = Packet.ReadSInt32Le(buffer, ref offset);
                 var size = Packet.ReadSInt16Le(buffer, ref offset);
@@ -91,24 +92,23 @@ namespace MyAgario
                 //reserved for future use?
                 if ((opt & 2) != 0)
                 {
-                    offset += 4;
+                    offset += (int)Packet.ReadUInt32Le(buffer, ref offset);
                 }
                 if ((opt & 4) != 0)
                 {
-                    offset += 8;
+                    while (true)
+                    {
+                        var ch = Packet.ReadUInt8(buffer, ref offset);
+                        if (ch == 0) break;
+                    }
                 }
-                if ((opt & 8) != 0)
-                {
-                    offset += 16;
-                }
-
                 var nick = "";
                 while (true)
                 {
                     var ch = Packet.ReadUInt16Le(buffer, ref offset);
                     if (ch == 0)
                         break;
-                    nick += (char) ch;
+                    nick += (char)ch;
                 }
 
                 if (!Balls.ContainsKey(ballId))
@@ -117,7 +117,7 @@ namespace MyAgario
                 var ball = Balls[ballId];
                 ball.SetColor(colorR, colorG, colorB, isVirus);
                 ball.SetCoordinates(coordinateX, coordinateY, size, this);
-                ball.Nick = nick;
+                ball.SetNick(nick);
             }
             return offset;
         }
@@ -159,7 +159,7 @@ namespace MyAgario
         {
             var offset = 1;
             var myBallId = Packet.ReadUInt32Le(buffer, ref offset);
-            var b = new Ball(canvas) {Mine = true};
+            var b = new Ball(canvas) { Mine = true };
             Balls.Add(myBallId, b);
             MyBalls.Add(b);
         }
@@ -238,10 +238,15 @@ namespace MyAgario
                 {
                     var c = Packet.ReadUInt16Le(buffer, ref offset);
                     if (c == 0) break;
-                    name += (char) c;
+                    name += (char)c;
                 }
                 //Console.Write(id + "->" + name + "; ");
             }
+        }
+
+        public void Purge()
+        {
+            DestroyAllBalls();
         }
     }
 }
