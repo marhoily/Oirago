@@ -14,13 +14,16 @@ namespace MyAgario
                 case 16: return p.ReadTick();
                 case 17: return p.ReadSpectate();
                 case 18: return new Message.DestroyAllBalls();
-                case 20: return new Message.Nop();
+                case 20: return new Message.Nop(); // clear less stuff
+                case 21: return new Message.Unknown(packetId); // set some variables?
                 case 32: return p.ReadNewId();
                 case 49: return new Message.LeadersBoard(p.ReadLeaders().ToArray());
                 case 50: return new Message.TeamUpdate();
                 case 64: return p.ReadWorldSize();
                 case 72: return new Message.Nop();
                 case 81: return new Message.ExperienceUpdate();
+                case 102: return new Message.ForwardMessage();
+                case 104: return new Message.LogOut();
                 case 240: return new Message.Nop();
                 case 254: return new Message.GameOver();
                 default: return new Message.Unknown(packetId);

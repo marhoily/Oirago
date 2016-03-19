@@ -243,14 +243,14 @@
             var c = a.split(":");
             a = "wss://ip-" + c[1].replace(/\./g, "-").replace(/\//g, "") + ".tech.agar.io:" + +c[2];
         }
-        G = [];
-        t = [];
+        MyBalls = [];
+        notMyBalls = [];
         Balls = {};
         z = [];
         ba = [];
         D = [];
         H = I = null;
-        T = 0;
+        highestMass = 0;
         ma = !1;
         m.cache.sentGameServerLogin = !1;
         x = new WebSocket(a);
@@ -332,14 +332,14 @@
                     d += 4;
                     break;
                 case 18:
-                    G = [];
-                    t = [];
+                    MyBalls = [];
+                    notMyBalls = [];
                     Balls = {};
                     z = [];
                     break;
                 case 20:
-                    t = [];
-                    G = [];
+                    notMyBalls = [];
+                    MyBalls = [];
                     break;
                 case 21:
                     lb = a.getInt16(d, !0);
@@ -351,7 +351,7 @@
                         Ia = mb);
                     break;
                 case 32:
-                    G.push(a.getUint32(d, !0));
+                    MyBalls.push(a.getUint32(d, !0));
                     d += 4;
                     break;
                 case 49:
@@ -458,7 +458,7 @@
                 eaten.pa(eater.x, eater.y),
                 eaten.g = eaten.size,
                 eaten.T = now,
-                Ic(eater, eaten));
+                updateEatingStats(eater, eaten));
         }
         for (var idx = 0; ;) {
             var apppearedIndex = source.getUint32(offset, !0);
@@ -493,8 +493,8 @@
                     ball.color = color);
             else 
             (ball = new CreateBall(apppearedIndex, coordX, coordY, size, color, nick),
-                            z.push(ball),
-                            Balls[apppearedIndex] = ball);
+                                                    z.push(ball),
+                                                    Balls[apppearedIndex] = ball);
             ball.c = isVirus;
             ball.h = opt16;
             ball.pa(coordX, coordY);
@@ -503,19 +503,19 @@
             ball.ea = opt;
             asciiStr && (ball.C = asciiStr);
             nick && ball.A(nick);
-            -1 != G.indexOf(apppearedIndex) && -1 == t.indexOf(ball) && (t.push(ball),
+            -1 != MyBalls.indexOf(apppearedIndex) && -1 == notMyBalls.indexOf(ball) && (notMyBalls.push(ball),
                 ball.I = !0,
-                1 == t.length && (ball.wa = !0,
+                1 == notMyBalls.length && (ball.wa = !0,
                     A = ball.x,
                     B = ball.y,
                     Wb(),
                     document.getElementById("overlays").style.display = "none",
                     F = [],
-                    wb = 0,
-                    xb = t[0].color,
+                    foodEaten = 0,
+                    xb = notMyBalls[0].color,
                     Aa = !0,
-                    Ja = Date.now(),
-                    W = yb = zb = 0));
+                    Ended = Date.now(),
+                    topPosition = cellsEaten = LeaderboardTime = 0));
         }
         coordX = source.getUint32(offset, !0);
         offset += 4;
@@ -524,7 +524,7 @@
                 offset += 4,
                 ball = Balls[apppearedIndex],
                 null != ball && ball.Destroy__();
-        ub && 0 == t.length && (0 == c.MC.isUserLoggedIn() ? Ga() : Xb = setTimeout(Ga, 2E3));
+        ub && 0 == notMyBalls.length && (0 == c.MC.isUserLoggedIn() ? Ga() : Xb = setTimeout(Ga, 2E3));
     }
 
     function Ka() {
@@ -601,9 +601,9 @@
     }
 
     function Lc() {
-        if (0 != t.length) {
-            for (var a = 0, b = 0; b < t.length; b++)
-                a += t[b].size;
+        if (0 != notMyBalls.length) {
+            for (var a = 0, b = 0; b < notMyBalls.length; b++)
+                a += notMyBalls[b].size;
             r = (9 * r + Math.pow(Math.min(64 / a, 1), .4) * bc()) /
                 10;
         }
@@ -615,12 +615,12 @@
         cc && (++La,
             180 < La && (La = 0));
         now = b;
-        if (0 < t.length) {
+        if (0 < notMyBalls.length) {
             Lc();
-            for (var d = a = 0, c = 0; c < t.length; c++)
-                t[c].S(),
-                    a += t[c].x / t.length,
-                    d += t[c].y / t.length;
+            for (var d = a = 0, c = 0; c < notMyBalls.length; c++)
+                notMyBalls[c].S(),
+                    a += notMyBalls[c].x / notMyBalls.length,
+                    d += notMyBalls[c].y / notMyBalls.length;
             ib = a;
             jb = d;
             kb = r;
@@ -658,17 +658,17 @@
             f.lineJoin = "round";
             f.globalAlpha = .5;
             f.beginPath();
-            for (c = 0; c < t.length; c++)
-                f.moveTo(t[c].x, t[c].y),
+            for (c = 0; c < notMyBalls.length; c++)
+                f.moveTo(notMyBalls[c].x, notMyBalls[c].y),
                     f.lineTo(Ha, Ia);
             f.stroke();
             f.restore();
         }
         f.restore();
         H && H.width && f.drawImage(H, q - H.width - 10, 10);
-        T = Math.max(T, dc());
-        0 != T && (null == Ma && (Ma = new Na(24, "#FFFFFF")),
-            Ma.B(R("score") + ": " + ~~(T / 100)),
+        highestMass = Math.max(highestMass, dc());
+        0 != highestMass && (null == Ma && (Ma = new Na(24, "#FFFFFF")),
+            Ma.B(R("score") + ": " + ~~(highestMass / 100)),
             d = Ma.N(),
             a = d.width,
             f.globalAlpha =
@@ -756,8 +756,8 @@
     }
 
     function dc() {
-        for (var a = 0, b = 0; b < t.length; b++)
-            a += t[b].g * t[b].g;
+        for (var a = 0, b = 0; b < notMyBalls.length; b++)
+            a += notMyBalls[b].g * notMyBalls[b].g;
         return a;
     }
 
@@ -788,7 +788,7 @@
                         b = 0; b < D.length; ++b)
                         d = D[b].name || R("unnamed_cell"),
                             fa || (d = R("unnamed_cell")),
-                            1 == D[b].id || -1 != G.indexOf(D[b].id) ? (t[0].name && (d = t[0].name),
+                            1 == D[b].id || -1 != MyBalls.indexOf(D[b].id) ? (notMyBalls[0].name && (d = notMyBalls[0].name),
                                 a.fillStyle = "#FFAAAA") : a.fillStyle = "#FFFFFF",
                             d = b + 1 + ". " + d,
                             e = a.measureText(d).width,
@@ -1032,21 +1032,25 @@
         Ba = !1;
         clearTimeout(Xb);
         null == c.storageInfo && c.createDefaultStorage();
-        Gb = Date.now();
-        0 >= Ja && (Ja = Gb);
+        Started = Date.now();
+        0 >= Ended && (Ended = Started);
         Aa = !1;
         Uc();
     }
 
-    function Ic(a, b) {
-        var d = -1 != G.indexOf(a.id),
-            c = -1 != G.indexOf(b.id),
-            e = 30 > b.size;
-        d && e && ++wb;
-        e || !d || c || b.ea & 32 || ++yb;
+    function updateEatingStats(eater, eaten) {
+        var eaterIsMine = -1 != MyBalls.indexOf(eater.id),
+            eatenIsMine = -1 != MyBalls.indexOf(eaten.id),
+            eatenIsFood = 30 > eaten.size;
+        if (eaterIsMine && eatenIsFood)
+            ++foodEaten;
+
+        if (!eatenIsFood && eaterIsMine)
+            if (!eatenIsMine && !(eaten.ea & 32))
+                ++cellsEaten;
     }
 
-    function nc(a) {
+    function ToTime(a) {
         a = ~~a;
         var b = (a % 60).toString();
         a = (~~(a / 60)).toString();
@@ -1064,12 +1068,12 @@
     }
 
     function Wc() {
-        e(".stats-food-eaten").text(wb);
-        e(".stats-time-alive").text(nc((Gb - Ja) / 1E3));
-        e(".stats-leaderboard-time").text(nc(zb));
-        e(".stats-highest-mass").text(~~(T / 100));
-        e(".stats-cells-eaten").text(yb);
-        e(".stats-top-position").text(0 == W ? ":(" : W);
+        e(".stats-food-eaten").text(foodEaten);
+        e(".stats-time-alive").text(ToTime((Started - Ended) / 1E3));
+        e(".stats-leaderboard-time").text(ToTime(LeaderboardTime));
+        e(".stats-highest-mass").text(~~(highestMass / 100));
+        e(".stats-cells-eaten").text(cellsEaten);
+        e(".stats-top-position").text(0 == topPosition ? ":(" : topPosition);
         var a = document.getElementById("statsGraph");
         if (a) {
             var b = a.getContext("2d"),
@@ -1188,11 +1192,11 @@
                 ub = !1;
                 Balls = {};
                 var Ab, f, O, q, u, ia = null, x = null,
-                    A = 0, B = 0, G = [], t = [], z = [], ba = [], D = [],
+                    A = 0, B = 0, MyBalls = [], notMyBalls = [], z = [], ba = [], D = [],
                     Y = 0, Z = 0, va = -1, wa = -1,
                     Mc = 0, ec = 0, N = null, ob = 0,
                     pb = 0, qb = 1E4, rb = 1E4, r = 1,
-                    K = null, Va = !0, fa = !0, pa = !1, T = 0, ea = !1, Wa = !1, ib = A = ~~((ob + qb) / 2), jb = B = ~~((pb + rb) / 2), kb = 1, Ca = "", I = null, ab = !1, nb = !1, lb = 0, mb = 0, Ha = 0, Ia = 0, Qc = ["#333333", "#FF3333", "#33FF33", "#3333FF"], Bb = !1, P = 1, C = 1, ja = !1, eb = 0, fc = !0, tb = null, sb = !1, J = new Image;
+                    K = null, Va = !0, fa = !0, pa = !1, highestMass = 0, ea = !1, Wa = !1, ib = A = ~~((ob + qb) / 2), jb = B = ~~((pb + rb) / 2), kb = 1, Ca = "", I = null, ab = !1, nb = !1, lb = 0, mb = 0, Ha = 0, Ia = 0, Qc = ["#333333", "#FF3333", "#33FF33", "#3333FF"], Bb = !1, P = 1, C = 1, ja = !1, eb = 0, fc = !0, tb = null, sb = !1, J = new Image;
                 J.src = "/img/background.png";
                 var gc = "ontouchstart" in c && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(c.navigator.userAgent),
                     Cb = new Image;
@@ -1274,7 +1278,7 @@
                     Pb();
                     N = a;
                     Vb();
-                    T = 0;
+                    highestMass = 0;
                     w.skinsEnabled = Va;
                     w.namesEnabled = fa;
                     w.noColors = pa;
@@ -1831,11 +1835,11 @@
                                 break;
                             }
                         delete Balls[this.id];
-                        a = t.indexOf(this);
+                        a = notMyBalls.indexOf(this);
                         -1 != a && (ub = !0,
-                            t.splice(a, 1));
-                        a = G.indexOf(this.id);
-                        -1 != a && G.splice(a, 1);
+                            notMyBalls.splice(a, 1));
+                        a = MyBalls.indexOf(this.id);
+                        -1 != a && MyBalls.splice(a, 1);
                         this.G = !0;
                         0 < this.da && ba.push(this);
                     },
@@ -1967,7 +1971,7 @@
                             this.h || !Va || sb || (-1 != Rb.indexOf(e) ? (ha.hasOwnProperty(e) || (ha[e] = new Image,
                                         ha[e].src = c.ASSETS_ROOT + "skins/" + e + ".png"),
                                     g = 0 != ha[e].width && ha[e].complete ? ha[e] : null) : g = null,
-                                null != g ? -1 != dd.indexOf(e) && (d = !0) : (this.I && "%starball" == this.C && "shenron" == e && 7 <= t.length && (cc = d = !0,
+                                null != g ? -1 != dd.indexOf(e) && (d = !0) : (this.I && "%starball" == this.C && "shenron" == e && 7 <= notMyBalls.length && (cc = d = !0,
                                         p = hc("%starball1")),
                                     g = hc(this.C),
                                     null != g && (l = !0,
@@ -1998,7 +2002,7 @@
                                 a.globalAlpha *= .1,
                                 a.stroke());
                             a.globalAlpha = 1;
-                            e = -1 != t.indexOf(this);
+                            e = -1 != notMyBalls.indexOf(this);
                             b = ~~this.y;
                             0 != this.id && (fa || e) && this.name && this.i && !d && (g = this.i,
                                 g.B(this.name),
@@ -2010,7 +2014,7 @@
                                 f = Math.ceil(g.height / d),
                                 a.drawImage(g, ~~this.x - ~~(p / 2), b - ~~(f / 2), p, f),
                                 b += g.height / 2 / d + 4);
-                            0 < this.id && Wa && (e || 0 == t.length && (!this.c || this.h) && 20 < this.size) && (null == this.R && (this.R = new Na(this.m() / 2, "#FFFFFF", !0, "#000000")),
+                            0 < this.id && Wa && (e || 0 == notMyBalls.length && (!this.c || this.h) && 20 < this.size) && (null == this.R && (this.R = new Na(this.m() / 2, "#FFFFFF", !0, "#000000")),
                                 e = this.R,
                                 e.O(this.m() / 2),
                                 e.B(~~(this.size * this.size /
@@ -2172,22 +2176,24 @@
                     }
                 },
                     Wb = function () {
-                        var a = new CreateBall(0, 0, 0, 32, "#ED1C24", ""), b = document.createElement("canvas");
-                        b.width = 32;
-                        b.height =
-                            32;
-                        var c = b.getContext("2d");
+                        var newBall = new CreateBall(0, 0, 0, 32, "#ED1C24", ""),
+                            canvas = document.createElement("canvas");
+                        canvas.width = 32;
+                        canvas.height = 32;
+                        var context = canvas.getContext("2d");
                         return function () {
-                            0 < t.length && (a.color = t[0].color,
-                                a.A(t[0].name));
-                            c.clearRect(0, 0, 32, 32);
-                            c.save();
-                            c.translate(16, 16);
-                            c.scale(.4, .4);
-                            a.w(c);
-                            c.restore();
+                            if (notMyBalls.length > 0) {
+                                newBall.color = notMyBalls[0].color;
+                                newBall.A(notMyBalls[0].name);
+                            }
+                            context.clearRect(0, 0, 32, 32);
+                            context.save();
+                            context.translate(16, 16);
+                            context.scale(.4, .4);
+                            newBall.w(context);
+                            context.restore();
                             var e = document.getElementById("favicon"), g = e.cloneNode(!0);
-                            g.setAttribute("href", b.toDataURL("image/png"));
+                            g.setAttribute("href", canvas.toDataURL("image/png"));
                             e.parentNode.replaceChild(g, e);
                         };
                     }();
@@ -2492,15 +2498,15 @@
                     Q();
                 };
                 var F = [],
-                    wb = 0,
+                    foodEaten = 0,
                     xb = "#000000",
                     aa = !1,
                     Aa = !1,
-                    Ja = 0,
-                    Gb = 0,
-                    zb = 0,
-                    yb = 0,
-                    W = 0,
+                    Ended = 0,
+                    Started = 0,
+                    LeaderboardTime = 0,
+                    cellsEaten = 0,
+                    topPosition = 0,
                     Ta = !0;
                 c.onPlayerDeath = Ga;
                 setInterval(function () {
@@ -2508,9 +2514,9 @@
                 }, 1E3 / 60);
                 setInterval(function () {
                     var a = Vc();
-                    0 != a && (++zb,
-                        0 == W && (W = a),
-                        W = Math.min(W, a));
+                    0 != a && (++LeaderboardTime,
+                        0 == topPosition && (topPosition = a),
+                        topPosition = Math.min(topPosition, a));
                 }, 1E3);
                 c.closeStats = function () {
                     aa = !1;

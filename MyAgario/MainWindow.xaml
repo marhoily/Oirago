@@ -10,8 +10,8 @@
     <Canvas x:Name="_canvas" RenderTransformOrigin="0.5,0.5" SizeChanged="_canvas_OnSizeChanged">
         <Canvas.RenderTransform>
             <TransformGroup>
+                <TranslateTransform x:Name="_tanslate"  X="-100" Y="-100"/>
                 <ScaleTransform x:Name="_scale" ScaleX="2" ScaleY="2"/>
-                <TranslateTransform  x:Name="_tanslate"  X="1" Y="1"/>
             </TransformGroup>
         </Canvas.RenderTransform>
     </Canvas>

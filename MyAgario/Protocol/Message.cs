@@ -66,6 +66,8 @@ namespace MyAgario
         public sealed class GameOver : Message { }
         public sealed class DestroyAllBalls : Message { }
         public sealed class ExperienceUpdate : Message { }
+        public sealed class ForwardMessage : Message { }
+        public sealed class LogOut : Message { }
         [DebuggerDisplay("{X}, {Y}: {Zoom}")]
         public sealed class Spectate : Message
         {

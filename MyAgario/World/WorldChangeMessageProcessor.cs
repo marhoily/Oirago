@@ -94,7 +94,7 @@ namespace MyAgario
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
             me.State = new Message.Updates(
-                msg.Id, 0, 0, 10, 200, 0, 100, false, "me");
+                msg.Id, 0, 0, 32, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }
         private void DestroyAll()
