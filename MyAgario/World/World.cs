@@ -6,7 +6,7 @@ namespace MyAgario
     {
         public readonly Dictionary<uint, Ball> Balls = new Dictionary<uint, Ball>();
         public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
-        public Spectate SpectateViewPort = new Spectate(0, 0, 1);
-        public WorldSize WorldSize;
+        public Message.Spectate SpectateViewPort = new Message.Spectate(0, 0, 1);
+        public Message.WorldSize WorldSize;
     }
 }

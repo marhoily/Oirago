@@ -62,25 +62,11 @@
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />
     <Compile Include="Ui\WindowAdapter.cs" />
-    <Compile Include="Protocol\DestroyAllBalls.cs" />
-    <Compile Include="Protocol\Leader.cs" />
-    <Compile Include="Protocol\LeadersBoard.cs" />
     <Compile Include="Protocol\Message.cs" />
-    <Compile Include="Protocol\NewId.cs" />
-    <Compile Include="Protocol\Spectate.cs" />
-    <Compile Include="Protocol\WorldSize.cs" />
-    <Compile Include="Protocol\Updates.cs" />
-    <Compile Include="Protocol\Eating.cs" />
-    <Compile Include="Protocol\ExperienceUpdate.cs" />
-    <Compile Include="Protocol\GameOver.cs" />
-    <Compile Include="Protocol\Nop.cs" />
-    <Compile Include="Protocol\TeamUpdate.cs" />
-    <Compile Include="Protocol\Tick.cs" />
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerCredentials.cs" />
     <Compile Include="Client\Servers.cs" />
     <Compile Include="World\World.cs" />
-    <Compile Include="Protocol\Unknown.cs" />
     <Compile Include="World\WorldChangeMessageProcessor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

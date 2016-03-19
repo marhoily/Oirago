@@ -15,33 +15,33 @@ namespace MyAgario
 
         public void ProcessMessage(Message msg)
         {
-            var tick = msg as Tick;
+            var tick = msg as Message.Tick;
             if (tick != null) Process(tick);
 
-            var newId = msg as NewId;
+            var newId = msg as Message.NewId;
             if (newId != null) Process(newId);
 
-            var spectate = msg as Spectate;
+            var spectate = msg as Message.Spectate;
             if (spectate != null) _world.SpectateViewPort = spectate;
 
-            var worldSize = msg as WorldSize;
+            var worldSize = msg as Message.WorldSize;
             if (worldSize != null) _world.WorldSize = worldSize;
 
-            var destroyAllBalls = msg as DestroyAllBalls;
+            var destroyAllBalls = msg as Message.DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
 
-            var unknown = msg as Unknown;
+            var unknown = msg as Message.Unknown;
             if (unknown != null) Console.WriteLine(
                 "Unknown packet id {0}", unknown.PacketId);
         }
 
-        private void Process(Tick tick)
+        private void Process(Message.Tick tick)
         {
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
         }
-        private void ProcessEating(Tick tick)
+        private void ProcessEating(Message.Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
@@ -61,7 +61,7 @@ namespace MyAgario
                 }
             }
         }
-        private void ProcessUpdating(Tick tick)
+        private void ProcessUpdating(Message.Tick tick)
         {
             foreach (var state in tick.Updates)
             {
@@ -76,7 +76,7 @@ namespace MyAgario
                 _windowAdapter.Update(newGuy, _world.SpectateViewPort);
             }
         }
-        private void ProcessDisappearances(Tick tick)
+        private void ProcessDisappearances(Message.Tick tick)
         {
             foreach (var ballId in tick.Disappearances)
             {
@@ -88,12 +88,12 @@ namespace MyAgario
                 _windowAdapter.Remove(dying);
             }
         }
-        private void Process(NewId msg)
+        private void Process(Message.NewId msg)
         {
             var me = new Ball(true);
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
-            me.State = new Updates(
+            me.State = new Message.Updates(
                 msg.Id, 0, 0, 10, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }

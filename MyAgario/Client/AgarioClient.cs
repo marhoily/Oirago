@@ -90,7 +90,8 @@ namespace MyAgario
 
         public void Purge()
         {
-            _worldChangeMessageProcessor.ProcessMessage(new DestroyAllBalls());
+            _worldChangeMessageProcessor
+                .ProcessMessage(new Message.DestroyAllBalls());
             _canvas.Children.Clear();
         }
     }

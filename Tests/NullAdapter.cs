@@ -8,7 +8,7 @@ namespace Tests
         {
         }
 
-        public void Update(Ball newGuy, Spectate world)
+        public void Update(Ball newGuy, Message.Spectate world)
         {
         }
 

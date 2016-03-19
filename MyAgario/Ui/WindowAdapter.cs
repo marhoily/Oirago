@@ -18,7 +18,7 @@ namespace MyAgario
             _canvas.Children.Add(ballUi.Ellipse);
             _canvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Spectate world)
+        public void Update(Ball newGuy, Message.Spectate world)
         {
             ((BallUi) newGuy.Tag).Update(newGuy.State, world);
         }

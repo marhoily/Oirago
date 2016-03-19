@@ -23,7 +23,7 @@ namespace MyAgario
             };
         }
 
-        public void Update(Updates appears, Spectate world)
+        public void Update(Message.Updates appears, Message.Spectate world)
         {
             _solidColorBrush.Color = appears.IsVirus
                 ? Colors.Green : Color.FromRgb(appears.R, appears.G, appears.B);
