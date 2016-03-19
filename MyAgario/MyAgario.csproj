@@ -59,6 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Protocol\Appearance.cs" />
+    <Compile Include="Protocol\Eating.cs" />
+    <Compile Include="Protocol\Tick.cs" />
+    <Compile Include="Protocol\PacketTickExtensions.cs" />
     <Compile Include="Client\ServerCredentials.cs" />
     <Compile Include="Client\Servers.cs" />
     <Compile Include="Client\WorldState.cs" />
@@ -78,7 +82,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\Packet.cs" />
+    <Compile Include="Protocol\Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

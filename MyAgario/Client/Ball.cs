@@ -46,7 +46,7 @@ namespace MyAgario
             _canvas.Children.Remove(_textBlock);
         }
 
-        public void SetNick(string nick)
+        public void SetName(string nick)
         {
             if (!string.IsNullOrEmpty(nick))
             {

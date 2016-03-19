@@ -79,7 +79,8 @@ namespace MyAgario
         {
             _dispatcher.BeginInvoke(new Action(() =>
             {
-                _state.ProcessMessage(((MessageEventArgs) e).RawData, _canvas);
+                _state.ProcessMessage(
+                    new Packet(((MessageEventArgs)e).RawData), _canvas);
             }));
         }
 

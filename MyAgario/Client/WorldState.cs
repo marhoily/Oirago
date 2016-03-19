@@ -12,7 +12,6 @@ namespace MyAgario
         public double MinX;
         public double MinY;
         public readonly List<Ball> MyBalls;
-        public int TickCounter;
         public double X;
         public double Y;
         public double Zoom;
@@ -23,41 +22,37 @@ namespace MyAgario
             MyBalls = new List<Ball>();
         }
 
-        private void ProcessWorldSize(byte[] buffer)
+        private void ProcessWorldSize(Packet p)
         {
-            var offset = 1;
-
-            MinX = Packet.ReadDoubleLe(buffer, ref offset);
-            MinY = Packet.ReadDoubleLe(buffer, ref offset);
-            MaxX = Packet.ReadDoubleLe(buffer, ref offset);
-            MaxY = Packet.ReadDoubleLe(buffer, ref offset);
+            MinX = p.ReadDouble();
+            MinY = p.ReadDouble();
+            MaxX = p.ReadDouble();
+            MaxY = p.ReadDouble();
             //Console.WriteLine("world size : {0} {1} {2} {3}", MinX, MinY, MaxX, MaxY);
         }
 
-        private void ProcessTick(byte[] buffer, Canvas canvas)
+        private void Process(Canvas canvas, Tick tick)
         {
-            var offset = 1;
-            TickCounter++;
-            offset = EatEvents(buffer, canvas, offset);
-            offset = ReadActionsOfBalls(buffer, canvas, offset);
-            RemoveBalls(buffer, canvas, offset);
-            if (offset != buffer.Length)
-                1.ToString();
-            //Console.Clear();
-            //Console.WriteLine("x: {0}..{1} | {2:F1}..{3:F1}", 
-            //    Balls.Min(b => b.Value.X),
-            //    Balls.Max(b => b.Value.X), MinX, MaxX);
-            //Console.WriteLine("y: {0}..{1} | {2:F1}..{3:F1}",
-            //    Balls.Min(b => b.Value.Y),
-            //    Balls.Max(b => b.Value.Y), MinY, MaxY);
-        }
-
-        private void RemoveBalls(byte[] buffer, Canvas canvas, int offset)
-        {
-            var count = Packet.ReadUInt32Le(buffer, ref offset);
-            for (var i = 0; i < count; i++)
+            foreach (var e in tick.Eatings)
             {
-                var ballId = Packet.ReadUInt32Le(buffer, ref offset);
+                if (!Balls.ContainsKey(e.Eater))
+                    Balls.Add(e.Eater, new Ball(canvas));
+                if (!Balls.ContainsKey(e.Eaten))
+                    Remove(Balls, e.Eaten);
+            }
+            foreach (var appears in tick.Appearances)
+            {
+                if (!Balls.ContainsKey(appears.Id))
+                    Balls.Add(appears.Id, new Ball(canvas));
+
+                var ball = Balls[appears.Id];
+                ball.SetColor(appears.R, appears.G, appears.B, appears.IsVirus);
+                ball.SetCoordinates(appears.X, appears.Y, appears.Size, this);
+                ball.SetName(appears.Name);
+            }
+
+            foreach (var ballId in tick.Disappearances)
+            {
                 var b = Balls.ContainsKey(ballId)
                     ? Balls[ballId]
                     : new Ball(canvas);
@@ -69,74 +64,16 @@ namespace MyAgario
 
                 Balls.Remove(ballId);
             }
+            //Console.Clear();
+            //Console.WriteLine("x: {0}..{1} | {2:F1}..{3:F1}", 
+            //    Balls.Min(b => b.Value.X),
+            //    Balls.Max(b => b.Value.X), MinX, MaxX);
+            //Console.WriteLine("y: {0}..{1} | {2:F1}..{3:F1}",
+            //    Balls.Min(b => b.Value.Y),
+            //    Balls.Max(b => b.Value.Y), MinY, MaxY);
         }
 
-        private int ReadActionsOfBalls(byte[] buffer, Canvas canvas, int offset)
-        {
-            while (true)
-            {
-                var ballId = Packet.ReadUInt32Le(buffer, ref offset);
-                if (ballId == 0) break;
-                var coordinateX = Packet.ReadSInt32Le(buffer, ref offset);
-                var coordinateY = Packet.ReadSInt32Le(buffer, ref offset);
-                var size = Packet.ReadSInt16Le(buffer, ref offset);
 
-                var colorR = Packet.ReadUInt8(buffer, ref offset);
-                var colorG = Packet.ReadUInt8(buffer, ref offset);
-                var colorB = Packet.ReadUInt8(buffer, ref offset);
-
-                var opt = Packet.ReadUInt8(buffer, ref offset);
-
-                var isVirus = (opt & 1) != 0;
-
-                //reserved for future use?
-                if ((opt & 2) != 0)
-                {
-                    offset += (int)Packet.ReadUInt32Le(buffer, ref offset);
-                }
-                if ((opt & 4) != 0)
-                {
-                    while (true)
-                    {
-                        var ch = Packet.ReadUInt8(buffer, ref offset);
-                        if (ch == 0) break;
-                    }
-                }
-                var nick = "";
-                while (true)
-                {
-                    var ch = Packet.ReadUInt16Le(buffer, ref offset);
-                    if (ch == 0)
-                        break;
-                    nick += (char)ch;
-                }
-
-                if (!Balls.ContainsKey(ballId))
-                    Balls.Add(ballId, new Ball(canvas));
-
-                var ball = Balls[ballId];
-                ball.SetColor(colorR, colorG, colorB, isVirus);
-                ball.SetCoordinates(coordinateX, coordinateY, size, this);
-                ball.SetNick(nick);
-            }
-            return offset;
-        }
-
-        private int EatEvents(byte[] buffer, Canvas canvas, int offset)
-        {
-            var eatersCount = Packet.ReadUInt16Le(buffer, ref offset);
-            for (var i = 0; i < eatersCount; i++)
-            {
-                var eaterId = Packet.ReadUInt32Le(buffer, ref offset);
-                var eatenId = Packet.ReadUInt32Le(buffer, ref offset);
-
-                if (!Balls.ContainsKey(eaterId))
-                    Balls.Add(eaterId, new Ball(canvas));
-                if (!Balls.ContainsKey(eatenId))
-                    Remove(Balls, eatenId);
-            }
-            return offset;
-        }
 
         private void Remove(Dictionary<uint, Ball> balls, uint eatenId)
         {
@@ -147,37 +84,36 @@ namespace MyAgario
 
         }
 
-        private void ProcessSpectate(byte[] buffer)
+        private void ProcessSpectate(Packet p)
         {
-            var offset = 1;
-            X = Packet.ReadFloatLe(buffer, ref offset);
-            Y = Packet.ReadFloatLe(buffer, ref offset);
-            Zoom = Packet.ReadFloatLe(buffer, ref offset);
+            X = p.ReadFloat();
+            Y = p.ReadFloat();
+            Zoom = p.ReadFloat();
         }
 
-        private void ProcessNewId(byte[] buffer, Canvas canvas)
+        private void ProcessNewId(Packet p, Canvas canvas)
         {
-            var offset = 1;
-            var myBallId = Packet.ReadUInt32Le(buffer, ref offset);
+            var myBallId = p.ReadUInt();
             var b = new Ball(canvas) { Mine = true };
             Balls.Add(myBallId, b);
             MyBalls.Add(b);
         }
 
-        public void ProcessMessage(byte[] buffer, Canvas canvas)
+        public void ProcessMessage(Packet p, Canvas canvas)
         {
-            if (buffer.Length == 0)
+            if (p.Length == 0)
             {
                 Console.WriteLine("buffer of length 0");
                 return;
             }
-            switch (buffer[0])
+            var packetId = p.ReadByte();
+            switch (packetId)
             {
                 case 16:
-                    ProcessTick(buffer, canvas);
+                    Process(canvas, p.ReadTick());
                     break;
                 case 17:
-                    ProcessSpectate(buffer);
+                    ProcessSpectate(p);
                     break;
                 case 18:
                     DestroyAllBalls();
@@ -185,10 +121,10 @@ namespace MyAgario
                 case 20:
                     break;
                 case 32:
-                    ProcessNewId(buffer, canvas);
+                    ProcessNewId(p, canvas);
                     break;
                 case 49:
-                    Leaders(buffer);
+                    Leaders(p);
                     break;
 
                 case 50:
@@ -196,7 +132,7 @@ namespace MyAgario
                     //TODO:implement see https://github.com/pulviscriptor/agario-client
                     break;
                 case 64:
-                    ProcessWorldSize(buffer);
+                    ProcessWorldSize(p);
                     break;
                 case 72:
                     //packet is sent by server but not used in original code
@@ -212,7 +148,7 @@ namespace MyAgario
                     break;
 
                 default:
-                    Console.WriteLine("Unknown packet id {0}", buffer[0]);
+                    Console.WriteLine("Unknown packet id {0}", packetId);
                     break;
             }
         }
@@ -224,19 +160,18 @@ namespace MyAgario
             Balls.Clear();
         }
 
-        private void Leaders(byte[] buffer)
+        private void Leaders(Packet p)
         {
-            int offset = 1;
-            var count = Packet.ReadUInt32Le(buffer, ref offset);
+            var count = p.ReadUInt();
 
             for (var i = 0; i < count; i++)
             {
-                var id = Packet.ReadUInt32Le(buffer, ref offset);
+                var id = p.ReadUInt();
 
                 var name = "";
                 while (true)
                 {
-                    var c = Packet.ReadUInt16Le(buffer, ref offset);
+                    var c = p.ReadUShort();
                     if (c == 0) break;
                     name += (char)c;
                 }
