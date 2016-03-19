@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Client\BallUi.cs" />
     <Compile Include="Client\WindowAdapter.cs" />
     <Compile Include="Protocol\DestroyAllBalls.cs" />
     <Compile Include="Protocol\Leader.cs" />
