@@ -7,14 +7,11 @@ namespace MyAgario
     public class WorldState
     {
         public readonly Dictionary<uint, Ball> Balls;
-        public double MaxX;
-        public double MaxY;
-        public double MinX;
-        public double MinY;
         public readonly List<Ball> MyBalls;
         public double X;
         public double Y;
         public double Zoom;
+        public WorldSize WorldSize;
 
         public WorldState()
         {
@@ -22,16 +19,33 @@ namespace MyAgario
             MyBalls = new List<Ball>();
         }
 
-        private void ProcessWorldSize(Packet p)
+        public void ProcessMessage(Message msg, Canvas canvas)
         {
-            MinX = p.ReadDouble();
-            MinY = p.ReadDouble();
-            MaxX = p.ReadDouble();
-            MaxY = p.ReadDouble();
-            //Console.WriteLine("world size : {0} {1} {2} {3}", MinX, MinY, MaxX, MaxY);
+            var tick = msg as Tick;
+            if (tick != null) Process(tick, canvas);
+
+            var newId = msg as NewId;
+            if (newId != null) Process(newId, canvas);
+
+            var spectate = msg as Spectate;
+            if (spectate != null) Process(spectate);
+
+            var worldSize = msg as WorldSize;
+            if (worldSize != null) Process(worldSize);
+
+            var destroyAllBalls = msg as DestroyAllBalls;
+            if (destroyAllBalls != null) Process();
+
+            var unknown = msg as Unknown;
+            if (unknown != null) Console.WriteLine(
+                "Unknown packet id {0}", unknown.PacketId);
         }
 
-        private void Process(Canvas canvas, Tick tick)
+        private void Process(WorldSize msg)
+        {
+            WorldSize = msg;
+        }
+        private void Process(Tick tick, Canvas canvas)
         {
             foreach (var e in tick.Eatings)
             {
@@ -72,9 +86,29 @@ namespace MyAgario
             //    Balls.Min(b => b.Value.Y),
             //    Balls.Max(b => b.Value.Y), MinY, MaxY);
         }
+        private void Process()
+        {
+            foreach (var ball in Balls)
+                ball.Value.Destroy();
+            Balls.Clear();
+        }
+        private void Process(Spectate msg)
+        {
+            X = msg.X;
+            Y = msg.Y;
+            Zoom = msg.Zoom;
+        }
+        private void Process(NewId msg, Canvas canvas)
+        {
+            var b = new Ball(canvas) { Mine = true };
+            Balls.Add(msg.Id, b);
+            MyBalls.Add(b);
+        }
 
-
-
+        public void Purge()
+        {
+            Process();
+        }
         private void Remove(Dictionary<uint, Ball> balls, uint eatenId)
         {
             Ball ball;
@@ -82,106 +116,6 @@ namespace MyAgario
                 ball.Destroy();
             balls.Remove(eatenId);
 
-        }
-
-        private void ProcessSpectate(Packet p)
-        {
-            X = p.ReadFloat();
-            Y = p.ReadFloat();
-            Zoom = p.ReadFloat();
-        }
-
-        private void ProcessNewId(Packet p, Canvas canvas)
-        {
-            var myBallId = p.ReadUInt();
-            var b = new Ball(canvas) { Mine = true };
-            Balls.Add(myBallId, b);
-            MyBalls.Add(b);
-        }
-
-        public void ProcessMessage(Packet p, Canvas canvas)
-        {
-            if (p.Length == 0)
-            {
-                Console.WriteLine("buffer of length 0");
-                return;
-            }
-            var packetId = p.ReadByte();
-            switch (packetId)
-            {
-                case 16:
-                    Process(canvas, p.ReadTick());
-                    break;
-                case 17:
-                    ProcessSpectate(p);
-                    break;
-                case 18:
-                    DestroyAllBalls();
-                    break;
-                case 20:
-                    break;
-                case 32:
-                    ProcessNewId(p, canvas);
-                    break;
-                case 49:
-                    Leaders(p);
-                    break;
-
-                case 50:
-                    //teams scored update in teams mode
-                    //TODO:implement see https://github.com/pulviscriptor/agario-client
-                    break;
-                case 64:
-                    ProcessWorldSize(p);
-                    break;
-                case 72:
-                    //packet is sent by server but not used in original code
-                    break;
-                case 81:
-                    //client.emit('experienceUpdate', level, curernt_exp, need_exp);
-                    //I don't know what this should do
-                    break;
-                case 240:
-                    break;
-                case 254:
-                    //somebody won, end of the game (server restart)
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown packet id {0}", packetId);
-                    break;
-            }
-        }
-
-        private void DestroyAllBalls()
-        {
-            foreach (var ball in Balls)
-                ball.Value.Destroy();
-            Balls.Clear();
-        }
-
-        private void Leaders(Packet p)
-        {
-            var count = p.ReadUInt();
-
-            for (var i = 0; i < count; i++)
-            {
-                var id = p.ReadUInt();
-
-                var name = "";
-                while (true)
-                {
-                    var c = p.ReadUShort();
-                    if (c == 0) break;
-                    name += (char)c;
-                }
-                //Console.Write(id + "->" + name + "; ");
-            }
-        }
-
-        public void Purge()
-        {
-            DestroyAllBalls();
         }
     }
 }

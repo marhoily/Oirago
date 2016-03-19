@@ -1,6 +1,6 @@
 namespace MyAgario
 {
-    public struct Tick
+    public sealed class Tick : Message
     {
         public readonly Eating[] Eatings;
         public readonly Appearance[] Appearances;

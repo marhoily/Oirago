@@ -59,13 +59,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Protocol\DestroyAllBalls.cs" />
+    <Compile Include="Protocol\Leader.cs" />
+    <Compile Include="Protocol\LeadersBoard.cs" />
+    <Compile Include="Protocol\Message.cs" />
+    <Compile Include="Protocol\NewId.cs" />
+    <Compile Include="Protocol\Spectate.cs" />
+    <Compile Include="Protocol\WorldSize.cs" />
     <Compile Include="Protocol\Appearance.cs" />
     <Compile Include="Protocol\Eating.cs" />
+    <Compile Include="Protocol\ExperienceUpdate.cs" />
+    <Compile Include="Protocol\GameOver.cs" />
+    <Compile Include="Protocol\Nop.cs" />
+    <Compile Include="Protocol\TeamUpdate.cs" />
     <Compile Include="Protocol\Tick.cs" />
-    <Compile Include="Protocol\PacketTickExtensions.cs" />
+    <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerCredentials.cs" />
     <Compile Include="Client\Servers.cs" />
     <Compile Include="Client\WorldState.cs" />
+    <Compile Include="Protocol\Unknown.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -79,8 +79,10 @@ namespace MyAgario
         {
             _dispatcher.BeginInvoke(new Action(() =>
             {
-                _state.ProcessMessage(
-                    new Packet(((MessageEventArgs)e).RawData), _canvas);
+                var p = new Packet(((MessageEventArgs)e).RawData);
+                var msg = p.ReadMessage();
+                if (msg == null) Console.WriteLine("buffer of length 0");
+                else _state.ProcessMessage(msg, _canvas);
             }));
         }
 
