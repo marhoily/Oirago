@@ -945,6 +945,8 @@ function main(self, $) {
      * @param {number} offset
      * @return {undefined}
      */
+    var timer: number;
+
     function init(dataView, offset) {
         /**
          * @return {?}
@@ -1011,24 +1013,26 @@ function main(self, $) {
         offset += 2;
         /** @type {number} */
         var i = 0;
+        var c;
         for (; i < x; ++i) {
-            var pos = args[dataView.getUint32(offset, true)];
-            var c = args[dataView.getUint32(offset + 4, true)];
+            var pos12 = args[dataView.getUint32(offset, true)];
+            c = args[dataView.getUint32(offset + 4, true)];
             offset += 8;
-            if (pos) {
+            if (pos12) {
                 if (c) {
                     c.ca();
                     c.s = c.x;
                     c.u = c.y;
                     c.o = c.size;
-                    c.pa(pos.x, pos.y);
+                    c.pa(pos12.x, pos12.y);
                     c.g = c.size;
                     /** @type {number} */
                     c.T = t;
-                    hasClass(pos, c);
+                    hasClass(pos12, c);
                 }
             }
         }
+        var pos: number;
         /** @type {number} */
         i = 0;
         for (; ;) {
@@ -1144,9 +1148,12 @@ function main(self, $) {
         }
     }
 
+    var closest: number;
+
     /**
      * @return {undefined}
      */
+
     function read() {
         if (forEach()) {
             /** @type {number} */
@@ -1722,10 +1729,8 @@ function main(self, $) {
         return null;
     }
 
-    /**
-     * @param {string} x
-     * @return {?}
-     */
+    var results: {};
+   
     function loop(x) {
         if (null == x || 0 == x.length) {
             return null;
@@ -3075,7 +3080,6 @@ function main(self, $) {
                     var success = null;
                     /** @type {boolean} */
                     var Ba = false;
-                    var timer: number;
                     /** @type {function (string, string): undefined} */
                     self.connect = open;
                     /** @type {number} */
@@ -3089,7 +3093,7 @@ function main(self, $) {
                     /** @type {number} */
                     var qz = 0.125;
                     /** @type {number} */
-                    var closest = -1;
+                    closest = -1;
                     /** @type {number} */
                     var t1 = -1;
                     /** @type {function (): undefined} */
@@ -3180,7 +3184,7 @@ function main(self, $) {
                     var excludes = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;chaplin;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;ea;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;venezuela;blatter;chavez;cuba;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
                     /** @type {Array.<string>} */
                     var names = "8;nasa;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;blatter;chavez;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
-                    var results = {};
+                    results = {};
                     Player.prototype = {
                         $: null,
                         x: 0,
