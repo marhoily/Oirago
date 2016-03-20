@@ -1,4 +1,5 @@
-﻿// ReSharper disable InconsistentNaming
+﻿// ReSharper disable MissingHasOwnPropertyInForeach
+// ReSharper disable InconsistentNaming
 // ReSharper disable CoercedEqualsUsing
 
 var gapi;
@@ -11,7 +12,11 @@ class TimeSeries {
 }
 
 class SmoothieChart {
-    constructor(res) { return; }
+    private res;
+
+    constructor(res) {
+        this.res = res;
+    }
 }
 
 class Obj1 {
@@ -265,6 +270,10 @@ var opts = options.renderSettings =
 
 var base = self.location.protocol;
 
+var excludes: string[];
+var input: { AF: string; AX: string; AL: string; DZ: string; AS: string; AD: string; AO: string; AI: string; AG: string; AR: string; AM: string; AW: string; AU: string; AT: string; AZ: string; BS: string; BH: string; BD: string; BB: string; BY: string; BE: string; BZ: string; BJ: string; BM: string; BT: string; BO: string; BQ: string; BA: string; BW: string; BR: string; IO: string; VG: string; BN: string; BG: string; BF: string; BI: string; KH: string; CM: string; CA: string; CV: string; KY: string; CF: string; TD: string; CL: string; CN: string; CX: string; CC: string; CO: string; KM: string; CD: string; CG: string; CK: string; CR: string; CI: string; HR: string; CU: string; CW: string; CY: string; CZ: string; DK: string; DJ: string; DM: string; DO: string; EC: string; EG: string; SV: string; GQ: string; ER: string; EE: string; ET: string; FO: string; FK: string; FJ: string; FI: string; FR: string; GF: string; PF: string; GA: string; GM: string; GE: string; DE: string; GH: string; GI: string; GR: string; GL: string; GD: string; GP: string; GU: string; GT: string; GG: string; GN: string; GW: string; GY: string; HT: string; VA: string; HN: string; HK: string; HU: string; IS: string; IN: string; ID: string; IR: string; IQ: string; IE: string; IM: string; IL: string; IT: string; JM: string; JP: string; JE: string; JO: string; KZ: string; KE: string; KI: string; KP: string; KR: string; KW: string; KG: string; LA: string; LV: string; LB: string; LS: string; LR: string; LY: string; LI: string; LT: string; LU: string; MO: string; MK: string; MG: string; MW: string; MY: string; MV: string; ML: string; MT: string; MH: string; MQ: string; MR: string; MU: string; YT: string; MX: string; FM: string; MD: string; MC: string; MN: string; ME: string; MS: string; MA: string; MZ: string; MM: string; NA: string; NR: string; NP: string; NL: string; NC: string; NZ: string; NI: string; NE: string; NG: string; NU: string; NF: string; MP: string; NO: string; OM: string; PK: string; PW: string; PS: string; PA: string; PG: string; PY: string; PE: string; PH: string; PN: string; PL: string; PT: string; PR: string; QA: string; RE: string; RO: string; RU: string; RW: string; BL: string; SH: string; KN: string; LC: string; MF: string; PM: string; VC: string; WS: string; SM: string; ST: string; SA: string; SN: string; RS: string; SC: string; SL: string; SG: string; SX: string; SK: string; SI: string; SB: string; SO: string; ZA: string; SS: string; ES: string; LK: string; SD: string; SR: string; SJ: string; SZ: string; SE: string; CH: string; SY: string; TW: string; TJ: string; TZ: string; TH: string; TL: string; TG: string; TK: string; TO: string; TT: string; TN: string; TR: string; TM: string; TC: string; TV: string; UG: string; UA: string; AE: string; GB: string; US: string; UM: string; VI: string; UY: string; UZ: string; VU: string; VE: string; VN: string; WF: string; EH: string; YE: string; ZM: string; ZW: string };
+var timer: number;
+
 function main(self, $) {
 
     function playerCalc() {
@@ -310,7 +319,7 @@ function main(self, $) {
          * @param {?} event
          * @return {undefined}
          */
-        self.onkeyup = function (event) {
+        self.onkeyup = event => {
             if (32 == event.keyCode) {
                 /** @type {boolean} */
                 firing = false;
@@ -329,6 +338,8 @@ function main(self, $) {
         };
     }
 
+    var proto: { init: (params: any) => { va: (val: any) => void;Ga: (memory: any, a: any, array: any, offset: any, func: any) => void } };
+
     function createObjects() {
         if (0.4 > scale) {
             /** @type {null} */
@@ -344,19 +355,20 @@ function main(self, $) {
             var bottom = Number.NEGATIVE_INFINITY;
             /** @type {number} */
             var i = 0;
+            var p1;
             for (; i < parts.length; i++) {
-                var p = parts[i];
-                if (!!p.P()) {
-                    if (!p.V) {
-                        if (!(20 >= p.size * scale)) {
+                p1 = parts[i];
+                if (!!p1.P()) {
+                    if (!p1.V) {
+                        if (!(20 >= p1.size * scale)) {
                             /** @type {number} */
-                            j = Math.min(p.x - p.size, j);
+                            j = Math.min(p1.x - p1.size, j);
                             /** @type {number} */
-                            left = Math.min(p.y - p.size, left);
+                            left = Math.min(p1.y - p1.size, left);
                             /** @type {number} */
-                            maxY = Math.max(p.x + p.size, maxY);
+                            maxY = Math.max(p1.x + p1.size, maxY);
                             /** @type {number} */
-                            bottom = Math.max(p.y + p.size, bottom);
+                            bottom = Math.max(p1.y + p1.size, bottom);
                         }
                     }
                 }
@@ -372,7 +384,8 @@ function main(self, $) {
             /** @type {number} */
             i = 0;
             for (; i < parts.length; i++) {
-                if (p = parts[i], p.P() && !(20 >= p.size * scale)) {
+                var p = parts[i];
+                if (p.P() && !(20 >= p.size * scale)) {
                     /** @type {number} */
                     j = 0;
                     for (; j < p.a.length; ++j) {
@@ -398,6 +411,9 @@ function main(self, $) {
         t2 = (cy - height / 2) / scale + y;
     }
 
+    var old: any;
+    var url: string;
+
     function run() {
         if (null == old) {
             old = {};
@@ -409,11 +425,10 @@ function main(self, $) {
                 }
             });
         }
-        $.get(url + "info", function (b) {
+        $.get(url + "info", b => {
             var testSource = {};
             var name;
             for (name in b.regions) {
-                /** @type {string} */
                 var sourceName = name.split(":")[0];
                 testSource[sourceName] = testSource[sourceName] || 0;
                 testSource[sourceName] += b.regions[name].numPlayers;
@@ -423,6 +438,8 @@ function main(self, $) {
             }
         }, "json");
     }
+
+    var from: boolean;
 
     function _init() {
         $("#adsBottom").hide();
@@ -463,6 +480,10 @@ function main(self, $) {
      * @param {number} expectedHashCode
      * @return {undefined}
      */
+    var Aa: boolean;
+    var Ba: boolean;
+    var selector: boolean;
+
     function showError(expectedHashCode) {
         if (!to) {
             if (!from) {
@@ -549,20 +570,22 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var result: Result;
+
     function startServer() {
         if ("configID" in result) {
             resolve(result.configID);
         } else {
-            $.get(url + "getLatestID", function (newId) {
+            $.get(url + "getLatestID", newId => {
                 resolve(newId);
                 /** @type {string} */
                 self.localStorage.last_config_id = newId;
-            }).fail(function () {
+            }).fail(() => {
                 var data: boolean | string;
                 if (data = "last_config_id" in self.localStorage) {
                     data = self.localStorage.last_config_id;
                     /** @type {boolean} */
-                    data = !(null == data || (void 0 == data || "" === data));
+                    data = !(null == data || ("" === data));
                 }
                 if (data) {
                     data = self.localStorage.last_config_id;
@@ -576,8 +599,9 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+
     function postLink() {
-        $.get(base + "//gc.agar.io", function (prop) {
+        $.get(base + "//gc.agar.io", prop => {
             var name = prop.split(" ");
             prop = name[0];
             name = name[1] || "";
@@ -611,6 +635,8 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var ssl: boolean;
+
     function makeRequest() {
         /** @type {number} */
         var uid = ++resizeUID;
@@ -618,16 +644,14 @@ function main(self, $) {
         $.ajax(url + "findServer", {
             /**
              * @return {undefined}
-             */
-            error: function () {
+             */ error() {
                 console.log("Failed to get server. Will retry in 30 seconds");
                 setTimeout(makeRequest, 3E4);
             },
             /**
              * @param {Object} data
              * @return {undefined}
-             */
-            success: function (data) {
+             */ success(data) {
                 if (uid == resizeUID) {
                     if (data.alert) {
                         alert(data.alert);
@@ -685,6 +709,12 @@ function main(self, $) {
      * @param {string} a
      * @return {undefined}
      */
+    var success: any;
+    var img: any;
+    var d: number;
+    var a1: number;
+    var exports;
+
     function open(url, a) {
         bind();
         if (result.ip) {
@@ -696,7 +726,7 @@ function main(self, $) {
             /**
              * @return {undefined}
              */
-            success = function () {
+            success = () => {
                 callback(a);
             };
         }
@@ -731,7 +761,7 @@ function main(self, $) {
         /**
          * @return {undefined}
          */
-        ws.onopen = function () {
+        ws.onopen = () => {
             var data: DataView;
             /** @type {number} */
             j = t = Date.now();
@@ -789,6 +819,8 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var backoff: number;
+
     function listener() {
         if (matchEnd) {
             /** @type {number} */
@@ -816,6 +848,8 @@ function main(self, $) {
         /**
          * @return {?}
          */
+        var offset: number;
+
         function encode() {
             /** @type {string} */
             var str = "";
@@ -831,7 +865,7 @@ function main(self, $) {
         }
 
         /** @type {number} */
-        var offset = 0;
+        offset = 0;
         if (240 == data.getUint8(offset)) {
             fn();
         } else {
@@ -945,7 +979,18 @@ function main(self, $) {
      * @param {number} offset
      * @return {undefined}
      */
-    var timer: number;
+    var pauseText: number;
+    var qw: number;
+    var qz: number;
+    var ty: number;
+    var tx: number;
+    var valueAccessor: () => void;
+    var a: typeof undefined[];
+    var col: string;
+    var aux: number;
+    var count: number;
+    var path: number;
+    var name: number;
 
     function init(dataView, offset) {
         /**
@@ -1035,6 +1080,7 @@ function main(self, $) {
         var pos: number;
         /** @type {number} */
         i = 0;
+        var data;
         for (; ;) {
             var a2 = dataView.getUint32(offset, true);
             offset += 4;
@@ -1049,7 +1095,7 @@ function main(self, $) {
             offset += 4;
             g = dataView.getInt16(offset, true);
             offset += 2;
-            var data = dataView.getUint8(offset++);
+            data = dataView.getUint8(offset++);
             var color = dataView.getUint8(offset++);
             var key = dataView.getUint8(offset++);
             color = isArray(data << 16 | color << 8 | key);
@@ -1153,6 +1199,7 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var t1: number;
 
     function read() {
         if (forEach()) {
@@ -1161,7 +1208,8 @@ function main(self, $) {
             /** @type {number} */
             var y = cy - height / 2;
             if (!(64 > x * x + y * y)) {
-                if (!(0.01 > Math.abs(closest - value) && 0.01 > Math.abs(t1 - t2))) {
+                if (!(0.01 > Math.abs(closest - value) &&
+                    0.01 > Math.abs(t1 - t2))) {
                     closest = value;
                     t1 = t2;
                     var buff = stringify(13);
@@ -1304,6 +1352,12 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var cc: boolean;
+    var HALF_PI: number;
+    var _arg: any;
+    var Oa: number;
+    var Pa: number;
+
     function render() {
         var size: number;
         /** @type {number} */
@@ -1362,22 +1416,20 @@ function main(self, $) {
         } else {
             redraw();
         }
-        parts.sort(function (a, b) {
-            return a.size == b.size ? a.id - b.id : a.size - b.size;
-        });
+        parts.sort((a, b) => (a.size == b.size ? a.id - b.id : a.size - b.size));
         ctx.save();
         ctx.translate(width / 2, height / 2);
         ctx.scale(scale, scale);
         ctx.translate(-px, -y);
         /** @type {number} */
-        i = 0;
-        for (; i < chars.length; i++) {
-            chars[i].w(ctx);
+        var b3 = 0;
+        for (; b3 < chars.length; b3++) {
+            chars[b3].w(ctx);
         }
         /** @type {number} */
-        i = 0;
-        for (; i < parts.length; i++) {
-            parts[i].w(ctx);
+        var b4 = 0;
+        for (; b4 < parts.length; b4++) {
+            parts[b4].w(ctx);
         }
         if (nb) {
             /** @type {number} */
@@ -1397,9 +1449,9 @@ function main(self, $) {
             ctx.globalAlpha = 0.5;
             ctx.beginPath();
             /** @type {number} */
-            i = 0;
-            for (; i < items.length; i++) {
-                ctx.moveTo(items[i].x, items[i].y);
+            var b5 = 0;
+            for (; b5 < items.length; b5++) {
+                ctx.moveTo(items[b5].x, items[b5].y);
                 ctx.lineTo(xr, pos);
             }
             ctx.stroke();
@@ -1861,6 +1913,7 @@ function main(self, $) {
      * @return {undefined}
      */
     var data: { context: any;defaultProvider: string;loginIntent: string;userInfo: { socialToken: any;tokenExpires: string;level: string;xp: string;xpNeeded: string;name: string;picture: string;displayName: string;loggedIn: string;socialId: string } };
+    var tmp: { context: any;defaultProvider: string;loginIntent: string;userInfo: { socialToken: any;tokenExpires: string;level: string;xp: string;xpNeeded: string;name: string;picture: string;displayName: string;loggedIn: string;socialId: string } };
 
     function compassResult() {
         data = tmp;
@@ -1943,7 +1996,7 @@ function main(self, $) {
             var xpgen = $("#helloContainer")
                 .is(":visible") && "1" == $("#helloContainer")
                     .attr("data-has-account-data");
-            if (null == options || void 0 == options) {
+            if (null == options) {
                 options = data.userInfo;
             }
             if (xpgen) {
@@ -1958,13 +2011,14 @@ function main(self, $) {
                         xp: a3,
                         xpNeeded: a3,
                         level: level
-                    }, function () {
+                    }, () => {
                         $(".agario-profile-panel .progress-bar-star").text(options.level);
                         $(".agario-exp-bar .progress-bar").css("width", "100%");
-                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function () {
-                            $(".progress-bar-star").removeClass("animated tada");
-                        });
-                        setTimeout(function () {
+                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",
+                            () => {
+                                $(".progress-bar-star").removeClass("animated tada");
+                            });
+                        setTimeout(() => {
                             $(".agario-exp-bar .progress-bar-text").text(options.xpNeeded + "/" + options.xpNeeded + " XP");
                             start({
                                 xp: 0,
@@ -1979,7 +2033,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var update = function () {
+                    var update = () => {
                         var t: number;
                         /** @type {number} */
                         t = (Date.now() - f) / 1E3;
@@ -2007,7 +2061,9 @@ function main(self, $) {
      */
     function f() {
         var force;
-        if ("undefined" !== typeof force && force || "none" == $("#settings").css("display") && "none" == $("#socialLoginContainer").css("display")) {
+        if ("undefined" !== typeof force ||
+            "none" == $("#settings").css("display") &&
+            "none" == $("#socialLoginContainer").css("display")) {
             $("#instructions").show();
         }
     }
@@ -2016,6 +2072,9 @@ function main(self, $) {
      * @param {Object} response
      * @return {undefined}
      */
+    var lc: number;
+    var h: () => void;
+
     function error(response) {
         if ("connected" == response.status) {
             var actualAria = response.authResponse.accessToken;
@@ -2029,7 +2088,8 @@ function main(self, $) {
                 self.MC.doLoginWithFB(actualAria);
                 /** @type {Array} */
                 options.cache.login_info = [actualAria, "facebook"];
-                self.FB.api("/me/picture?width=180&height=180", function (messageEvent) {
+                self.FB.api("/me/picture?width=180&height=180",
+                    messageEvent => {
                     data.userInfo.picture = messageEvent.data.url;
                     self.updateStorage();
                     $(".agario-profile-picture").attr("src", messageEvent.data.url);
@@ -2066,8 +2126,7 @@ function main(self, $) {
             /**
              * @param {string} status
              * @return {undefined}
-             */
-            success: function (status) {
+             */ success(status) {
                 status = status.split("\n");
                 $(".partyToken").val(`agar.io/#${self.encodeURIComponent(param)}`);
                 $("#helloContainer").attr("data-party-state", "5");
@@ -2097,6 +2156,8 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var max: number;
+
     function fn() {
         /** @type {boolean} */
         Ba = false;
@@ -2133,7 +2194,7 @@ function main(self, $) {
             }
         }
         if (!e) {
-            if (!!d) {
+            if (d) {
                 if (!c) {
                     if (!(self.ea & 32)) {
                         ++path;
@@ -2231,9 +2292,7 @@ function main(self, $) {
                         }
                     }
                     /** @type {number} */
-                    var r2 = r.reduce(function (far, near) {
-                        return far + near;
-                    }) / r.length / n;
+                    var r2 = r.reduce((far, near) => (far + near)) / r.length / n;
                     ctx.lineTo(x, h2 - r2 * (h2 - 10) + 10);
                 }
                 ctx.stroke();
@@ -2293,7 +2352,7 @@ function main(self, $) {
     if ("undefined" == typeof console || ("undefined" == typeof DataView || ("undefined" == typeof WebSocket || (null == test_canvas || (null == test_canvas.getContext || null == self.localStorage))))) {
         alert("You browser does not support this game, we recommend you to use Firefox to play this");
     } else {
-        var result = new Result();
+        result = new Result();
         (function () {
             /** @type {string} */
             var params = self.location.search;
@@ -2358,12 +2417,12 @@ function main(self, $) {
         }
         if (!self.agarioNoInit) {
             /** @type {boolean} */
-            var ssl = "https:" == base;
+            ssl = "https:" == base;
             if (result.master) {
                 EnvConfig.master_url = result.master;
             }
             /** @type {string} */
-            var url = base + "//" + EnvConfig.master_url + "/";
+            url = base + "//" + EnvConfig.master_url + "/";
             /** @type {string} */
             var userAgent = self.navigator.userAgent;
             if (-1 != userAgent.indexOf("Android")) {
@@ -2398,7 +2457,7 @@ function main(self, $) {
                      * @param {number} m3
                      * @return {undefined}
                      */
-                    self.gamepadAxisUpdate = function (dataAndEvents, m3) {
+                    self.gamepadAxisUpdate = (dataAndEvents, m3) => {
                         /** @type {boolean} */
                         var d = 0.1 > m3 * m3;
                         if (0 == dataAndEvents) {
@@ -2427,7 +2486,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.agarioInit = function () {
+                    self.agarioInit = () => {
                         /** @type {boolean} */
                         ab = true;
                         postLink();
@@ -2533,7 +2592,7 @@ function main(self, $) {
                         }
                     };
                     /** @type {null} */
-                    var old = null;
+                    old = null;
                     /**
                      * @param {Function} v
                      * @return {undefined}
@@ -2586,7 +2645,7 @@ function main(self, $) {
                      * @param {string} color
                      * @return {undefined}
                      */
-                    self.setColors = function (color) {
+                    self.setColors = color => {
                         /** @type {string} */
                         type = color;
                     };
@@ -2594,14 +2653,14 @@ function main(self, $) {
                      * @param {string} response
                      * @return {undefined}
                      */
-                    self.setShowMass = function (response) {
+                    self.setShowMass = response => {
                         /** @type {string} */
                         metadata = response;
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.spectate = function () {
+                    self.spectate = () => {
                         /** @type {null} */
                         b = null;
                         playerCalc();
@@ -2611,12 +2670,12 @@ function main(self, $) {
                     /** @type {function ((Object|string)): undefined} */
                     self.setRegion = reset;
                     /** @type {boolean} */
-                    var selector = true;
+                    selector = true;
                     /**
                      * @param {string} expected
                      * @return {undefined}
                      */
-                    self.setGameMode = function (expected) {
+                    self.setGameMode = expected => {
                         if (expected != actual) {
                             if (":party" == actual) {
                                 $("#helloContainer").attr("data-party-state", "0");
@@ -2631,7 +2690,7 @@ function main(self, $) {
                      * @param {boolean} _$timeout_
                      * @return {undefined}
                      */
-                    self.setAcid = function (_$timeout_) {
+                    self.setAcid = _$timeout_ => {
                         /** @type {boolean} */
                         $timeout = _$timeout_;
                     };
@@ -2826,7 +2885,7 @@ function main(self, $) {
                         return Child;
                     } ({});
                     options.debug = debug;
-                    var input = {
+                    input = {
                         AF: "JP-Tokyo",
                         AX: "EU-London",
                         AL: "EU-London",
@@ -3073,29 +3132,29 @@ function main(self, $) {
                         ZW: "EU-London"
                     };
                     /** @type {number} */
-                    var d = 0;
+                    d = 0;
                     /** @type {number} */
-                    var a1 = 0;
+                    a1 = 0;
                     /** @type {null} */
-                    var success = null;
+                    success = null;
                     /** @type {boolean} */
-                    var Ba = false;
+                    Ba = false;
                     /** @type {function (string, string): undefined} */
                     self.connect = open;
                     /** @type {number} */
-                    var backoff = 500;
+                    backoff = 500;
                     /** @type {number} */
-                    var qw = 0.875;
+                    qw = 0.875;
                     /** @type {number} */
-                    var tx = 0.75;
+                    tx = 0.75;
                     /** @type {number} */
-                    var ty = 0.25;
+                    ty = 0.25;
                     /** @type {number} */
-                    var qz = 0.125;
+                    qz = 0.125;
                     /** @type {number} */
                     closest = -1;
                     /** @type {number} */
-                    var t1 = -1;
+                    t1 = -1;
                     /** @type {function (): undefined} */
                     self.sendMitosis = end;
                     /** @type {function (): undefined} */
@@ -3127,16 +3186,16 @@ function main(self, $) {
                         return opt_attributes;
                     } ({});
                     /** @type {null} */
-                    var img = null;
+                    img = null;
                     /** @type {null} */
-                    var _arg = null;
+                    _arg = null;
 
                     /** @type {number} */
                     var pdataCur = 0;
                     /** @type {number} */
-                    var Pa = 0;
+                    Pa = 0;
                     /** @type {number} */
-                    var Oa = 0;
+                    Oa = 0;
                     var which = function () {
                         /** @type {number} */
                         var d = Date.now();
@@ -3181,7 +3240,7 @@ function main(self, $) {
                     self.setQuality = set;
                     var images = {};
                     /** @type {Array.<string>} */
-                    var excludes = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;chaplin;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;ea;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;venezuela;blatter;chavez;cuba;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
+                    excludes = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;chaplin;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;ea;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;venezuela;blatter;chavez;cuba;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
                     /** @type {Array.<string>} */
                     var names = "8;nasa;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;blatter;chavez;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
                     results = {};
@@ -3193,9 +3252,9 @@ function main(self, $) {
                         b: 0
                     };
                     /** @type {number} */
-                    var HALF_PI = -1;
+                    HALF_PI = -1;
                     /** @type {boolean} */
-                    var cc = false;
+                    cc = false;
                     Node.prototype = {
                         id: 0,
                         a: null,
@@ -3713,7 +3772,7 @@ function main(self, $) {
                         return item;
                     } ({});
                     self.Maths = val;
-                    var exports = function (opt_attributes) {
+                    exports = function (opt_attributes) {
                         /**
                          * @return {?}
                          */
@@ -3859,7 +3918,7 @@ function main(self, $) {
                             };
                         }
                     })();
-                    var proto = {
+                    proto = {
                         /**
                          * @param {?} params
                          * @return {?}
@@ -3957,7 +4016,7 @@ function main(self, $) {
                             };
                         }
                     };
-                    var valueAccessor = function () {
+                    valueAccessor = function () {
                         var that = new Node(0, 0, 0, 32, "#ED1C24", "");
                         /** @type {Element} */
                         var canvas = document.createElement("canvas");
@@ -3988,7 +4047,7 @@ function main(self, $) {
                     $(function () {
                         valueAccessor();
                     });
-                    var tmp = {
+                    tmp = {
                         context: null,
                         defaultProvider: "facebook",
                         loginIntent: "0",
@@ -4035,7 +4094,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var h = function () {
+                    h = function () {
                         self.MC.setProfilePicture(data.userInfo.picture);
                         self.MC.setSocialId(data.userInfo.socialId);
                     };
@@ -4152,7 +4211,7 @@ function main(self, $) {
                         return doc;
                     } ({});
                     /** @type {number} */
-                    var lc = 0;
+                    lc = 0;
                     /**
                      * @return {undefined}
                      */
@@ -4506,25 +4565,25 @@ function main(self, $) {
                         next();
                     };
                     /** @type {Array} */
-                    var a = [];
+                    a = [];
                     /** @type {number} */
-                    var pauseText = 0;
+                    pauseText = 0;
                     /** @type {string} */
-                    var col = "#000000";
+                    col = "#000000";
                     /** @type {boolean} */
-                    var from = false;
+                    from = false;
                     /** @type {boolean} */
-                    var Aa = false;
+                    Aa = false;
                     /** @type {number} */
-                    var aux = 0;
+                    aux = 0;
                     /** @type {number} */
-                    var max = 0;
+                    max = 0;
                     /** @type {number} */
-                    var name = 0;
+                    name = 0;
                     /** @type {number} */
-                    var path = 0;
+                    path = 0;
                     /** @type {number} */
-                    var count = 0;
+                    count = 0;
                     /** @type {boolean} */
                     var id = true;
                     /** @type {function (): undefined} */
