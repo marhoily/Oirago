@@ -16,7 +16,72 @@ class Options {
     core;
     cache;
     debug;
-    renderSettings;
+    renderSettings: RenderingSettings;
+    networking;
+}
+class RenderingSettings {
+    constructor(high: OneRenSett, medium: OneRenSett, low: OneRenSett) {
+        this.high = high;
+        this.medium = medium;
+        this.low = low;
+        this.selected = high;
+    }
+
+    high: OneRenSett;
+    medium: OneRenSett;
+    low: OneRenSett;
+
+    selected: OneRenSett;
+    /** @type {number} */
+    detail = 1;
+    /** @type {boolean} */
+    auto = false;
+    /**
+     * @return {undefined}
+     */
+    upgrade() {
+        if (this.selected == this.low) {
+            this.selected = this.medium;
+            /** @type {number} */
+            this.detail = this.medium.maxDetail;
+        } else {
+            if (this.selected == this.medium) {
+                this.selected = this.high;
+                /** @type {number} */
+                this.detail = this.high.maxDetail;
+            }
+        }
+    }
+    /**
+     * @return {undefined}
+     */
+    downgrade() {
+        if (this.selected == this.high) {
+            this.selected = this.medium;
+        } else {
+            if (this.selected == this.medium) {
+                this.selected = this.low;
+            }
+        }
+    };
+
+}
+class OneRenSett {
+    constructor(warnFps: number, simpleDraw: boolean,
+        maxDetail: number, minDetail: number, U: number) {
+        this.warnFps = warnFps;
+        this.simpleDraw = simpleDraw;
+        this.maxDetail = maxDetail;
+        this.minDetail = minDetail;
+        this.U = U;
+    }
+
+    warnFps: number;
+    simpleDraw;
+    maxDetail: number;
+    minDetail: number;
+    U: number;
+    ma    : boolean;
 }
 
 var EnvConfig: IEnvConfig;
@@ -1708,7 +1773,9 @@ var EnvConfig: IEnvConfig;
         /** @type {string} */
         var options = args;
         if (data.userInfo.loggedIn) {
-            var xpgen = $("#helloContainer").is(":visible") && "1" == $("#helloContainer").attr("data-has-account-data");
+            var xpgen = $("#helloContainer")
+                .is(":visible") && "1" == $("#helloContainer")
+                    .attr("data-has-account-data");
             if (null == options || void 0 == options) {
                 options = data.userInfo;
             }
@@ -1716,12 +1783,13 @@ var EnvConfig: IEnvConfig;
                 /** @type {number} */
                 var val = +$(".agario-exp-bar .progress-bar-text").first().text().split("/")[0];
                 /** @type {number} */
-                xpgen = +$(".agario-exp-bar .progress-bar-text").first().text().split("/")[1].split(" ")[0];
+                var a3 = +$(".agario-exp-bar .progress-bar-text")
+                    .first().text().split("/")[1].split(" ")[0];
                 var level = $(".agario-profile-panel .progress-bar-star").first().text();
                 if (level != options.level) {
                     start({
-                        xp: xpgen,
-                        xpNeeded: xpgen,
+                        xp: a3,
+                        xpNeeded: a3,
                         level: level
                     }, function () {
                         $(".agario-profile-panel .progress-bar-star").text(options.level);
@@ -2074,12 +2142,12 @@ var EnvConfig: IEnvConfig;
         /** @type {boolean} */
         var miniclip = "miniclip" in result;
         var settings = {
-            skinsEnabled: "0",
-            namesEnabled: "0",
-            noColors: "0",
-            blackTheme: "0",
-            showMass: "0",
-            statsEnabled: "0"
+            skinsEnabled: false,
+            namesEnabled: false,
+            noColors: false,
+            blackTheme: false,
+            showMass: false,
+            statsEnabled: false
         };
         /**
          * @return {undefined}
@@ -3013,65 +3081,12 @@ var EnvConfig: IEnvConfig;
                     var img = null;
                     /** @type {null} */
                     var _arg = null;
-                    var opts = options.renderSettings = {
-                        high: {
-                            warnFps: 30,
-                            simpleDraw: false,
-                            maxDetail: 1,
-                            minDetail: 0.6,
-                            U: 30
-                        },
-                        medium: {
-                            warnFps: 30,
-                            simpleDraw: false,
-                            maxDetail: 0.5,
-                            minDetail: 0.3,
-                            U: 25
-                        },
-                        low: {
-                            warnFps: 30,
-                            simpleDraw: true,
-                            maxDetail: 0.3,
-                            minDetail: 0.2,
-                            U: 25
-                        },
-                        /**
-                         * @return {undefined}
-                         */
-                        upgrade: function () {
-                            if (opts.selected == opts.low) {
-                                opts.selected = opts.medium;
-                                /** @type {number} */
-                                opts.detail = opts.medium.maxDetail;
-                            } else {
-                                if (opts.selected == opts.medium) {
-                                    opts.selected = opts.high;
-                                    /** @type {number} */
-                                    opts.detail = opts.high.maxDetail;
-                                }
-                            }
-                        },
-                        /**
-                         * @return {undefined}
-                         */
-                        downgrade: function () {
-                            if (opts.selected == opts.high) {
-                                opts.selected = opts.medium;
-                            } else {
-                                if (opts.selected == opts.medium) {
-                                    opts.selected = opts.low;
-                                }
-                            }
-                        },
-                        auto: 
-                    ,
-                        auto: 
-                    };
-                    opts.selected = opts.high;
-                    /** @type {number} */
-                    opts.detail = 1;
-                    /** @type {boolean} */
-                    opts.auto = false;
+                    var h1 = new OneRenSett(30, false, 1, 0.6, 30);
+                    var m = new OneRenSett(30, false, .5, 0.3, 25);
+                    var l = new OneRenSett(30, true, .3, 0.2, 25);
+                    var opts = options.renderSettings =
+                        new RenderingSettings(h1, m, l);
+
                     /** @type {number} */
                     var pdataCur = 0;
                     /** @type {number} */
