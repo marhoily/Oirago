@@ -1,4 +1,7 @@
-﻿var gapi;
+﻿// ReSharper disable InconsistentNaming
+// ReSharper disable CoercedEqualsUsing
+
+var gapi;
 var SSA_CORE;
 
 class TimeSeries {
@@ -117,53 +120,153 @@ class OneRenSett {
 
 var EnvConfig: IEnvConfig;
 
-function main(self, $) {
-    /**
-     * @param {string} value
-     * @param {number} expectedNumberOfNonCommentArgs
-     * @return {undefined}
-     */
-    function setCookie(value, expectedNumberOfNonCommentArgs) {
-        var expires1: string;
-        if (expectedNumberOfNonCommentArgs) {
-            /** @type {Date} */
-            var expires = new Date;
-            expires.setTime(expires.getTime() + 864E5 * expectedNumberOfNonCommentArgs);
-            /** @type {string} */
-            expires1 = `; expires=${expires.toUTCString()}`;
-        } else {
-            /** @type {string} */
-            expires1 = "";
-        }
+/**
+ * @param {string} value
+ * @param {number} expectedNumberOfNonCommentArgs
+ * @return {undefined}
+ */
+function setCookie(value, expectedNumberOfNonCommentArgs) {
+    var expires1: string;
+    if (expectedNumberOfNonCommentArgs) {
+        /** @type {Date} */
+        var expires = new Date;
+        expires.setTime(expires.getTime() + 864E5 * expectedNumberOfNonCommentArgs);
         /** @type {string} */
-        document.cookie = `agario_redirect=${value}${expires1}; path=/`;
+        expires1 = `; expires=${expires.toUTCString()}`;
+    } else {
+        /** @type {string} */
+        expires1 = "";
     }
+    /** @type {string} */
+    document.cookie = `agario_redirect=${value}${expires1}; path=/`;
+}
 
-    /**
-     * @return {?}
-     */
-    function fnReadCookie() {
-        /** @type {Array.<string>} */
-        var codeSegments = document.cookie.split(";");
-        /** @type {number} */
-        var i = 0;
-        for (; i < codeSegments.length; i++) {
+
+/**
+ * @return {?}
+ */
+function fnReadCookie() {
+    /** @type {Array.<string>} */
+    var codeSegments = document.cookie.split(";");
+    /** @type {number} */
+    var i = 0;
+    for (; i < codeSegments.length; i++) {
+        /** @type {string} */
+        var thisCookie = codeSegments[i];
+        for (; " " == thisCookie.charAt(0);) {
             /** @type {string} */
-            var thisCookie = codeSegments[i];
-            for (; " " == thisCookie.charAt(0);) {
-                /** @type {string} */
-                thisCookie = thisCookie.substring(1, thisCookie.length);
-            }
-            if (0 == thisCookie.indexOf("agario_redirect=")) {
-                return thisCookie.substring(16, thisCookie.length);
-            }
+            thisCookie = thisCookie.substring(1, thisCookie.length);
         }
-        return null;
+        if (0 == thisCookie.indexOf("agario_redirect=")) {
+            return thisCookie.substring(16, thisCookie.length);
+        }
     }
+    return null;
+}
 
-    /**
-     * @return {undefined}
-     */
+var ratio: number;
+var scale: number;
+
+function handleMousewheel(e: MouseWheelEvent) {
+    e.preventDefault();
+    ratio *= Math.pow(0.9, e.wheelDelta / -120 || (e.detail || 0));
+    if (1 > ratio) {
+        ratio = 1;
+    }
+    if (ratio > 4 / scale) {
+        ratio = 4 / scale;
+    }
+}
+
+var ctx: CanvasRenderingContext2D;
+var options = new Options();
+var cv: HTMLCanvasElement;
+var canvas: HTMLCanvasElement;
+var width: number;
+var height: number;
+var context = null;
+var ws = null;
+var px: number = 0;
+var y: number = 0;
+var that = [];
+var items = [];
+
+
+var args = {};
+var parts = [];
+var chars = [];
+var list = [];
+var cx = 0;
+var cy = 0;
+var value = -1;
+var t2 = -1;
+var Mc = 0;
+var t = 0;
+var tOffset = 0;
+var b = null;
+
+
+var minX = 0;
+var minY = 0;
+var maxX = 1E4;
+var maxY = 1E4;
+var scale = 1;
+var newValue = null;
+var root = true;
+var text = true;
+var type = false;
+var ub = false;
+var closingAnimationTime = 0;
+
+
+var color = false;
+var metadata = false;
+var chunk = px = ~~((minX + maxX) / 2);
+var x = y = ~~((minY + maxY) / 2);
+var argumentOffset = 1;
+var actual = "";
+var angles = null;
+var ab = false;
+var nb = false;
+var matches = 0;
+var s = 0;
+var xr = 0;
+var pos = 0;
+var cs = ["#333333", "#FF3333", "#33FF33", "#3333FF"];
+var $timeout = false;
+var matchEnd = false;
+
+var j = 0;
+var ratio = 1;
+var alpha = 1;
+var to = false;
+var resizeUID = 0;
+var fc = true;
+var passes = null;
+var started = false;
+var image = new Image;
+image.src = "/img/background.png";
+var gc = "ontouchstart" in self && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(self.navigator.userAgent);
+var copy = new Image;
+copy.src = "/img/split.png";
+var firing = false;
+var memory = false;
+var stack = false;
+var Xa = false;
+var k: number;
+var oldconfig: number;
+
+
+var h1 = new OneRenSett(30, false, 1, 0.6, 30);
+var m = new OneRenSett(30, false, .5, 0.3, 25);
+var l = new OneRenSett(30, true, .3, 0.2, 25);
+var opts = options.renderSettings =
+    new RenderingSettings(h1, m, l);
+
+var base = self.location.protocol;
+
+function main(self, $) {
+
     function playerCalc() {
         /**
          * @param {Object} evt
@@ -207,7 +310,7 @@ function main(self, $) {
          * @param {?} event
          * @return {undefined}
          */
-        self.onkeyup = function(event) {
+        self.onkeyup = function (event) {
             if (32 == event.keyCode) {
                 /** @type {boolean} */
                 firing = false;
@@ -226,26 +329,6 @@ function main(self, $) {
         };
     }
 
-    /**
-     * @param {Event} e
-     * @return {undefined}
-     */
-    function handleMousewheel(e) {
-        e.preventDefault();
-        ratio *= Math.pow(0.9, e.wheelDelta / -120 || (e.detail || 0));
-        if (1 > ratio) {
-            /** @type {number} */
-            ratio = 1;
-        }
-        if (ratio > 4 / scale) {
-            /** @type {number} */
-            ratio = 4 / scale;
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
     function createObjects() {
         if (0.4 > scale) {
             /** @type {null} */
@@ -310,21 +393,15 @@ function main(self, $) {
         }
     }
 
-    /**
-     * @return {undefined}
-     */
     function preventDefault() {
         value = (cx - width / 2) / scale + px;
         t2 = (cy - height / 2) / scale + y;
     }
 
-    /**
-     * @return {undefined}
-     */
     function run() {
         if (null == old) {
             old = {};
-            $("#region").children().each(function() {
+            $("#region").children().each(function () {
                 var option = $(this);
                 var name = option.val();
                 if (name) {
@@ -332,7 +409,7 @@ function main(self, $) {
                 }
             });
         }
-        $.get(url + "info", function(b) {
+        $.get(url + "info", function (b) {
             var testSource = {};
             var name;
             for (name in b.regions) {
@@ -347,9 +424,6 @@ function main(self, $) {
         }, "json");
     }
 
-    /**
-     * @return {undefined}
-     */
     function _init() {
         $("#adsBottom").hide();
         $("#overlays").hide();
@@ -479,11 +553,11 @@ function main(self, $) {
         if ("configID" in result) {
             resolve(result.configID);
         } else {
-            $.get(url + "getLatestID", function(newId) {
+            $.get(url + "getLatestID", function (newId) {
                 resolve(newId);
                 /** @type {string} */
                 self.localStorage.last_config_id = newId;
-            }).fail(function() {
+            }).fail(function () {
                 var data: boolean | string;
                 if (data = "last_config_id" in self.localStorage) {
                     data = self.localStorage.last_config_id;
@@ -503,7 +577,7 @@ function main(self, $) {
      * @return {undefined}
      */
     function postLink() {
-        $.get(base + "//gc.agar.io", function(prop) {
+        $.get(base + "//gc.agar.io", function (prop) {
             var name = prop.split(" ");
             prop = name[0];
             name = name[1] || "";
@@ -545,7 +619,7 @@ function main(self, $) {
             /**
              * @return {undefined}
              */
-            error: function() {
+            error: function () {
                 console.log("Failed to get server. Will retry in 30 seconds");
                 setTimeout(makeRequest, 3E4);
             },
@@ -553,7 +627,7 @@ function main(self, $) {
              * @param {Object} data
              * @return {undefined}
              */
-            success: function(data) {
+            success: function (data) {
                 if (uid == resizeUID) {
                     if (data.alert) {
                         alert(data.alert);
@@ -622,7 +696,7 @@ function main(self, $) {
             /**
              * @return {undefined}
              */
-            success = function() {
+            success = function () {
                 callback(a);
             };
         }
@@ -657,7 +731,7 @@ function main(self, $) {
         /**
          * @return {undefined}
          */
-        ws.onopen = function() {
+        ws.onopen = function () {
             var data: DataView;
             /** @type {number} */
             j = t = Date.now();
@@ -691,7 +765,7 @@ function main(self, $) {
         /**
          * @return {undefined}
          */
-        ws.onerror = function() {
+        ws.onerror = function () {
             console.log(exports.la() + " socket error", arguments);
         };
     }
@@ -745,7 +819,7 @@ function main(self, $) {
         function encode() {
             /** @type {string} */
             var str = "";
-            for (;;) {
+            for (; ;) {
                 var b = data.getUint16(offset, true);
                 offset += 2;
                 if (0 == b) {
@@ -762,106 +836,106 @@ function main(self, $) {
             fn();
         } else {
             switch (data.getUint8(offset++)) {
-            case 16:
-                init(data, offset);
-                break;
-            case 17:
-                chunk = data.getFloat32(offset, true);
-                offset += 4;
-                x = data.getFloat32(offset, true);
-                offset += 4;
-                argumentOffset = data.getFloat32(offset, true);
-                offset += 4;
-                break;
-            case 18:
-                /** @type {Array} */
-                that = [];
-                /** @type {Array} */
-                items = [];
-                args = {};
-                /** @type {Array} */
-                parts = [];
-                break;
-            case 20:
-                /** @type {Array} */
-                items = [];
-                /** @type {Array} */
-                that = [];
-                break;
-            case 21:
-                matches = data.getInt16(offset, true);
-                offset += 2;
-                s = data.getInt16(offset, true);
-                offset += 2;
-                if (!nb) {
-                    /** @type {boolean} */
-                    nb = true;
-                    xr = matches;
-                    pos = s;
-                }
-                break;
-            case 32:
-                that.push(data.getUint32(offset, true));
-                offset += 4;
-                break;
-            case 49:
-                if (null != angles) {
+                case 16:
+                    init(data, offset);
                     break;
-                }
-                var b = data.getUint32(offset, true);
-                offset = offset + 4;
-                /** @type {Array} */
-                list = [];
-                /** @type {number} */
-                var a = 0;
-                for (; a < b; ++a) {
-                    var token = data.getUint32(offset, true);
-                    offset = offset + 4;
-                    list.push({
-                        id: token,
-                        name: encode()
-                    });
-                }
-                create();
-                break;
-            case 50:
-                /** @type {Array} */
-                angles = [];
-                b = data.getUint32(offset, true);
-                offset += 4;
-                /** @type {number} */
-                a = 0;
-                for (; a < b; ++a) {
-                    angles.push(data.getFloat32(offset, true));
+                case 17:
+                    chunk = data.getFloat32(offset, true);
                     offset += 4;
-                }
-                create();
-                break;
-            case 64:
-                minX = data.getFloat64(offset, true);
-                offset += 8;
-                minY = data.getFloat64(offset, true);
-                offset += 8;
-                maxX = data.getFloat64(offset, true);
-                offset += 8;
-                maxY = data.getFloat64(offset, true);
-                offset += 8;
-                if (data.byteLength > offset) {
+                    x = data.getFloat32(offset, true);
+                    offset += 4;
+                    argumentOffset = data.getFloat32(offset, true);
+                    offset += 4;
+                    break;
+                case 18:
+                    /** @type {Array} */
+                    that = [];
+                    /** @type {Array} */
+                    items = [];
+                    args = {};
+                    /** @type {Array} */
+                    parts = [];
+                    break;
+                case 20:
+                    /** @type {Array} */
+                    items = [];
+                    /** @type {Array} */
+                    that = [];
+                    break;
+                case 21:
+                    matches = data.getInt16(offset, true);
+                    offset += 2;
+                    s = data.getInt16(offset, true);
+                    offset += 2;
+                    if (!nb) {
+                        /** @type {boolean} */
+                        nb = true;
+                        xr = matches;
+                        pos = s;
+                    }
+                    break;
+                case 32:
+                    that.push(data.getUint32(offset, true));
+                    offset += 4;
+                    break;
+                case 49:
+                    if (null != angles) {
+                        break;
+                    }
+                    var b = data.getUint32(offset, true);
+                    offset = offset + 4;
+                    /** @type {Array} */
+                    list = [];
+                    /** @type {number} */
+                    var a = 0;
+                    for (; a < b; ++a) {
+                        var token = data.getUint32(offset, true);
+                        offset = offset + 4;
+                        list.push({
+                            id: token,
+                            name: encode()
+                        });
+                    }
+                    create();
+                    break;
+                case 50:
+                    /** @type {Array} */
+                    angles = [];
                     b = data.getUint32(offset, true);
                     offset += 4;
-                    /** @type {boolean} */
-                    started = !!(b & 1);
-                    passes = encode();
-                    self.MC.updateServerVersion(passes);
-                    console.log(`Server version ${passes}`);
-                }
-                break;
-            case 102:
-                b = data.buffer.slice(offset);
-                options.core.proxy.forwardProtoMessage(b);
-                break;
-            case 104:
-                self.logout();
+                    /** @type {number} */
+                    a = 0;
+                    for (; a < b; ++a) {
+                        angles.push(data.getFloat32(offset, true));
+                        offset += 4;
+                    }
+                    create();
+                    break;
+                case 64:
+                    minX = data.getFloat64(offset, true);
+                    offset += 8;
+                    minY = data.getFloat64(offset, true);
+                    offset += 8;
+                    maxX = data.getFloat64(offset, true);
+                    offset += 8;
+                    maxY = data.getFloat64(offset, true);
+                    offset += 8;
+                    if (data.byteLength > offset) {
+                        b = data.getUint32(offset, true);
+                        offset += 4;
+                        /** @type {boolean} */
+                        started = !!(b & 1);
+                        passes = encode();
+                        self.MC.updateServerVersion(passes);
+                        console.log(`Server version ${passes}`);
+                    }
+                    break;
+                case 102:
+                    b = data.buffer.slice(offset);
+                    options.core.proxy.forwardProtoMessage(b);
+                    break;
+                case 104:
+                    self.logout();
             }
         }
     }
@@ -878,7 +952,7 @@ function main(self, $) {
         function read() {
             /** @type {string} */
             var str = "";
-            for (;;) {
+            for (; ;) {
                 var b = dataView.getUint16(offset, true);
                 offset += 2;
                 if (0 == b) {
@@ -895,7 +969,7 @@ function main(self, $) {
         function randomString() {
             /** @type {string} */
             var str = "";
-            for (;;) {
+            for (; ;) {
                 var b = dataView.getUint8(offset++);
                 if (0 == b) {
                     break;
@@ -957,7 +1031,7 @@ function main(self, $) {
         }
         /** @type {number} */
         i = 0;
-        for (;;) {
+        for (; ;) {
             var a2 = dataView.getUint32(offset, true);
             offset += 4;
             if (0 == a2) {
@@ -1154,7 +1228,7 @@ function main(self, $) {
      * @return {undefined}
      */
     function set(caption) {
-        if ("auto" == caption.toLowerCase()) {
+        if ("auto" === caption.toLowerCase()) {
             /** @type {boolean} */
             opts.auto = true;
         } else {
@@ -1281,7 +1355,7 @@ function main(self, $) {
         } else {
             redraw();
         }
-        parts.sort(function(a, b) {
+        parts.sort(function (a, b) {
             return a.size == b.size ? a.id - b.id : a.size - b.size;
         });
         ctx.save();
@@ -1781,6 +1855,8 @@ function main(self, $) {
     /**
      * @return {undefined}
      */
+    var data: { context: any;defaultProvider: string;loginIntent: string;userInfo: { socialToken: any;tokenExpires: string;level: string;xp: string;xpNeeded: string;name: string;picture: string;displayName: string;loggedIn: string;socialId: string } };
+
     function compassResult() {
         data = tmp;
     }
@@ -1861,7 +1937,7 @@ function main(self, $) {
         if (data.userInfo.loggedIn) {
             var xpgen = $("#helloContainer")
                 .is(":visible") && "1" == $("#helloContainer")
-                .attr("data-has-account-data");
+                    .attr("data-has-account-data");
             if (null == options || void 0 == options) {
                 options = data.userInfo;
             }
@@ -1877,13 +1953,13 @@ function main(self, $) {
                         xp: a3,
                         xpNeeded: a3,
                         level: level
-                    }, function() {
+                    }, function () {
                         $(".agario-profile-panel .progress-bar-star").text(options.level);
                         $(".agario-exp-bar .progress-bar").css("width", "100%");
-                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function() {
+                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function () {
                             $(".progress-bar-star").removeClass("animated tada");
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $(".agario-exp-bar .progress-bar-text").text(options.xpNeeded + "/" + options.xpNeeded + " XP");
                             start({
                                 xp: 0,
@@ -1898,7 +1974,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var update = function() {
+                    var update = function () {
                         var t: number;
                         /** @type {number} */
                         t = (Date.now() - f) / 1E3;
@@ -1948,7 +2024,7 @@ function main(self, $) {
                 self.MC.doLoginWithFB(actualAria);
                 /** @type {Array} */
                 options.cache.login_info = [actualAria, "facebook"];
-                self.FB.api("/me/picture?width=180&height=180", function(messageEvent) {
+                self.FB.api("/me/picture?width=180&height=180", function (messageEvent) {
                     data.userInfo.picture = messageEvent.data.url;
                     self.updateStorage();
                     $(".agario-profile-picture").attr("src", messageEvent.data.url);
@@ -1979,14 +2055,14 @@ function main(self, $) {
             /**
              * @return {undefined}
              */
-            error: function() {
+            error: function () {
                 $("#helloContainer").attr("data-party-state", "6");
             },
             /**
              * @param {string} status
              * @return {undefined}
              */
-            success: function(status) {
+            success: function (status) {
                 status = status.split("\n");
                 $(".partyToken").val(`agar.io/#${self.encodeURIComponent(param)}`);
                 $("#helloContainer").attr("data-party-state", "5");
@@ -2150,7 +2226,7 @@ function main(self, $) {
                         }
                     }
                     /** @type {number} */
-                    var r2 = r.reduce(function(far, near) {
+                    var r2 = r.reduce(function (far, near) {
                         return far + near;
                     }) / r.length / n;
                     ctx.lineTo(x, h2 - r2 * (h2 - 10) + 10);
@@ -2178,7 +2254,7 @@ function main(self, $) {
                     DrawPolyline();
                     /** @type {boolean} */
                     from = true;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $("#overlays").fadeIn(500, start);
                         $("#stats").show();
                         var onComplete = trigger("g_plus_share_stats");
@@ -2213,7 +2289,7 @@ function main(self, $) {
         alert("You browser does not support this game, we recommend you to use Firefox to play this");
     } else {
         var result = new Result();
-        (function() {
+        (function () {
             /** @type {string} */
             var params = self.location.search;
             if ("?" == params.charAt(0)) {
@@ -2247,7 +2323,7 @@ function main(self, $) {
         /**
          * @return {undefined}
          */
-        var after = function() {
+        var after = () => {
             setCookie("", -1);
         };
         /** @type {boolean} */
@@ -2276,8 +2352,6 @@ function main(self, $) {
             setTimeout(after, 3E3);
         }
         if (!self.agarioNoInit) {
-            /** @type {string} */
-            var base = self.location.protocol;
             /** @type {boolean} */
             var ssl = "https:" == base;
             if (result.master) {
@@ -2291,7 +2365,7 @@ function main(self, $) {
                 if (self.ga) {
                     self.ga("send", "event", "MobileRedirect", "PlayStore");
                 }
-                setTimeout(function() {
+                setTimeout(function () {
                     /** @type {string} */
                     self.location.href = "https://play.google.com/store/apps/details?id=com.miniclip.agar.io";
                 }, 1E3);
@@ -2300,145 +2374,14 @@ function main(self, $) {
                     if (self.ga) {
                         self.ga("send", "event", "MobileRedirect", "AppStore");
                     }
-                    setTimeout(function() {
+                    setTimeout(function () {
                         /** @type {string} */
                         self.location.href = "https://itunes.apple.com/app/agar.io/id995999703?mt=8&at=1l3vajp";
                     }, 1E3);
                 } else {
-                    var options = new Options();
                     self.agarApp = options;
-                    var cv: HTMLCanvasElement;
-                    var ctx;
-                    var canvas: HTMLCanvasElement;
-                    var width: number;
-                    var height: number;
-                    /** @type {null} */
-                    var context = null;
-                    /** @type {null} */
-                    var ws = null;
-                    /** @type {number} */
-                    var px = 0;
-                    /** @type {number} */
-                    var y = 0;
-                    /** @type {Array} */
-                    var that = [];
-                    /** @type {Array} */
-                    var items = [];
-                    var args = {};
-                    /** @type {Array} */
-                    var parts = [];
-                    /** @type {Array} */
-                    var chars = [];
-                    /** @type {Array} */
-                    var list = [];
-                    /** @type {number} */
-                    var cx = 0;
-                    /** @type {number} */
-                    var cy = 0;
-                    /** @type {number} */
-                    var value = -1;
-                    /** @type {number} */
-                    var t2 = -1;
-                    /** @type {number} */
-                    var Mc = 0;
-                    /** @type {number} */
-                    var t = 0;
-                    /** @type {number} */
-                    var tOffset = 0;
-                    /** @type {null} */
-                    var b = null;
-                    /** @type {number} */
-                    var minX = 0;
-                    /** @type {number} */
-                    var minY = 0;
-                    /** @type {number} */
-                    var maxX = 1E4;
-                    /** @type {number} */
-                    var maxY = 1E4;
-                    /** @type {number} */
-                    var scale = 1;
-                    /** @type {null} */
-                    var newValue = null;
-                    /** @type {boolean} */
-                    var root = true;
-                    /** @type {boolean} */
-                    var text = true;
-                    /** @type {boolean} */
-                    var type = false;
-                    /** @type {boolean} */
-                    var ub = false;
-                    /** @type {number} */
-                    var closingAnimationTime = 0;
-                    /** @type {boolean} */
-                    var color = false;
-                    /** @type {boolean} */
-                    var metadata = false;
-                    /** @type {number} */
-                    var chunk = px = ~~((minX + maxX) / 2);
-                    /** @type {number} */
-                    var x = y = ~~((minY + maxY) / 2);
-                    /** @type {number} */
-                    var argumentOffset = 1;
-                    /** @type {string} */
-                    var actual = "";
-                    /** @type {null} */
-                    var angles = null;
-                    /** @type {boolean} */
-                    var ab = false;
-                    /** @type {boolean} */
-                    var nb = false;
-                    /** @type {number} */
-                    var matches = 0;
-                    /** @type {number} */
-                    var s = 0;
-                    /** @type {number} */
-                    var xr = 0;
-                    /** @type {number} */
-                    var pos = 0;
-                    /** @type {Array} */
-                    var cs = ["#333333", "#FF3333", "#33FF33", "#3333FF"];
-                    /** @type {boolean} */
-                    var $timeout = false;
-                    /** @type {boolean} */
-                    var matchEnd = false;
-                    /** @type {number} */
-                    var j = 0;
-                    /** @type {number} */
-                    var ratio = 1;
-                    /** @type {number} */
-                    var alpha = 1;
-                    /** @type {boolean} */
-                    var to = false;
-                    /** @type {number} */
-                    var resizeUID = 0;
-                    /** @type {boolean} */
-                    var fc = true;
-                    /** @type {null} */
-                    var passes = null;
-                    /** @type {boolean} */
-                    var started = false;
-                    /** @type {Image} */
-                    var image = new Image;
-                    /** @type {string} */
-                    image.src = "/img/background.png";
-                    /** @type {boolean} */
-                    var gc = "ontouchstart" in self && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(self.navigator.userAgent);
-                    /** @type {Image} */
-                    var copy = new Image;
-                    /** @type {string} */
-                    copy.src = "/img/split.png";
-                    /** @type {boolean} */
-                    var firing = false;
-                    /** @type {boolean} */
-                    var memory = false;
-                    /** @type {boolean} */
-                    var stack = false;
-                    /** @type {boolean} */
-                    var Xa = false;
-                    var k: number;
-                    var oldconfig: number;
                     if ("gamepad" in result) {
-                        setInterval(function() {
+                        setInterval(function () {
                             if (Xa) {
                                 cx = val.ha(cx, k);
                                 cy = val.ha(cy, oldconfig);
@@ -2450,7 +2393,7 @@ function main(self, $) {
                      * @param {number} m3
                      * @return {undefined}
                      */
-                    self.gamepadAxisUpdate = function(dataAndEvents, m3) {
+                    self.gamepadAxisUpdate = function (dataAndEvents, m3) {
                         /** @type {boolean} */
                         var d = 0.1 > m3 * m3;
                         if (0 == dataAndEvents) {
@@ -2479,7 +2422,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.agarioInit = function() {
+                    self.agarioInit = function () {
                         /** @type {boolean} */
                         ab = true;
                         postLink();
@@ -2511,7 +2454,7 @@ function main(self, $) {
                              * @param {Event} e
                              * @return {undefined}
                              */
-                            canvas.onmousedown = function(e) {
+                            canvas.onmousedown = function (e) {
                                 if (gc) {
                                     /** @type {number} */
                                     var z0 = e.clientX - (5 + width / 5 / 2);
@@ -2533,7 +2476,7 @@ function main(self, $) {
                              * @param {Event} e
                              * @return {undefined}
                              */
-                            canvas.onmousemove = function(e) {
+                            canvas.onmousemove = function (e) {
                                 /** @type {boolean} */
                                 Xa = false;
                                 /** @type {number} */
@@ -2545,7 +2488,7 @@ function main(self, $) {
                             /**
                              * @return {undefined}
                              */
-                            canvas.onmouseup = function() {
+                            canvas.onmouseup = function () {
                             };
                             if (/firefox/i.test(navigator.userAgent)) {
                                 document.addEventListener("DOMMouseScroll", handleMousewheel, false);
@@ -2556,7 +2499,7 @@ function main(self, $) {
                             /**
                              * @return {undefined}
                              */
-                            self.onblur = function() {
+                            self.onblur = function () {
                                 emit(19);
                                 /** @type {boolean} */
                                 stack = memory = firing = false;
@@ -2590,7 +2533,7 @@ function main(self, $) {
                      * @param {Function} v
                      * @return {undefined}
                      */
-                    self.setNick = function(v) {
+                    self.setNick = function (v) {
                         if (self.ga) {
                             self.ga("send", "event", "Nick", v.toLowerCase());
                         }
@@ -2614,7 +2557,7 @@ function main(self, $) {
                      * @param {string} part
                      * @return {undefined}
                      */
-                    self.setSkins = function(part) {
+                    self.setSkins = function (part) {
                         /** @type {string} */
                         root = part;
                     };
@@ -2622,7 +2565,7 @@ function main(self, $) {
                      * @param {string} textAlt
                      * @return {undefined}
                      */
-                    self.setNames = function(textAlt) {
+                    self.setNames = function (textAlt) {
                         /** @type {string} */
                         text = textAlt;
                     };
@@ -2630,7 +2573,7 @@ function main(self, $) {
                      * @param {boolean} newColor
                      * @return {undefined}
                      */
-                    self.setDarkTheme = function(newColor) {
+                    self.setDarkTheme = function (newColor) {
                         /** @type {boolean} */
                         color = newColor;
                     };
@@ -2638,7 +2581,7 @@ function main(self, $) {
                      * @param {string} color
                      * @return {undefined}
                      */
-                    self.setColors = function(color) {
+                    self.setColors = function (color) {
                         /** @type {string} */
                         type = color;
                     };
@@ -2646,14 +2589,14 @@ function main(self, $) {
                      * @param {string} response
                      * @return {undefined}
                      */
-                    self.setShowMass = function(response) {
+                    self.setShowMass = function (response) {
                         /** @type {string} */
                         metadata = response;
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.spectate = function() {
+                    self.spectate = function () {
                         /** @type {null} */
                         b = null;
                         playerCalc();
@@ -2668,7 +2611,7 @@ function main(self, $) {
                      * @param {string} expected
                      * @return {undefined}
                      */
-                    self.setGameMode = function(expected) {
+                    self.setGameMode = function (expected) {
                         if (expected != actual) {
                             if (":party" == actual) {
                                 $("#helloContainer").attr("data-party-state", "0");
@@ -2683,11 +2626,11 @@ function main(self, $) {
                      * @param {boolean} _$timeout_
                      * @return {undefined}
                      */
-                    self.setAcid = function(_$timeout_) {
+                    self.setAcid = function (_$timeout_) {
                         /** @type {boolean} */
                         $timeout = _$timeout_;
                     };
-                    var POST = function(self) {
+                    var POST = function (self) {
                         var $window = {};
                         /** @type {boolean} */
                         var text = false;
@@ -2698,7 +2641,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        self.init = function() {
+                        self.init = function () {
                             options.account.init();
                             options.google.xa();
                             options.fa.init();
@@ -2711,7 +2654,7 @@ function main(self, $) {
                          * @param {Function} callback
                          * @return {undefined}
                          */
-                        self.bind = function(event_name, callback) {
+                        self.bind = function (event_name, callback) {
                             $($window).bind(event_name, callback);
                         };
                         /**
@@ -2719,7 +2662,7 @@ function main(self, $) {
                          * @param {?} cb
                          * @return {undefined}
                          */
-                        self.unbind = function(callback, cb) {
+                        self.unbind = function (callback, cb) {
                             $($window).unbind(callback, cb);
                         };
                         /**
@@ -2727,26 +2670,26 @@ function main(self, $) {
                          * @param {?} extra
                          * @return {undefined}
                          */
-                        self.trigger = function(type, extra) {
+                        self.trigger = function (type, extra) {
                             $($window).trigger(type, extra);
                         };
-                        self.__defineGetter__("debug", function() {
+                        self.__defineGetter__("debug", function () {
                             return text;
                         });
-                        self.__defineSetter__("debug", function(textAlt) {
+                        self.__defineSetter__("debug", function (textAlt) {
                             return text = textAlt;
                         });
-                        self.__defineGetter__("proxy", function() {
+                        self.__defineGetter__("proxy", function () {
                             return self.MC;
                         });
-                        self.__defineGetter__("config", function() {
+                        self.__defineGetter__("config", function () {
                             return skipDraw;
                         });
                         return self;
-                    }({});
+                    } ({});
                     options.core = POST;
                     options.cache = {};
-                    var debug = function(Child) {
+                    var debug = function (Child) {
                         /**
                          * @param {number} id
                          * @param {Array} data
@@ -2811,7 +2754,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Child.showDebug = function() {
+                        Child.showDebug = function () {
                             if (!g) {
                                 input = $("#debug-overlay");
                                 done("networkUpdate", {
@@ -2831,16 +2774,16 @@ function main(self, $) {
                                     minValue: 0,
                                     maxValue: 120
                                 }, [
-                                    {
-                                        strokeStyle: "rgba(255, 0, 0, 1)",
-                                        fillStyle: "rgba(0, 255, 0, 0.2)",
-                                        lineWidth: 2
-                                    }, {
-                                        strokeStyle: "rgba(0, 255, 0, 1)",
-                                        fillStyle: "rgba(0, 255, 0, 0)",
-                                        lineWidth: 2
-                                    }
-                                ]);
+                                        {
+                                            strokeStyle: "rgba(255, 0, 0, 1)",
+                                            fillStyle: "rgba(0, 255, 0, 0.2)",
+                                            lineWidth: 2
+                                        }, {
+                                            strokeStyle: "rgba(0, 255, 0, 1)",
+                                            fillStyle: "rgba(0, 255, 0, 0)",
+                                            lineWidth: 2
+                                        }
+                                    ]);
                                 /** @type {boolean} */
                                 g = true;
                             }
@@ -2851,7 +2794,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Child.hideDebug = function() {
+                        Child.hideDebug = function () {
                             input.hide();
                             /** @type {boolean} */
                             options.core.debug = false;
@@ -2862,21 +2805,21 @@ function main(self, $) {
                          * @param {number} data
                          * @return {undefined}
                          */
-                        Child.updateChart = function(name, a, data) {
+                        Child.updateChart = function (name, a, data) {
                             if (g) {
                                 if (name in obj) {
                                     obj[name].append(a, data);
                                 }
                             }
                         };
-                        Child.__defineGetter__("showPrediction", function() {
+                        Child.__defineGetter__("showPrediction", function () {
                             return text;
                         });
-                        Child.__defineSetter__("showPrediction", function(textAlt) {
+                        Child.__defineSetter__("showPrediction", function (textAlt) {
                             return text = textAlt;
                         });
                         return Child;
-                    }({});
+                    } ({});
                     options.debug = debug;
                     var input = {
                         AF: "JP-Tokyo",
@@ -3153,7 +3096,7 @@ function main(self, $) {
                     self.sendMitosis = end;
                     /** @type {function (): undefined} */
                     self.sendEject = emitter;
-                    options.networking = function(opt_attributes) {
+                    options.networking = function (opt_attributes) {
                         opt_attributes.loginRealm = {
                             GG: "google",
                             FB: "facebook"
@@ -3162,7 +3105,7 @@ function main(self, $) {
                          * @param {string} data
                          * @return {undefined}
                          */
-                        opt_attributes.sendMessage = function(data) {
+                        opt_attributes.sendMessage = function (data) {
                             if (forEach()) {
                                 var codeSegments = data.byteView;
                                 if (null != codeSegments) {
@@ -3178,16 +3121,11 @@ function main(self, $) {
                             }
                         };
                         return opt_attributes;
-                    }({});
+                    } ({});
                     /** @type {null} */
                     var img = null;
                     /** @type {null} */
                     var _arg = null;
-                    var h1 = new OneRenSett(30, false, 1, 0.6, 30);
-                    var m = new OneRenSett(30, false, .5, 0.3, 25);
-                    var l = new OneRenSett(30, true, .3, 0.2, 25);
-                    var opts = options.renderSettings =
-                        new RenderingSettings(h1, m, l);
 
                     /** @type {number} */
                     var pdataCur = 0;
@@ -3195,12 +3133,12 @@ function main(self, $) {
                     var Pa = 0;
                     /** @type {number} */
                     var Oa = 0;
-                    var which = function() {
+                    var which = function () {
                         /** @type {number} */
                         var d = Date.now();
                         /** @type {number} */
                         var b = 1E3 / 60;
-                        return function() {
+                        return function () {
                             self.requestAnimationFrame(which);
                             /** @type {number} */
                             var x = Date.now();
@@ -3234,7 +3172,7 @@ function main(self, $) {
                                 }
                             }
                         };
-                    }();
+                    } ();
                     /** @type {function (Object): undefined} */
                     self.setQuality = set;
                     var images = {};
@@ -3288,7 +3226,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        ca: function() {
+                        ca: function () {
                             var i: number;
                             /** @type {number} */
                             i = 0;
@@ -3318,14 +3256,14 @@ function main(self, $) {
                         /**
                          * @return {?}
                          */
-                        m: function() {
+                        m: function () {
                             return Math.max(~~(0.3 * this.size), 24);
                         },
                         /**
                          * @param {?} n
                          * @return {undefined}
                          */
-                        A: function(n) {
+                        A: function (n) {
                             if (this.name = n) {
                                 if (null == this.i) {
                                     this.i = new setFillAndStroke(this.m(), "#FFFFFF", true, "#000000");
@@ -3338,7 +3276,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        ba: function() {
+                        ba: function () {
                             var a = this.H();
                             for (; this.a.length > a;) {
                                 /** @type {number} */
@@ -3360,7 +3298,7 @@ function main(self, $) {
                         /**
                          * @return {?}
                          */
-                        H: function() {
+                        H: function () {
                             /** @type {number} */
                             var rh = 10;
                             if (20 > this.size) {
@@ -3380,7 +3318,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Da: function() {
+                        Da: function () {
                             this.ba();
                             var items = this.a;
                             var n = items.length;
@@ -3415,7 +3353,7 @@ function main(self, $) {
                                     var k = false;
                                     var x = pos.x;
                                     var offset = pos.y;
-                                    context.Ga(x - 5, offset - 5, 10, 10, function(node) {
+                                    context.Ga(x - 5, offset - 5, 10, 10, function (node) {
                                         if (node.$ != ELEMENT_NODE) {
                                             if (25 > (x - node.x) * (x - node.x) + (offset - node.y) * (offset - node.y)) {
                                                 /** @type {boolean} */
@@ -3468,7 +3406,7 @@ function main(self, $) {
                          * @param {?} v22
                          * @return {undefined}
                          */
-                        pa: function(pos, v22) {
+                        pa: function (pos, v22) {
                             this.L = pos;
                             this.M = v22;
                             this.J = pos;
@@ -3479,7 +3417,7 @@ function main(self, $) {
                         /**
                          * @return {?}
                          */
-                        S: function() {
+                        S: function () {
                             if (0 >= this.id) {
                                 return 1;
                             }
@@ -3501,14 +3439,14 @@ function main(self, $) {
                         /**
                          * @return {?}
                          */
-                        P: function() {
+                        P: function () {
                             return 0 >= this.id ? true : this.x + this.size + 40 < px - width / 2 / scale || (this.y + this.size + 40 < y - height / 2 / scale || (this.x - this.size - 40 > px + width / 2 / scale || this.y - this.size - 40 > y + height / 2 / scale)) ? false : true;
                         },
                         /**
                          * @param {CanvasRenderingContext2D} ctx
                          * @return {undefined}
                          */
-                        sa: function(ctx) {
+                        sa: function (ctx) {
                             ctx.beginPath();
                             var len = this.H();
                             ctx.moveTo(this.a[0].x, this.a[0].y);
@@ -3526,7 +3464,7 @@ function main(self, $) {
                          * @param {CanvasRenderingContext2D} ctx
                          * @return {undefined}
                          */
-                        w: function(ctx) {
+                        w: function (ctx) {
                             if (this.P()) {
                                 ++this.da;
                                 var y_position = 0 < this.id && (!this.c && (!this.h && 0.4 > scale)) || opts.selected.simpleDraw && !this.c;
@@ -3721,7 +3659,7 @@ function main(self, $) {
                          * @param {Object} o
                          * @return {undefined}
                          */
-                        na: function(ctx, map, o) {
+                        na: function (ctx, map, o) {
                             ctx.save();
                             ctx.clip();
                             /** @type {number} */
@@ -3735,7 +3673,7 @@ function main(self, $) {
                             ctx.restore();
                         }
                     };
-                    var val = function(item) {
+                    var val = function (item) {
                         /**
                          * @param {number} value
                          * @param {number} min
@@ -3751,7 +3689,7 @@ function main(self, $) {
                          * @param {number} b
                          * @return {?}
                          */
-                        item.ha = function(a, b) {
+                        item.ha = function (a, b) {
                             var x;
                             x = clamp(0.5, 0, 1);
                             return a + x * (b - a);
@@ -3763,19 +3701,19 @@ function main(self, $) {
                          * @param {?} n
                          * @return {?}
                          */
-                        item.fixed = function(d, n) {
+                        item.fixed = function (d, n) {
                             /** @type {number} */
                             var base = Math.pow(10, n);
                             return ~~(d * base) / base;
                         };
                         return item;
-                    }({});
+                    } ({});
                     self.Maths = val;
-                    var exports = function(opt_attributes) {
+                    var exports = function (opt_attributes) {
                         /**
                          * @return {?}
                          */
-                        opt_attributes.la = function() {
+                        opt_attributes.la = function () {
                             /** @type {Date} */
                             var c = new Date;
                             /** @type {Array} */
@@ -3792,7 +3730,7 @@ function main(self, $) {
                             return `[${UNICODE_SPACES.join("/")} ${c2.join(":")}]`;
                         };
                         return opt_attributes;
-                    }({});
+                    } ({});
                     self.Utils = exports;
                     setFillAndStroke.prototype = {
                         F: "",
@@ -3808,7 +3746,7 @@ function main(self, $) {
                          * @param {number} v
                          * @return {undefined}
                          */
-                        O: function(v) {
+                        O: function (v) {
                             if (this.v != v) {
                                 /** @type {number} */
                                 this.v = v;
@@ -3820,7 +3758,7 @@ function main(self, $) {
                          * @param {?} d
                          * @return {undefined}
                          */
-                        oa: function(d) {
+                        oa: function (d) {
                             if (this.D != d) {
                                 this.D = d;
                                 /** @type {boolean} */
@@ -3831,7 +3769,7 @@ function main(self, $) {
                          * @param {number} err
                          * @return {undefined}
                          */
-                        B: function(err) {
+                        B: function (err) {
                             if (err != this.F) {
                                 /** @type {number} */
                                 this.F = err;
@@ -3842,7 +3780,7 @@ function main(self, $) {
                         /**
                          * @return {?}
                          */
-                        N: function() {
+                        N: function () {
                             if (null == this.j) {
                                 /** @type {Element} */
                                 this.j = document.createElement("canvas");
@@ -3887,11 +3825,11 @@ function main(self, $) {
                         /**
                          * @return {number}
                          */
-                        Date.now = function() {
+                        Date.now = function () {
                             return (new Date).getTime();
                         };
                     }
-                    (function() {
+                    (function () {
                         /** @type {Array} */
                         var vendors = ["ms", "moz", "webkit", "o"];
                         /** @type {number} */
@@ -3905,14 +3843,14 @@ function main(self, $) {
                              * @param {function (number): ?} callback
                              * @return {number}
                              */
-                            self.requestAnimationFrame = function(callback) {
+                            self.requestAnimationFrame = function (callback) {
                                 return setTimeout(callback, 1E3 / 60);
                             };
                             /**
                              * @param {number} id
                              * @return {?}
                              */
-                            self.cancelAnimationFrame = function(id) {
+                            self.cancelAnimationFrame = function (id) {
                                 clearTimeout(id);
                             };
                         }
@@ -3922,7 +3860,7 @@ function main(self, $) {
                          * @param {?} params
                          * @return {?}
                          */
-                        init: function(params) {
+                        init: function (params) {
                             /**
                              * @param {?} data
                              * @return {?}
@@ -3966,7 +3904,7 @@ function main(self, $) {
                                  * @param {?} val
                                  * @return {undefined}
                                  */
-                                va: function(val) {
+                                va: function (val) {
                                     var key = fire(val.x) + b(val.y) * cols;
                                     if (null == result[key]) {
                                         result[key] = val;
@@ -3987,7 +3925,7 @@ function main(self, $) {
                                  * @param {Function} func
                                  * @return {undefined}
                                  */
-                                Ga: function(memory, a, array, offset, func) {
+                                Ga: function (memory, a, array, offset, func) {
                                     var currentOffset = fire(memory);
                                     var r = b(a);
                                     memory = fire(memory + array);
@@ -4015,7 +3953,7 @@ function main(self, $) {
                             };
                         }
                     };
-                    var valueAccessor = function() {
+                    var valueAccessor = function () {
                         var that = new Node(0, 0, 0, 32, "#ED1C24", "");
                         /** @type {Element} */
                         var canvas = document.createElement("canvas");
@@ -4024,7 +3962,7 @@ function main(self, $) {
                         /** @type {number} */
                         canvas.height = 32;
                         var renderer = canvas.getContext("2d");
-                        return function() {
+                        return function () {
                             if (0 < items.length) {
                                 that.color = items[0].color;
                                 that.A(items[0].name);
@@ -4042,8 +3980,8 @@ function main(self, $) {
                             newNode.setAttribute("href", canvas.toDataURL("image/png"));
                             originalFavicon.parentNode.replaceChild(newNode, originalFavicon);
                         };
-                    }();
-                    $(function() {
+                    } ();
+                    $(function () {
                         valueAccessor();
                     });
                     var tmp = {
@@ -4063,13 +4001,13 @@ function main(self, $) {
                             socialId: ""
                         }
                     };
-                    var data = self.defaultSt = tmp;
+                    data = self.defaultSt = tmp;
                     self.storageInfo = data;
                     /** @type {function (): undefined} */
                     self.createDefaultStorage = compassResult;
                     /** @type {function (): undefined} */
                     self.updateStorage = callback;
-                    $(function() {
+                    $(function () {
                         if (null != self.localStorage.storeObjectInfo) {
                             /** @type {*} */
                             data = JSON.parse(self.localStorage.storeObjectInfo);
@@ -4084,7 +4022,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.checkLoginStatus = function() {
+                    self.checkLoginStatus = function () {
                         if ("1" == data.loginIntent) {
                             h();
                             template(data.context);
@@ -4093,14 +4031,14 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var h = function() {
+                    var h = function () {
                         self.MC.setProfilePicture(data.userInfo.picture);
                         self.MC.setSocialId(data.userInfo.socialId);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.logout = function() {
+                    self.logout = function () {
                         data = tmp;
                         delete self.localStorage.storeObjectInfo;
                         /** @type {string} */
@@ -4122,7 +4060,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSocialLogin = function() {
+                    self.toggleSocialLogin = function () {
                         $("#socialLoginContainer").toggle();
                         $("#settings").hide();
                         $("#instructions").hide();
@@ -4131,13 +4069,13 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSettings = function() {
+                    self.toggleSettings = function () {
                         $("#settings").toggle();
                         $("#socialLoginContainer").hide();
                         $("#instructions").hide();
                         f();
                     };
-                    options.account = function(doc) {
+                    options.account = function (doc) {
                         /**
                          * @return {undefined}
                          */
@@ -4170,7 +4108,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        doc.init = function() {
+                        doc.init = function () {
                             options.core.bind("user_login", onError);
                             options.core.bind("user_logout", restoreScript);
                         };
@@ -4178,7 +4116,7 @@ function main(self, $) {
                          * @param {Object} value
                          * @return {undefined}
                          */
-                        doc.setUserData = function(value) {
+                        doc.setUserData = function (value) {
                             apply(value);
                         };
                         /**
@@ -4186,7 +4124,7 @@ function main(self, $) {
                          * @param {?} b
                          * @return {undefined}
                          */
-                        doc.setAccountData = function(options, b) {
+                        doc.setAccountData = function (options, b) {
                             var a = $("#helloContainer").attr("data-has-account-data", "1");
                             data.userInfo.xp = options.xp;
                             data.userInfo.xpNeeded = options.xpNeeded;
@@ -4204,17 +4142,17 @@ function main(self, $) {
                          * @param {string} count
                          * @return {undefined}
                          */
-                        doc.Ia = function(count) {
+                        doc.Ia = function (count) {
                             start(count, "");
                         };
                         return doc;
-                    }({});
+                    } ({});
                     /** @type {number} */
                     var lc = 0;
                     /**
                      * @return {undefined}
                      */
-                    self.fbAsyncInit = function() {
+                    self.fbAsyncInit = function () {
                         /**
                          * @return {undefined}
                          */
@@ -4225,11 +4163,11 @@ function main(self, $) {
                                 /** @type {string} */
                                 data.loginIntent = "1";
                                 self.updateStorage();
-                                self.FB.login(function(e) {
+                                self.FB.login(function (e) {
                                     error(e);
                                 }, {
-                                    scope: "public_profile, email"
-                                });
+                                        scope: "public_profile, email"
+                                    });
                             }
                         }
 
@@ -4241,7 +4179,7 @@ function main(self, $) {
                             version: "v2.2"
                         });
                         if ("1" == self.storageInfo.loginIntent && "facebook" == self.storageInfo.context || fb) {
-                            self.FB.getLoginStatus(function(response) {
+                            self.FB.getLoginStatus(function (response) {
                                 if ("connected" === response.status) {
                                     error(response);
                                 } else {
@@ -4261,7 +4199,7 @@ function main(self, $) {
                     };
                     /** @type {boolean} */
                     var Kb = false;
-                    (function(optionsString) {
+                    (function (optionsString) {
                         /**
                          * @return {undefined}
                          */
@@ -4286,14 +4224,14 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        self.gapiAsyncInit = function() {
+                        self.gapiAsyncInit = function () {
                             $($window).trigger("initialized");
                         };
                         optionsString.google = {
                             /**
                              * @return {undefined}
                              */
-                            xa: function() {
+                            xa: function () {
                                 injectScript();
                             },
                             /**
@@ -4301,12 +4239,12 @@ function main(self, $) {
                              * @param {Function} cb
                              * @return {undefined}
                              */
-                            ua: function(results, cb) {
-                                self.gapi.client.load("plus", "v1", function() {
+                            ua: function (results, cb) {
+                                self.gapi.client.load("plus", "v1", function () {
                                     console.log("fetching me profile");
                                     gapi.client.plus.people.get({
                                         userId: "me"
-                                    }).execute(function(outErr) {
+                                    }).execute(function (outErr) {
                                         cb(outErr);
                                     });
                                 });
@@ -4316,7 +4254,7 @@ function main(self, $) {
                          * @param {Function} method
                          * @return {undefined}
                          */
-                        optionsString.Fa = function(method) {
+                        optionsString.Fa = function (method) {
                             if (!f) {
                                 injectScript();
                             }
@@ -4328,7 +4266,7 @@ function main(self, $) {
                         };
                         return optionsString;
                     })(options);
-                    var app = function(optionsString) {
+                    var app = function (optionsString) {
                         /**
                          * @param {?} callback
                          * @return {undefined}
@@ -4360,22 +4298,22 @@ function main(self, $) {
                             /**
                              * @return {?}
                              */
-                            qa: function() {
+                            qa: function () {
                                 return api;
                             },
                             /**
                              * @return {undefined}
                              */
-                            init: function() {
+                            init: function () {
                                 var handler = this;
                                 var hasDisclosureProperty = data && ("1" == data.loginIntent && "google" == data.context);
-                                options.Fa(function() {
+                                options.Fa(function () {
                                     self.gapi.ytsubscribe.go("agarYoutube");
-                                    self.gapi.load("auth2", function() {
+                                    self.gapi.load("auth2", function () {
                                         api = self.gapi.auth2.init(params);
-                                        api.attachClickHandler(document.getElementById("gplusLogin"), {}, function(reply) {
+                                        api.attachClickHandler(document.getElementById("gplusLogin"), {}, function (reply) {
                                             console.log(`googleUser : ${reply}`);
-                                        }, function(err) {
+                                        }, function (err) {
                                             console.log("failed to login in google plus: ", JSON.stringify(err, void 0, 2));
                                         });
                                         api.currentUser.listen(_.bind(handler.Ea, handler));
@@ -4391,7 +4329,7 @@ function main(self, $) {
                              * @param {number} newVal
                              * @return {undefined}
                              */
-                            Ea: function(newVal) {
+                            Ea: function (newVal) {
                                 if (api && (newVal && (api.isSignedIn.get() && !Kb))) {
                                     /** @type {boolean} */
                                     Kb = true;
@@ -4404,7 +4342,7 @@ function main(self, $) {
                                     var record = newVal.getBasicProfile();
                                     newVal = record.getImageUrl();
                                     if (void 0 == newVal) {
-                                        options.google.ua(extra, function(r) {
+                                        options.google.ua(extra, function (r) {
                                             if (r.result.isPlusUser) {
                                                 if (r) {
                                                     handler(r.image.url);
@@ -4436,7 +4374,7 @@ function main(self, $) {
                             /**
                              * @return {undefined}
                              */
-                            ya: function() {
+                            ya: function () {
                                 if (api) {
                                     api.signOut();
                                     /** @type {boolean} */
@@ -4445,17 +4383,17 @@ function main(self, $) {
                             }
                         };
                         return optionsString;
-                    }(options);
+                    } (options);
                     self.gplusModule = app;
                     /**
                      * @return {undefined}
                      */
-                    var disconnect = function() {
+                    var disconnect = function () {
                         options.fa.ya();
                     };
                     /** @type {function (): undefined} */
                     self.logoutGooglePlus = disconnect;
-                    var throttledUpdate = function() {
+                    var throttledUpdate = function () {
                         /**
                          * @param {Object} l
                          * @param {number} map
@@ -4501,8 +4439,8 @@ function main(self, $) {
                         /** @type {number} */
                         map.width = map.height = 70;
                         render(n, map, "", 26, "#ebc0de");
-                        return function() {
-                            $(".cell-spinner").filter(":visible").each(function() {
+                        return function () {
+                            $(".cell-spinner").filter(":visible").each(function () {
                                 var body = $(this);
                                 /** @type {number} */
                                 var x = Date.now();
@@ -4523,7 +4461,7 @@ function main(self, $) {
                                 }
                                 render(data, this, body || "", +$(this).attr("data-size"), "#5bc0de");
                             });
-                            $("#statsPellets").filter(":visible").each(function() {
+                            $("#statsPellets").filter(":visible").each(function () {
                                 $(this);
                                 var i = this.width;
                                 var height = this.height;
@@ -4535,17 +4473,17 @@ function main(self, $) {
                                 }
                             });
                         };
-                    }();
+                    } ();
                     /**
                      * @return {undefined}
                      */
-                    self.createParty = function() {
+                    self.createParty = function () {
                         show(":party");
                         /**
                          * @param {string} content
                          * @return {undefined}
                          */
-                        success = function(content) {
+                        success = function (content) {
                             cb(`/#${self.encodeURIComponent(content)}`);
                             $(".partyToken").val(`agar.io/#${self.encodeURIComponent(content)}`);
                             $("#helloContainer").attr("data-party-state", "1");
@@ -4557,7 +4495,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.cancelParty = function() {
+                    self.cancelParty = function () {
                         cb("/");
                         $("#helloContainer").attr("data-party-state", "0");
                         show("");
@@ -4587,12 +4525,12 @@ function main(self, $) {
                     var id = true;
                     /** @type {function (): undefined} */
                     self.onPlayerDeath = fn;
-                    setInterval(function() {
+                    setInterval(function () {
                         if (Aa) {
                             a.push(pick() / 100);
                         }
                     }, 1E3 / 60);
-                    setInterval(function() {
+                    setInterval(function () {
                         var tempCount = objEquiv();
                         if (0 != tempCount) {
                             ++name;
@@ -4606,7 +4544,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.closeStats = function() {
+                    self.closeStats = function () {
                         /** @type {boolean} */
                         from = false;
                         $("#stats").hide();
@@ -4617,7 +4555,7 @@ function main(self, $) {
                      * @param {?} dataAndEvents
                      * @return {undefined}
                      */
-                    self.setSkipStats = function(dataAndEvents) {
+                    self.setSkipStats = function (dataAndEvents) {
                         /** @type {boolean} */
                         id = !dataAndEvents;
                     };
@@ -4628,14 +4566,14 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.twitterShareStats = function() {
+                    self.twitterShareStats = function () {
                         var url = self.getStatsString("tt_share_stats");
                         self.open(`https://twitter.com/intent/tweet?text=${url}`, "Agar.io", `width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self.screenX + self.innerWidth / 2 - 330},top=${(self.innerHeight - 310) / 2}`);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.fbShareStats = function() {
+                    self.fbShareStats = function () {
                         var groupDescription = self.getStatsString("fb_matchresults_subtitle");
                         self.FB.ui({
                             method: "feed",
@@ -4656,7 +4594,7 @@ function main(self, $) {
                      * @param {string} ctxt
                      * @return {undefined}
                      */
-                    self.fillSocialValues = function(onComplete, ctxt) {
+                    self.fillSocialValues = function (onComplete, ctxt) {
                         if (1 == self.isChrome) {
                             if ("google" == self.storageInfo.context) {
                                 self.gapi.interactivepost.render(ctxt, {
@@ -4670,7 +4608,7 @@ function main(self, $) {
                             }
                         }
                     };
-                    $(function() {
+                    $(function () {
                         if ("MAsyncInit" in self) {
                             self.MAsyncInit();
                         }
