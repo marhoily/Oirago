@@ -1,4 +1,19 @@
-﻿interface IEnvConfig {
+﻿var gapi;
+var SSA_CORE;
+
+class TimeSeries{
+    Ma: boolean;
+    constructor(p: { Ma: boolean }) { return; }
+}
+class SmoothieChart{
+    constructor(res) { return; }
+}
+class Obj1 {
+    rttSDev;
+    rttMean;
+}
+
+interface IEnvConfig {
     load_local_configuration;
     configID;
     master_url;
@@ -93,7 +108,8 @@ class OneRenSett {
 }
 
 var EnvConfig: IEnvConfig;
-(function (self, $) {
+
+function main (self, $) {
     /**
      * @param {string} value
      * @param {number} expectedNumberOfNonCommentArgs
@@ -1271,11 +1287,11 @@ var EnvConfig: IEnvConfig;
         closingAnimationTime = Math.max(closingAnimationTime, pick());
         if (0 != closingAnimationTime) {
             if (null == _arg) {
-                _arg = new setFillAndStroke(24, "#FFFFFF");
+                _arg = new setFillAndStroke(24, "#FFFFFF", true, "#000000");
             }
             _arg.B(_("score") + ": " + ~~(closingAnimationTime / 100));
-            a = _arg.N();
-            size = a.width;
+            var a11 = _arg.N();
+            size = a11.width;
             /** @type {number} */
             ctx.globalAlpha = 0.2;
             /** @type {string} */
@@ -1283,7 +1299,7 @@ var EnvConfig: IEnvConfig;
             ctx.fillRect(10, height - 10 - 24 - 10, size + 10, 34);
             /** @type {number} */
             ctx.globalAlpha = 1;
-            ctx.drawImage(a, 15, height - 10 - 24 - 5);
+            ctx.drawImage(a11, 15, height - 10 - 24 - 5);
         }
         drawBackground();
         /** @type {number} */
@@ -1809,9 +1825,7 @@ var EnvConfig: IEnvConfig;
                                 xp: 0,
                                 xpNeeded: options.xpNeeded,
                                 level: options.level
-                            }, function () {
-                                start(options);
-                            });
+                            }, "function () {start(options);}");
                         }, 1E3);
                     });
                 } else {
@@ -2021,7 +2035,7 @@ var EnvConfig: IEnvConfig;
         $(".stats-cells-eaten").text(path);
         $(".stats-top-position").text(0 == count ? ":(" : count);
         /** @type {(HTMLElement|null)} */
-        var h1: HTMLCanvasElement = document.getElementById("statsGraph");
+        var h1 = <HTMLCanvasElement>document.getElementById("statsGraph");
         if (h1) {
             var ctx = h1.getContext("2d");
             var width = h1.width;
@@ -2091,9 +2105,7 @@ var EnvConfig: IEnvConfig;
                     /** @type {boolean} */
                     from = true;
                     setTimeout(function () {
-                        $("#overlays").fadeIn(500, function () {
-                            start();
-                        });
+                        $("#overlays").fadeIn(500, start);
                         $("#stats").show();
                         var onComplete = trigger("g_plus_share_stats");
                         self.fillSocialValues(onComplete, "gPlusShare");
@@ -2677,7 +2689,7 @@ var EnvConfig: IEnvConfig;
                             j = 0;
                             for (; j < data.length; j++) {
                                 var pixel = data[j];
-                                var encoding = _.extend(deep, s[j]);
+                                var encoding = "_.extend(deep, s[j])";
                                 res.addTimeSeries(pixel, encoding);
                             }
                             res.streamTo(document.getElementById(id), 0);
@@ -2708,7 +2720,7 @@ var EnvConfig: IEnvConfig;
                         var input;
                         /** @type {boolean} */
                         var text = false;
-                        var obj = {};
+                        var obj = new Obj1();
                         var deep = {
                             strokeStyle: "rgba(0, 255, 0, 1)",
                             fillStyle: "rgba(0, 255, 0, 0.2)",
@@ -3257,8 +3269,8 @@ var EnvConfig: IEnvConfig;
                             for (; this.a.length < a;) {
                                 /** @type {number} */
                                 var a5 = ~~(Math.random() * this.a.length);
-                                a5 = this.a[a5];
-                                this.a.push(new Player(this, a5.x, a5.y, a5.f, a5.b));
+                                var a12 = this.a[a5];
+                                this.a.push(new Player(this, a12.x, a12.y, a12.f, a12.b));
                             }
                         },
                         /**
@@ -3684,15 +3696,15 @@ var EnvConfig: IEnvConfig;
                             /** @type {Array} */
                             var UNICODE_SPACES = [c.getMonth() + 1, c.getDate(), c.getFullYear()];
                             /** @type {Array} */
-                            c = [c.getHours(), c.getMinutes(), c.getSeconds()];
+                            var c2 = [c.getHours().toString(), c.getMinutes(), c.getSeconds()];
                             /** @type {number} */
                             var eventName = 1;
                             for (; 3 > eventName; eventName++) {
-                                if (10 > c[eventName]) {
-                                    c[eventName] = "0" + c[eventName];
+                                if (10 > c2[eventName]) {
+                                    c2[eventName] = "0" + c2[eventName];
                                 }
                             }
-                            return "[" + UNICODE_SPACES.join("/") + " " + c.join(":") + "]";
+                            return "[" + UNICODE_SPACES.join("/") + " " + c2.join(":") + "]";
                         };
                         return opt_attributes;
                     } ({});
@@ -3939,7 +3951,7 @@ var EnvConfig: IEnvConfig;
                             /** @type {(HTMLElement|null)} */
                             var originalFavicon = document.getElementById("favicon");
                             /** @type {Element} */
-                            var newNode = originalFavicon.cloneNode(true);
+                            var newNode: Element = <Element>originalFavicon.cloneNode(true);
                             newNode.setAttribute("href", canvas.toDataURL("image/png"));
                             originalFavicon.parentNode.replaceChild(newNode, originalFavicon);
                         };
@@ -4092,7 +4104,7 @@ var EnvConfig: IEnvConfig;
                             data.userInfo.level = options.level;
                             callback();
                             if (a && b) {
-                                start(options);
+                                start(options, "");
                             } else {
                                 $(".agario-profile-panel .progress-bar-star").text(options.level);
                                 $(".agario-exp-bar .progress-bar-text").text(options.xp + "/" + options.xpNeeded + " XP");
@@ -4104,7 +4116,7 @@ var EnvConfig: IEnvConfig;
                          * @return {undefined}
                          */
                         doc.Ia = function (count) {
-                            start(count);
+                            start(count, "");
                         };
                         return doc;
                     } ({});
@@ -4573,4 +4585,4 @@ var EnvConfig: IEnvConfig;
             }
         }
     }
-})(window, window.jQuery);
+}
