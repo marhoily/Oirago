@@ -359,11 +359,11 @@
                     processTick(a, d);
                     break;
                 case 17:
-                    ib = a.getFloat32(d, !0);
+                    SpectatorX = a.getFloat32(d, !0);
                     d += 4;
-                    jb = a.getFloat32(d, !0);
+                    SpectatorY = a.getFloat32(d, !0);
                     d += 4;
-                    kb = a.getFloat32(d, !0);
+                    SpectatorZoom = a.getFloat32(d, !0);
                     d += 4;
                     break;
                 case 18:
@@ -663,15 +663,15 @@
                 notMyBalls[c].S(),
                     a += notMyBalls[c].x / notMyBalls.length,
                     d += notMyBalls[c].y / notMyBalls.length;
-            ib = a;
-            jb = d;
-            kb = r;
+            SpectatorX = a;
+            SpectatorY = d;
+            SpectatorZoom = r;
             A = (A + a) / 2;
             B = (B + d) / 2;
         } else
-            A = (5 * A + ib) / 6,
-                B = (5 * B + jb) / 6,
-                r = (9 * r + kb * bc()) / 10;
+            A = (5 * A + SpectatorX) / 6,
+                B = (5 * B + SpectatorY) / 6,
+                r = (9 * r + SpectatorZoom * bc()) / 10;
         wc();
         $a();
         Bb || f.clearRect(0, 0, width, height);
@@ -1237,8 +1237,8 @@
                     skinsEnabled = !0, namesEnabled = !0,
                     noColors = !1,
                     highestMass = 0, blackTheme = !1,
-                    showMass = !1, ib = A = ~~((ob + qb) / 2),
-                    jb = B = ~~((pb + rb) / 2), kb = 1,
+                    showMass = !1, SpectatorX = A = ~~((ob + qb) / 2),
+                    SpectatorY = B = ~~((pb + rb) / 2), SpectatorZoom = 1,
                     Ca = "", I = null, ab = !1,
                     nb = !1, lb = 0, mb = 0,
                     Ha = 0, Ia = 0,

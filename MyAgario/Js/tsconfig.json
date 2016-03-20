@@ -1,0 +1,11 @@
+﻿{
+  "compilerOptions": {
+    "module": "commonjs",
+    "sourceMap": true
+  },
+  "files": [
+    "jquery.d.ts",
+    "lib.ts",
+    "main.ts"
+  ]
+}
