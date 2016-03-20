@@ -4,129 +4,153 @@
 
 
 
-function main(self, $) {
+var old: any;
+var url: string;
+var from: boolean;
+var proto: { init: (params: any) => { va: (val: any) => void; Ga: (memory: any, a: any, array: any, offset: any, func: any) => void } };
+var Aa: boolean;
+var Ba: boolean;
+var selector: boolean;
+var result: Result;
+var ssl: boolean;
+var success: any;
+var img: any;
+var d: number;
+var a1: number;
+var exports;
 
-    function playerCalc() {
-        /**
-         * @param {Object} evt
-         * @return {undefined}
-         */
-        self.onkeydown = evt => {
-            if (!(32 != evt.keyCode)) {
-                if (!firing) {
-                    if ("nick" != evt.target.id) {
-                        evt.preventDefault();
+var pauseText: number;
+var qw: number;
+var qz: number;
+var ty: number;
+var tx: number;
+var valueAccessor: () => void;
+var a: typeof undefined[];
+var col: string;
+var aux: number;
+var count: number;
+var path: number;
+var backoff: number;
+var self1;
+
+
+function playerCalc() {
+    /**
+     * @param {Object} evt
+     * @return {undefined}
+     */
+    self1.onkeydown = evt => {
+        if (!(32 != evt.keyCode)) {
+            if (!firing) {
+                if ("nick" != evt.target.id) {
+                    evt.preventDefault();
+                }
+                end();
+                /** @type {boolean} */
+                firing = true;
+            }
+        }
+        if (81 == evt.keyCode) {
+            emit(18);
+            /** @type {boolean} */
+            memory = true;
+        }
+        if (!(87 != evt.keyCode)) {
+            if (!stack) {
+                emitter();
+                /** @type {boolean} */
+                stack = true;
+            }
+        }
+        if (27 == evt.keyCode) {
+            evt.preventDefault();
+            showError(300);
+            if ($("#oferwallContainer").is(":visible")) {
+                self1.closeOfferwall();
+            }
+            if ($("#videoContainer").is(":visible")) {
+                self1.closeVideoContainer();
+            }
+        }
+    };
+    /**
+     * @param {?} event
+     * @return {undefined}
+     */
+    self1.onkeyup = event => {
+        if (32 == event.keyCode) {
+            /** @type {boolean} */
+            firing = false;
+        }
+        if (87 == event.keyCode) {
+            /** @type {boolean} */
+            stack = false;
+        }
+        if (81 == event.keyCode) {
+            if (memory) {
+                emit(19);
+                /** @type {boolean} */
+                memory = false;
+            }
+        }
+    };
+}
+function createObjects() {
+    if (0.4 > scale) {
+        /** @type {null} */
+        context = null;
+    } else {
+        /** @type {number} */
+        var j = Number.POSITIVE_INFINITY;
+        /** @type {number} */
+        var left = Number.POSITIVE_INFINITY;
+        /** @type {number} */
+        var maxY = Number.NEGATIVE_INFINITY;
+        /** @type {number} */
+        var bottom = Number.NEGATIVE_INFINITY;
+        /** @type {number} */
+        var i = 0;
+        var p1;
+        for (; i < parts.length; i++) {
+            p1 = parts[i];
+            if (!!p1.P()) {
+                if (!p1.V) {
+                    if (!(20 >= p1.size * scale)) {
+                        /** @type {number} */
+                        j = Math.min(p1.x - p1.size, j);
+                        /** @type {number} */
+                        left = Math.min(p1.y - p1.size, left);
+                        /** @type {number} */
+                        maxY = Math.max(p1.x + p1.size, maxY);
+                        /** @type {number} */
+                        bottom = Math.max(p1.y + p1.size, bottom);
                     }
-                    end();
-                    /** @type {boolean} */
-                    firing = true;
                 }
             }
-            if (81 == evt.keyCode) {
-                emit(18);
-                /** @type {boolean} */
-                memory = true;
-            }
-            if (!(87 != evt.keyCode)) {
-                if (!stack) {
-                    emitter();
-                    /** @type {boolean} */
-                    stack = true;
-                }
-            }
-            if (27 == evt.keyCode) {
-                evt.preventDefault();
-                showError(300);
-                if ($("#oferwallContainer").is(":visible")) {
-                    self.closeOfferwall();
-                }
-                if ($("#videoContainer").is(":visible")) {
-                    self.closeVideoContainer();
-                }
-            }
-        };
-        /**
-         * @param {?} event
-         * @return {undefined}
-         */
-        self.onkeyup = event => {
-            if (32 == event.keyCode) {
-                /** @type {boolean} */
-                firing = false;
-            }
-            if (87 == event.keyCode) {
-                /** @type {boolean} */
-                stack = false;
-            }
-            if (81 == event.keyCode) {
-                if (memory) {
-                    emit(19);
-                    /** @type {boolean} */
-                    memory = false;
-                }
-            }
-        };
-    }
-
-    var proto: { init: (params: any) => { va: (val: any) => void;Ga: (memory: any, a: any, array: any, offset: any, func: any) => void } };
-
-    function createObjects() {
-        if (0.4 > scale) {
-            /** @type {null} */
-            context = null;
-        } else {
-            /** @type {number} */
-            var j = Number.POSITIVE_INFINITY;
-            /** @type {number} */
-            var left = Number.POSITIVE_INFINITY;
-            /** @type {number} */
-            var maxY = Number.NEGATIVE_INFINITY;
-            /** @type {number} */
-            var bottom = Number.NEGATIVE_INFINITY;
-            /** @type {number} */
-            var i = 0;
-            var p1;
-            for (; i < parts.length; i++) {
-                p1 = parts[i];
-                if (!!p1.P()) {
-                    if (!p1.V) {
-                        if (!(20 >= p1.size * scale)) {
-                            /** @type {number} */
-                            j = Math.min(p1.x - p1.size, j);
-                            /** @type {number} */
-                            left = Math.min(p1.y - p1.size, left);
-                            /** @type {number} */
-                            maxY = Math.max(p1.x + p1.size, maxY);
-                            /** @type {number} */
-                            bottom = Math.max(p1.y + p1.size, bottom);
-                        }
-                    }
-                }
-            }
-            context = proto.init({
-                Ba: j - 10,
-                Ca: left - 10,
-                za: maxY + 10,
-                Aa: bottom + 10,
-                Ja: 2,
-                Ka: 4
-            });
-            /** @type {number} */
-            i = 0;
-            for (; i < parts.length; i++) {
-                var p = parts[i];
-                if (p.P() && !(20 >= p.size * scale)) {
-                    /** @type {number} */
-                    j = 0;
-                    for (; j < p.a.length; ++j) {
-                        left = p.a[j].x;
-                        maxY = p.a[j].y;
-                        if (!(left < px - width / 2 / scale)) {
-                            if (!(maxY < y - height / 2 / scale)) {
-                                if (!(left > px + width / 2 / scale)) {
-                                    if (!(maxY > y + height / 2 / scale)) {
-                                        context.va(p.a[j]);
-                                    }
+        }
+        context = proto.init({
+            Ba: j - 10,
+            Ca: left - 10,
+            za: maxY + 10,
+            Aa: bottom + 10,
+            Ja: 2,
+            Ka: 4
+        });
+        /** @type {number} */
+        i = 0;
+        for (; i < parts.length; i++) {
+            var p = parts[i];
+            if (p.P() && !(20 >= p.size * scale)) {
+                /** @type {number} */
+                j = 0;
+                for (; j < p.a.length; ++j) {
+                    left = p.a[j].x;
+                    maxY = p.a[j].y;
+                    if (!(left < px - width / 2 / scale)) {
+                        if (!(maxY < y - height / 2 / scale)) {
+                            if (!(left > px + width / 2 / scale)) {
+                                if (!(maxY > y + height / 2 / scale)) {
+                                    context.va(p.a[j]);
                                 }
                             }
                         }
@@ -135,253 +159,578 @@ function main(self, $) {
             }
         }
     }
-
-    function preventDefault() {
-        value = (cx - width / 2) / scale + px;
-        t2 = (cy - height / 2) / scale + y;
+}
+function preventDefault() {
+    value = (cx - width / 2) / scale + px;
+    t2 = (cy - height / 2) / scale + y;
+}
+function run() {
+    if (null == old) {
+        old = {};
+        $("#region").children().each(function () {
+            var option = $(this);
+            var name = option.val();
+            if (name) {
+                old[name] = option.text();
+            }
+        });
     }
-
-    var old: any;
-    var url: string;
-
-    function run() {
-        if (null == old) {
-            old = {};
-            $("#region").children().each(function () {
-                var option = $(this);
-                var name = option.val();
-                if (name) {
-                    old[name] = option.text();
-                }
-            });
+    $.get(url + "info", b => {
+        var testSource = {};
+        var name;
+        for (name in b.regions) {
+            var sourceName = name.split(":")[0];
+            testSource[sourceName] = testSource[sourceName] || 0;
+            testSource[sourceName] += b.regions[name].numPlayers;
         }
-        $.get(url + "info", b => {
-            var testSource = {};
-            var name;
-            for (name in b.regions) {
-                var sourceName = name.split(":")[0];
-                testSource[sourceName] = testSource[sourceName] || 0;
-                testSource[sourceName] += b.regions[name].numPlayers;
+        for (name in testSource) {
+            $(`#region option[value="${name}"]`).text(old[name] + " (" + testSource[name] + " players)");
+        }
+    }, "json");
+}
+function _init() {
+    $("#adsBottom").hide();
+    $("#overlays").hide();
+    $("#stats").hide();
+    $("#mainPanel").hide();
+    /** @type {boolean} */
+    from = to = false;
+    save();
+    self1.destroyAd(self1.adSlots.aa);
+    self1.destroyAd(self1.adSlots.ac);
+}
+function reset(hash) {
+    if (hash) {
+        if (hash == newValue) {
+            $(".btn-needs-server").prop("disabled", false);
+        } else {
+            if ($("#region").val() != hash) {
+                $("#region").val(hash);
             }
-            for (name in testSource) {
-                $(`#region option[value="${name}"]`).text(old[name] + " (" + testSource[name] + " players)");
+            newValue = self1.localStorage.location = hash;
+            $(".region-message").hide();
+            $(`.region-message.${hash}`).show();
+            $(".btn-needs-server").prop("disabled", false);
+            if (ab) {
+                next();
             }
-        }, "json");
+        }
     }
-
-    var from: boolean;
-
-    function _init() {
-        $("#adsBottom").hide();
-        $("#overlays").hide();
-        $("#stats").hide();
-        $("#mainPanel").hide();
-        /** @type {boolean} */
-        from = to = false;
-        save();
-        self.destroyAd(self.adSlots.aa);
-        self.destroyAd(self.adSlots.ac);
-    }
-
-    /**
-     * @param {(Object|string)} hash
-     * @return {undefined}
-     */
-    function reset(hash) {
-        if (hash) {
-            if (hash == newValue) {
-                $(".btn-needs-server").prop("disabled", false);
+}
+function showError(expectedHashCode) {
+    if (!to) {
+        if (!from) {
+            if (Aa) {
+                $(".btn-spectate").prop("disabled", true);
             } else {
-                if ($("#region").val() != hash) {
-                    $("#region").val(hash);
-                }
-                newValue = self.localStorage.location = hash;
-                $(".region-message").hide();
-                $(`.region-message.${hash}`).show();
-                $(".btn-needs-server").prop("disabled", false);
-                if (ab) {
-                    next();
-                }
+                $(".btn-spectate").prop("disabled", false);
             }
-        }
-    }
-
-    /**
-     * @param {number} expectedHashCode
-     * @return {undefined}
-     */
-    var Aa: boolean;
-    var Ba: boolean;
-    var selector: boolean;
-
-    function showError(expectedHashCode) {
-        if (!to) {
-            if (!from) {
-                if (Aa) {
-                    $(".btn-spectate").prop("disabled", true);
-                } else {
-                    $(".btn-spectate").prop("disabled", false);
-                }
-                /** @type {boolean} */
-                Ba = false;
-                /** @type {null} */
-                b = null;
-                if (!selector) {
-                    $("#adsBottom").show();
-                    $("#g300x250").hide();
-                    $("#a300x250").show();
-                    $("#g728x90").hide();
-                    $("#a728x90").show();
-                }
-                self.refreshAd(selector ? self.adSlots.ac : self.adSlots.aa);
-                /** @type {boolean} */
-                selector = false;
-                if (1E3 > expectedHashCode) {
-                    /** @type {number} */
-                    alpha = 1;
-                }
-                /** @type {boolean} */
-                to = true;
-                $("#mainPanel").show();
-                if (0 < expectedHashCode) {
-                    $("#overlays").fadeIn(expectedHashCode);
-                } else {
-                    $("#overlays").show();
-                }
+            /** @type {boolean} */
+            Ba = false;
+            /** @type {null} */
+            b = null;
+            if (!selector) {
+                $("#adsBottom").show();
+                $("#g300x250").hide();
+                $("#a300x250").show();
+                $("#g728x90").hide();
+                $("#a728x90").show();
             }
-        }
-    }
-
-    /**
-     * @param {number} path
-     * @return {undefined}
-     */
-    function show(path) {
-        $("#helloContainer").attr("data-gamemode", path);
-        /** @type {number} */
-        actual = path;
-        $("#gamemode").val(path);
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function save() {
-        if ($("#region").val()) {
-            self.localStorage.location = $("#region").val();
-        } else {
-            if (self.localStorage.location) {
-                $("#region").val(self.localStorage.location);
+            self1.refreshAd(selector ? self1.adSlots.ac : self1.adSlots.aa);
+            /** @type {boolean} */
+            selector = false;
+            if (1E3 > expectedHashCode) {
+                /** @type {number} */
+                alpha = 1;
             }
-        }
-        if ($("#region").val()) {
-            $("#locationKnown").append($("#region"));
-        } else {
-            $("#locationUnknown").append($("#region"));
-        }
-    }
-
-    /**
-     * @param {string} id
-     * @return {undefined}
-     */
-    function resolve(id) {
-        if ("env_local" in EnvConfig) {
-            if ("true" == EnvConfig.load_local_configuration) {
-                self.MC.updateConfigurationID("base");
+            /** @type {boolean} */
+            to = true;
+            $("#mainPanel").show();
+            if (0 < expectedHashCode) {
+                $("#overlays").fadeIn(expectedHashCode);
             } else {
-                self.MC.updateConfigurationID(EnvConfig.configID);
+                $("#overlays").show();
             }
-        } else {
-            self.MC.updateConfigurationID(id);
         }
     }
-
-    /**
-     * @return {undefined}
-     */
-    var result: Result;
-
-    function startServer() {
-        if ("configID" in result) {
-            resolve(result.configID);
-        } else {
-            $.get(url + "getLatestID", newId => {
-                resolve(newId);
-                /** @type {string} */
-                self.localStorage.last_config_id = newId;
-            }).fail(() => {
-                var data: boolean | string;
-                if (data = "last_config_id" in self.localStorage) {
-                    data = self.localStorage.last_config_id;
-                    /** @type {boolean} */
-                    data = !(null == data || ("" === data));
-                }
-                if (data) {
-                    data = self.localStorage.last_config_id;
-                    console.log(`Fallback to stored configID: ${data}`);
-                    resolve(data);
-                }
-            });
+}
+function save() {
+    if ($("#region").val()) {
+        self1.localStorage.location = $("#region").val();
+    } else {
+        if (self1.localStorage.location) {
+            $("#region").val(self1.localStorage.location);
         }
     }
-
-    /**
-     * @return {undefined}
-     */
-
-    function postLink() {
-        $.get(base + "//gc.agar.io", prop => {
-            var name = prop.split(" ");
-            prop = name[0];
-            name = name[1] || "";
-            if (-1 == ["UA"].indexOf(prop)) {
-                excludes.push("ussr");
+    if ($("#region").val()) {
+        $("#locationKnown").append($("#region"));
+    } else {
+        $("#locationUnknown").append($("#region"));
+    }
+}
+function show(path) {
+    $("#helloContainer").attr("data-gamemode", path);
+    /** @type {number} */
+    actual = path;
+    $("#gamemode").val(path);
+}
+function resolve(id) {
+    if ("env_local" in EnvConfig) {
+        if ("true" == EnvConfig.load_local_configuration) {
+            self1.MC.updateConfigurationID("base");
+        } else {
+            self1.MC.updateConfigurationID(EnvConfig.configID);
+        }
+    } else {
+        self1.MC.updateConfigurationID(id);
+    }
+}
+function startServer() {
+    if ("configID" in result) {
+        resolve(result.configID);
+    } else {
+        $.get(url + "getLatestID", newId => {
+            resolve(newId);
+            /** @type {string} */
+            self1.localStorage.last_config_id = newId;
+        }).fail(() => {
+            var data: boolean | string;
+            if (data = "last_config_id" in self1.localStorage) {
+                data = self1.localStorage.last_config_id;
+                /** @type {boolean} */
+                data = !(null == data || ("" === data));
             }
-            if (input.hasOwnProperty(prop)) {
-                if ("string" == typeof input[prop]) {
+            if (data) {
+                data = self1.localStorage.last_config_id;
+                console.log(`Fallback to stored configID: ${data}`);
+                resolve(data);
+            }
+        });
+    }
+}
+function postLink() {
+    $.get(base + "//gc.agar.io", prop => {
+        var name = prop.split(" ");
+        prop = name[0];
+        name = name[1] || "";
+        if (-1 == ["UA"].indexOf(prop)) {
+            excludes.push("ussr");
+        }
+        if (input.hasOwnProperty(prop)) {
+            if ("string" == typeof input[prop]) {
+                if (!newValue) {
+                    reset(input[prop]);
+                }
+            } else {
+                if (input[prop].hasOwnProperty(name)) {
                     if (!newValue) {
-                        reset(input[prop]);
-                    }
-                } else {
-                    if (input[prop].hasOwnProperty(name)) {
-                        if (!newValue) {
-                            reset(input[prop][name]);
-                        }
+                        reset(input[prop][name]);
                     }
                 }
             }
-        }, "text");
-    }
+        }
+    }, "text");
+}
 
+function end() {
+    read();
+    emit(17);
+}
+function emitter() {
+    read();
+    emit(21);
+}
+function forEach() {
+    return null != ws && ws.readyState == ws.OPEN;
+}
+function emit(expectedNumberOfNonCommentArgs) {
+    if (forEach()) {
+        var data = stringify(1);
+        data.setUint8(0, expectedNumberOfNonCommentArgs);
+        log(data);
+    }
+}
+function set(caption) {
+    if ("auto" === caption.toLowerCase()) {
+        /** @type {boolean} */
+        opts.auto = true;
+    } else {
+        options.renderSettings.selected = options.renderSettings[caption.toLowerCase()];
+        /** @type {boolean} */
+        opts.auto = false;
+    }
+}
+function update() {
+    /** @type {number} */
+    width = 1 * self1.innerWidth;
+    /** @type {number} */
+    height = 1 * self1.innerHeight;
+    /** @type {number} */
+    cv.width = canvas.width = width;
+    /** @type {number} */
+    cv.height = canvas.height = height;
+    var $this = $("#helloContainer");
+    $this.css("transform", "none");
+    var maxHeight = $this.height();
+    /** @type {number} */
+    var win = self1.innerHeight;
+    if (0 != maxHeight / 2 % 2) {
+        maxHeight++;
+        $this.height(maxHeight);
+    }
+    if (maxHeight > win / 1.1) {
+        $this.css("transform", `translate(-50%, -50%) scale(${win / maxHeight / 1.1})`);
+    } else {
+        $this.css("transform", "translate(-50%, -50%)");
+    }
+    render();
+}
+function requestAnimationFrame1() {
+    var setSize: number;
+    /** @type {number} */
+    setSize = 1 * Math.max(height / 1080, width / 1920);
+    return setSize *= ratio;
+}
+function frame() {
+    if (0 != items.length) {
+        /** @type {number} */
+        var imgWidth = 0;
+        /** @type {number} */
+        var i = 0;
+        for (; i < items.length; i++) {
+            imgWidth += items[i].size;
+        }
+        /** @type {number} */
+        scale = (9 * scale + Math.pow(Math.min(64 / imgWidth, 1), 0.4) * requestAnimationFrame1()) / 10;
+    }
+}
+
+var closest: number;
+var t1: number;
+function read() {
+    if (forEach()) {
+        /** @type {number} */
+        var x = cx - width / 2;
+        /** @type {number} */
+        var y = cy - height / 2;
+        if (!(64 > x * x + y * y)) {
+            if (!(0.01 > Math.abs(closest - value) &&
+                0.01 > Math.abs(t1 - t2))) {
+                closest = value;
+                t1 = t2;
+                var buff = stringify(13);
+                buff.setUint8(0, 16);
+                buff.setInt32(1, value, true);
+                buff.setInt32(5, t2, true);
+                buff.setUint32(9, 0, true);
+                log(buff);
+            }
+        }
+    }
+}
+function destroy() {
+    if (forEach() && (matchEnd && null != b)) {
+        var data = stringify(1 + 2 * b.length);
+        data.setUint8(0, 0);
+        /** @type {number} */
+        var bi = 0;
+        for (; bi < b.length; ++bi) {
+            data.setUint16(1 + 2 * bi, b.charCodeAt(bi), true);
+        }
+        log(data);
+        /** @type {null} */
+        b = null;
+        /** @type {boolean} */
+        Ba = true;
+    }
+}
+
+function next() {
+    if (ab) {
+        if (newValue) {
+            $("#connecting").show();
+            makeRequest();
+        }
+    }
+}
+function bind() {
+    if (ws) {
+        /** @type {null} */
+        ws.onopen = null;
+        /** @type {null} */
+        ws.onmessage1 = null;
+        /** @type {null} */
+        ws.onclose = null;
+        try {
+            ws.close();
+        } catch (a) {
+        }
+        /** @type {null} */
+        ws = null;
+    }
+}
+function open1(url, a) {
+    bind();
+    if (result.ip) {
+        /** @type {string} */
+        url = `ws${ssl ? "s" : ""}://${result.ip}`;
+    }
+    if (null != success) {
+        var callback = success;
+        /**
+         * @return {undefined}
+         */
+        success = () => {
+            callback(a);
+        };
+    }
+    if (ssl && (!EnvConfig.env_development && !EnvConfig.env_local)) {
+        var attrList = url.split(":");
+        /** @type {string} */
+        url = `wss://ip-${attrList[1].replace(/\./g, "-").replace(/\//g, "")}.tech.agar.io:${+attrList[2]}`;
+    }
+    /** @type {Array} */
+    that = [];
+    /** @type {Array} */
+    items = [];
+    args = {};
+    /** @type {Array} */
+    parts = [];
+    /** @type {Array} */
+    chars = [];
+    /** @type {Array} */
+    list = [];
+    /** @type {null} */
+    img = angles = null;
+    /** @type {number} */
+    closingAnimationTime = 0;
+    /** @type {boolean} */
+    matchEnd = false;
+    /** @type {boolean} */
+    options.cache.sentGameServerLogin = false;
+    /** @type {WebSocket} */
+    ws = new WebSocket(url);
+    /** @type {string} */
+    ws.binaryType = "arraybuffer";
     /**
-     * @param {string} name
+     * @return {undefined}
+     */
+    ws.onopen = () => {
+        var data: DataView;
+        /** @type {number} */
+        j = t = Date.now();
+        /** @type {number} */
+        d = 120;
+        /** @type {number} */
+        a1 = 0;
+        console.log("socket open1");
+        data = stringify(5);
+        data.setUint8(0, 254);
+        data.setUint32(1, 5, true);
+        log(data);
+        data = stringify(5);
+        data.setUint8(0, 255);
+        data.setUint32(1, 154669603, true);
+        log(data);
+        data = stringify(1 + a.length);
+        data.setUint8(0, 80);
+        /** @type {number} */
+        var i = 0;
+        for (; i < a.length; ++i) {
+            data.setUint8(i + 1, a.charCodeAt(i));
+        }
+        log(data);
+        options.core.proxy.onSocketOpen();
+    };
+    /** @type {function (MessageEvent): undefined} */
+    ws.onmessage1 = onmessage1;
+    /** @type {function (): undefined} */
+    ws.onclose = listener;
+    /**
+     * @return {undefined}
+     */
+    ws.onerror = function () {
+        console.log(exports.la() + " socket error", arguments);
+    };
+}
+function stringify(expectedNumberOfNonCommentArgs) {
+    return new DataView(new ArrayBuffer(expectedNumberOfNonCommentArgs));
+}
+function log(data) {
+    ws.send(data.buffer);
+}
+function listener() {
+    if (matchEnd) {
+        /** @type {number} */
+        backoff = 500;
+    }
+    options.core.proxy.onSocketClosed();
+    console.log(exports.la() + " socket close");
+    setTimeout(next, backoff);
+    backoff *= 2;
+}
+function onmessage1(a) {
+    parse(new DataView(a.data));
+}
+function parse(data) {
+    /**
      * @return {?}
      */
-    function _(name) {
-        return self.i18n[name] || (self.i18n_dict.en[name] || name);
+    var offset: number;
+
+    function encode() {
+        /** @type {string} */
+        var str = "";
+        for (; ;) {
+            var b = data.getUint16(offset, true);
+            offset += 2;
+            if (0 == b) {
+                break;
+            }
+            str += String.fromCharCode(b);
+        }
+        return str;
     }
 
-    /**
-     * @return {undefined}
-     */
-    var ssl: boolean;
+    /** @type {number} */
+    offset = 0;
+    if (240 == data.getUint8(offset)) {
+        fn();
+    } else {
+        switch (data.getUint8(offset++)) {
+            case 16:
+                init(data, offset);
+                break;
+            case 17:
+                chunk = data.getFloat32(offset, true);
+                offset += 4;
+                x = data.getFloat32(offset, true);
+                offset += 4;
+                argumentOffset = data.getFloat32(offset, true);
+                offset += 4;
+                break;
+            case 18:
+                /** @type {Array} */
+                that = [];
+                /** @type {Array} */
+                items = [];
+                args = {};
+                /** @type {Array} */
+                parts = [];
+                break;
+            case 20:
+                /** @type {Array} */
+                items = [];
+                /** @type {Array} */
+                that = [];
+                break;
+            case 21:
+                matches = data.getInt16(offset, true);
+                offset += 2;
+                s = data.getInt16(offset, true);
+                offset += 2;
+                if (!nb) {
+                    /** @type {boolean} */
+                    nb = true;
+                    xr = matches;
+                    pos = s;
+                }
+                break;
+            case 32:
+                that.push(data.getUint32(offset, true));
+                offset += 4;
+                break;
+            case 49:
+                if (null != angles) {
+                    break;
+                }
+                var b = data.getUint32(offset, true);
+                offset = offset + 4;
+                /** @type {Array} */
+                list = [];
+                /** @type {number} */
+                var a = 0;
+                for (; a < b; ++a) {
+                    var token = data.getUint32(offset, true);
+                    offset = offset + 4;
+                    list.push({
+                        id: token,
+                        name: encode()
+                    });
+                }
+                create();
+                break;
+            case 50:
+                /** @type {Array} */
+                angles = [];
+                b = data.getUint32(offset, true);
+                offset += 4;
+                /** @type {number} */
+                a = 0;
+                for (; a < b; ++a) {
+                    angles.push(data.getFloat32(offset, true));
+                    offset += 4;
+                }
+                create();
+                break;
+            case 64:
+                minX = data.getFloat64(offset, true);
+                offset += 8;
+                minY = data.getFloat64(offset, true);
+                offset += 8;
+                maxX = data.getFloat64(offset, true);
+                offset += 8;
+                maxY = data.getFloat64(offset, true);
+                offset += 8;
+                if (data.byteLength > offset) {
+                    b = data.getUint32(offset, true);
+                    offset += 4;
+                    /** @type {boolean} */
+                    started = !!(b & 1);
+                    passes = encode();
+                    self1.MC.updateServerVersion(passes);
+                    console.log(`Server version ${passes}`);
+                }
+                break;
+            case 102:
+                b = data.buffer.slice(offset);
+                options.core.proxy.forwardProtoMessage(b);
+                break;
+            case 104:
+                self1.logout();
+        }
+    }
+}
+var max: number;
 
+function fn() {
+    /** @type {boolean} */
+    Ba = false;
+    clearTimeout(timer);
+    if (null == self1.storageInfo) {
+        self1.createDefaultStorage();
+    }
+    /** @type {number} */
+    max = Date.now();
+    if (0 >= aux) {
+        /** @type {number} */
+        aux = max;
+    }
+    /** @type {boolean} */
+    Aa = false;
+    setPosition();
+}
+
+
+    function _(name) {
+        return self1.i18n[name] || (self1.i18n_dict.en[name] || name);
+    }
     function makeRequest() {
         /** @type {number} */
         var uid = ++resizeUID;
         bind();
         $.ajax(url + "findServer", {
-            /**
-             * @return {undefined}
-             */ error() {
-                console.log("Failed to get server. Will retry in 30 seconds");
-                setTimeout(makeRequest, 3E4);
-            },
-            /**
-             * @param {Object} data
-             * @return {undefined}
-             */ success(data) {
+             success(data) {
                 if (uid == resizeUID) {
                     if (data.alert) {
                         alert(data.alert);
@@ -389,9 +738,9 @@ function main(self, $) {
                     var method = data.ip;
                     if ("game_server_port" in EnvConfig) {
                         /** @type {string} */
-                        method = self.location.hostname + ":" + EnvConfig.game_server_port;
+                        method = self1.location.hostname + ":" + EnvConfig.game_server_port;
                     }
-                    open(`ws${ssl ? "s" : ""}://${method}`, data.token);
+                    open1(`ws${ssl ? "s" : ""}://${method}`, data.token);
                 }
             },
             dataType: "json",
@@ -402,330 +751,9 @@ function main(self, $) {
         });
     }
 
-    /**
-     * @return {undefined}
-     */
-    function next() {
-        if (ab) {
-            if (newValue) {
-                $("#connecting").show();
-                makeRequest();
-            }
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function bind() {
-        if (ws) {
-            /** @type {null} */
-            ws.onopen = null;
-            /** @type {null} */
-            ws.onmessage = null;
-            /** @type {null} */
-            ws.onclose = null;
-            try {
-                ws.close();
-            } catch (a) {
-            }
-            /** @type {null} */
-            ws = null;
-        }
-    }
-
-    /**
-     * @param {string} url
-     * @param {string} a
-     * @return {undefined}
-     */
-    var success: any;
-    var img: any;
-    var d: number;
-    var a1: number;
-    var exports;
-
-    function open(url, a) {
-        bind();
-        if (result.ip) {
-            /** @type {string} */
-            url = `ws${ssl ? "s" : ""}://${result.ip}`;
-        }
-        if (null != success) {
-            var callback = success;
-            /**
-             * @return {undefined}
-             */
-            success = () => {
-                callback(a);
-            };
-        }
-        if (ssl && (!EnvConfig.env_development && !EnvConfig.env_local)) {
-            var attrList = url.split(":");
-            /** @type {string} */
-            url = `wss://ip-${attrList[1].replace(/\./g, "-").replace(/\//g, "")}.tech.agar.io:${+attrList[2]}`;
-        }
-        /** @type {Array} */
-        that = [];
-        /** @type {Array} */
-        items = [];
-        args = {};
-        /** @type {Array} */
-        parts = [];
-        /** @type {Array} */
-        chars = [];
-        /** @type {Array} */
-        list = [];
-        /** @type {null} */
-        img = angles = null;
-        /** @type {number} */
-        closingAnimationTime = 0;
-        /** @type {boolean} */
-        matchEnd = false;
-        /** @type {boolean} */
-        options.cache.sentGameServerLogin = false;
-        /** @type {WebSocket} */
-        ws = new WebSocket(url);
-        /** @type {string} */
-        ws.binaryType = "arraybuffer";
-        /**
-         * @return {undefined}
-         */
-        ws.onopen = () => {
-            var data: DataView;
-            /** @type {number} */
-            j = t = Date.now();
-            /** @type {number} */
-            d = 120;
-            /** @type {number} */
-            a1 = 0;
-            console.log("socket open");
-            data = stringify(5);
-            data.setUint8(0, 254);
-            data.setUint32(1, 5, true);
-            log(data);
-            data = stringify(5);
-            data.setUint8(0, 255);
-            data.setUint32(1, 154669603, true);
-            log(data);
-            data = stringify(1 + a.length);
-            data.setUint8(0, 80);
-            /** @type {number} */
-            var i = 0;
-            for (; i < a.length; ++i) {
-                data.setUint8(i + 1, a.charCodeAt(i));
-            }
-            log(data);
-            options.core.proxy.onSocketOpen();
-        };
-        /** @type {function (MessageEvent): undefined} */
-        ws.onmessage = onmessage;
-        /** @type {function (): undefined} */
-        ws.onclose = listener;
-        /**
-         * @return {undefined}
-         */
-        ws.onerror = function () {
-            console.log(exports.la() + " socket error", arguments);
-        };
-    }
-
-    /**
-     * @param {number} expectedNumberOfNonCommentArgs
-     * @return {?}
-     */
-    function stringify(expectedNumberOfNonCommentArgs) {
-        return new DataView(new ArrayBuffer(expectedNumberOfNonCommentArgs));
-    }
-
-    /**
-     * @param {Object} data
-     * @return {undefined}
-     */
-    function log(data) {
-        ws.send(data.buffer);
-    }
-
-    /**
-     * @return {undefined}
-     */
-    var backoff: number;
-
-    function listener() {
-        if (matchEnd) {
-            /** @type {number} */
-            backoff = 500;
-        }
-        options.core.proxy.onSocketClosed();
-        console.log(exports.la() + " socket close");
-        setTimeout(next, backoff);
-        backoff *= 2;
-    }
-
-    /**
-     * @param {MessageEvent} a
-     * @return {undefined}
-     */
-    function onmessage(a) {
-        parse(new DataView(a.data));
-    }
-
-    /**
-     * @param {DataView} data
-     * @return {undefined}
-     */
-    function parse(data) {
-        /**
-         * @return {?}
-         */
-        var offset: number;
-
-        function encode() {
-            /** @type {string} */
-            var str = "";
-            for (; ;) {
-                var b = data.getUint16(offset, true);
-                offset += 2;
-                if (0 == b) {
-                    break;
-                }
-                str += String.fromCharCode(b);
-            }
-            return str;
-        }
-
-        /** @type {number} */
-        offset = 0;
-        if (240 == data.getUint8(offset)) {
-            fn();
-        } else {
-            switch (data.getUint8(offset++)) {
-                case 16:
-                    init(data, offset);
-                    break;
-                case 17:
-                    chunk = data.getFloat32(offset, true);
-                    offset += 4;
-                    x = data.getFloat32(offset, true);
-                    offset += 4;
-                    argumentOffset = data.getFloat32(offset, true);
-                    offset += 4;
-                    break;
-                case 18:
-                    /** @type {Array} */
-                    that = [];
-                    /** @type {Array} */
-                    items = [];
-                    args = {};
-                    /** @type {Array} */
-                    parts = [];
-                    break;
-                case 20:
-                    /** @type {Array} */
-                    items = [];
-                    /** @type {Array} */
-                    that = [];
-                    break;
-                case 21:
-                    matches = data.getInt16(offset, true);
-                    offset += 2;
-                    s = data.getInt16(offset, true);
-                    offset += 2;
-                    if (!nb) {
-                        /** @type {boolean} */
-                        nb = true;
-                        xr = matches;
-                        pos = s;
-                    }
-                    break;
-                case 32:
-                    that.push(data.getUint32(offset, true));
-                    offset += 4;
-                    break;
-                case 49:
-                    if (null != angles) {
-                        break;
-                    }
-                    var b = data.getUint32(offset, true);
-                    offset = offset + 4;
-                    /** @type {Array} */
-                    list = [];
-                    /** @type {number} */
-                    var a = 0;
-                    for (; a < b; ++a) {
-                        var token = data.getUint32(offset, true);
-                        offset = offset + 4;
-                        list.push({
-                            id: token,
-                            name: encode()
-                        });
-                    }
-                    create();
-                    break;
-                case 50:
-                    /** @type {Array} */
-                    angles = [];
-                    b = data.getUint32(offset, true);
-                    offset += 4;
-                    /** @type {number} */
-                    a = 0;
-                    for (; a < b; ++a) {
-                        angles.push(data.getFloat32(offset, true));
-                        offset += 4;
-                    }
-                    create();
-                    break;
-                case 64:
-                    minX = data.getFloat64(offset, true);
-                    offset += 8;
-                    minY = data.getFloat64(offset, true);
-                    offset += 8;
-                    maxX = data.getFloat64(offset, true);
-                    offset += 8;
-                    maxY = data.getFloat64(offset, true);
-                    offset += 8;
-                    if (data.byteLength > offset) {
-                        b = data.getUint32(offset, true);
-                        offset += 4;
-                        /** @type {boolean} */
-                        started = !!(b & 1);
-                        passes = encode();
-                        self.MC.updateServerVersion(passes);
-                        console.log(`Server version ${passes}`);
-                    }
-                    break;
-                case 102:
-                    b = data.buffer.slice(offset);
-                    options.core.proxy.forwardProtoMessage(b);
-                    break;
-                case 104:
-                    self.logout();
-            }
-        }
-    }
-
-    /**
-     * @param {DataView} dataView
-     * @param {number} offset
-     * @return {undefined}
-     */
-    var pauseText: number;
-    var qw: number;
-    var qz: number;
-    var ty: number;
-    var tx: number;
-    var valueAccessor: () => void;
-    var a: typeof undefined[];
-    var col: string;
-    var aux: number;
-    var count: number;
-    var path: number;
-    var name: number;
+    var name1: number;
 
     function init(dataView, offset) {
-        /**
-         * @return {?}
-         */
         function read() {
             /** @type {string} */
             var str = "";
@@ -739,10 +767,6 @@ function main(self, $) {
             }
             return str;
         }
-
-        /**
-         * @return {?}
-         */
         function randomString() {
             /** @type {string} */
             var str = "";
@@ -853,7 +877,7 @@ function main(self, $) {
                 data.o = data.size;
                 data.color = color;
             } else {
-                data = new Node(a2, pos, c, g, color, content);
+                data = new Node1(a2, pos, c, g, color, content);
                 parts.push(data);
                 args[a2] = data;
             }
@@ -895,7 +919,7 @@ function main(self, $) {
                         /** @type {number} */
                         aux = Date.now();
                         /** @type {number} */
-                        count = path = name = 0;
+                        count = path = name1 = 0;
                     }
                 }
             }
@@ -914,7 +938,7 @@ function main(self, $) {
         }
         if (ub) {
             if (0 == items.length) {
-                if (0 == self.MC.isUserLoggedIn()) {
+                if (0 == self1.MC.isUserLoggedIn()) {
                     fn();
                 } else {
                     /** @type {number} */
@@ -924,164 +948,7 @@ function main(self, $) {
         }
     }
 
-    var closest: number;
 
-    /**
-     * @return {undefined}
-     */
-    var t1: number;
-
-    function read() {
-        if (forEach()) {
-            /** @type {number} */
-            var x = cx - width / 2;
-            /** @type {number} */
-            var y = cy - height / 2;
-            if (!(64 > x * x + y * y)) {
-                if (!(0.01 > Math.abs(closest - value) &&
-                    0.01 > Math.abs(t1 - t2))) {
-                    closest = value;
-                    t1 = t2;
-                    var buff = stringify(13);
-                    buff.setUint8(0, 16);
-                    buff.setInt32(1, value, true);
-                    buff.setInt32(5, t2, true);
-                    buff.setUint32(9, 0, true);
-                    log(buff);
-                }
-            }
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function destroy() {
-        if (forEach() && (matchEnd && null != b)) {
-            var data = stringify(1 + 2 * b.length);
-            data.setUint8(0, 0);
-            /** @type {number} */
-            var bi = 0;
-            for (; bi < b.length; ++bi) {
-                data.setUint16(1 + 2 * bi, b.charCodeAt(bi), true);
-            }
-            log(data);
-            /** @type {null} */
-            b = null;
-            /** @type {boolean} */
-            Ba = true;
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function end() {
-        read();
-        emit(17);
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function emitter() {
-        read();
-        emit(21);
-    }
-
-    /**
-     * @return {?}
-     */
-    function forEach() {
-        return null != ws && ws.readyState == ws.OPEN;
-    }
-
-    /**
-     * @param {number} expectedNumberOfNonCommentArgs
-     * @return {undefined}
-     */
-    function emit(expectedNumberOfNonCommentArgs) {
-        if (forEach()) {
-            var data = stringify(1);
-            data.setUint8(0, expectedNumberOfNonCommentArgs);
-            log(data);
-        }
-    }
-
-    /**
-     * @param {Object} caption
-     * @return {undefined}
-     */
-    function set(caption) {
-        if ("auto" === caption.toLowerCase()) {
-            /** @type {boolean} */
-            opts.auto = true;
-        } else {
-            options.renderSettings.selected = options.renderSettings[caption.toLowerCase()];
-            /** @type {boolean} */
-            opts.auto = false;
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function update() {
-        /** @type {number} */
-        width = 1 * self.innerWidth;
-        /** @type {number} */
-        height = 1 * self.innerHeight;
-        /** @type {number} */
-        cv.width = canvas.width = width;
-        /** @type {number} */
-        cv.height = canvas.height = height;
-        var $this = $("#helloContainer");
-        $this.css("transform", "none");
-        var maxHeight = $this.height();
-        /** @type {number} */
-        var win = self.innerHeight;
-        if (0 != maxHeight / 2 % 2) {
-            maxHeight++;
-            $this.height(maxHeight);
-        }
-        if (maxHeight > win / 1.1) {
-            $this.css("transform", `translate(-50%, -50%) scale(${win / maxHeight / 1.1})`);
-        } else {
-            $this.css("transform", "translate(-50%, -50%)");
-        }
-        render();
-    }
-
-    /**
-     * @return {?}
-     */
-    function requestAnimationFrame() {
-        var setSize: number;
-        /** @type {number} */
-        setSize = 1 * Math.max(height / 1080, width / 1920);
-        return setSize *= ratio;
-    }
-
-    /**
-     * @return {undefined}
-     */
-    function frame() {
-        if (0 != items.length) {
-            /** @type {number} */
-            var imgWidth = 0;
-            /** @type {number} */
-            var i = 0;
-            for (; i < items.length; i++) {
-                imgWidth += items[i].size;
-            }
-            /** @type {number} */
-            scale = (9 * scale + Math.pow(Math.min(64 / imgWidth, 1), 0.4) * requestAnimationFrame()) / 10;
-        }
-    }
-
-    /**
-     * @return {undefined}
-     */
     var cc: boolean;
     var HALF_PI: number;
     var _arg: any;
@@ -1128,7 +995,7 @@ function main(self, $) {
             /** @type {number} */
             y = (5 * y + x) / 6;
             /** @type {number} */
-            scale = (9 * scale + argumentOffset * requestAnimationFrame()) / 10;
+            scale = (9 * scale + argumentOffset * requestAnimationFrame1()) / 10;
         }
         createObjects();
         preventDefault();
@@ -1301,9 +1168,6 @@ function main(self, $) {
         tOffset = t;
     }
 
-    /**
-     * @return {undefined}
-     */
     function draw() {
         /** @type {Element} */
         var map = document.createElement("canvas");
@@ -1335,9 +1199,6 @@ function main(self, $) {
         ctx.drawImage(map, (width - map.width) / 2, height - map.height - 10);
     }
 
-    /**
-     * @return {undefined}
-     */
     function redraw() {
         /** @type {string} */
         ctx.fillStyle = color ? "#111111" : "#F2FBFF";
@@ -1369,10 +1230,6 @@ function main(self, $) {
         }
         ctx.restore();
     }
-
-    /**
-     * @return {undefined}
-     */
     function drawBackground() {
         if (gc && copy.width) {
             /** @type {number} */
@@ -1381,9 +1238,6 @@ function main(self, $) {
         }
     }
 
-    /**
-     * @return {?}
-     */
     function pick() {
         /** @type {number} */
         var result = 0;
@@ -1395,9 +1249,6 @@ function main(self, $) {
         return result;
     }
 
-    /**
-     * @return {undefined}
-     */
     function create() {
         /** @type {null} */
         img = null;
@@ -1483,20 +1334,15 @@ function main(self, $) {
             }
         }
     }
-
-    /**
-     * @param {string} f
-     * @return {?}
-     */
     function tryIt(f) {
         if (null == f || 0 == f.length) {
             return null;
         }
         if ("%" == f[0]) {
-            if (!self.MC || !self.MC.getSkinInfo) {
+            if (!self1.MC || !self1.MC.getSkinInfo) {
                 return null;
             }
-            f = self.MC.getSkinInfo(`skin_${f.slice(1)}`);
+            f = self1.MC.getSkinInfo(`skin_${f.slice(1)}`);
             if (null == f) {
                 return null;
             }
@@ -1524,14 +1370,14 @@ function main(self, $) {
                 t.src = x.slice(1);
             } else {
                 if ("%" == x[0]) {
-                    if (!self.MC || !self.MC.getSkinInfo) {
+                    if (!self1.MC || !self1.MC.getSkinInfo) {
                         return null;
                     }
-                    var data = self.MC.getSkinInfo(`skin_${x.slice(1)}`);
+                    var data = self1.MC.getSkinInfo(`skin_${x.slice(1)}`);
                     if (null == data) {
                         return null;
                     }
-                    t.src = self.ASSETS_ROOT + data.url;
+                    t.src = self1.ASSETS_ROOT + data.url;
                 }
             }
             /** @type {Image} */
@@ -1539,15 +1385,7 @@ function main(self, $) {
         }
         return 0 != results[x].width && results[x].complete ? results[x] : null;
     }
-
-    /**
-     * @param {(Object|string)} client
-     * @param {number} x
-     * @param {number} y
-     * @param {number} f
-     * @param {number} opt_vars
-     * @return {undefined}
-     */
+    
     function Player(client, x, y, f, opt_vars) {
         /** @type {(Object|string)} */
         this.$ = client;
@@ -1561,16 +1399,8 @@ function main(self, $) {
         this.b = opt_vars;
     }
 
-    /**
-     * @param {number} id
-     * @param {?} opt_parent
-     * @param {?} $0
-     * @param {number} size
-     * @param {number} value
-     * @param {?} c
-     * @return {undefined}
-     */
-    function Node(id, opt_parent, $0, size, value, c) {
+    
+    function Node1(id, opt_parent, $0, size, value, c) {
         /** @type {number} */
         this.id = id;
         this.s = this.x = this.L = this.J = opt_parent;
@@ -1584,10 +1414,6 @@ function main(self, $) {
         this.A(c);
     }
 
-    /**
-     * @param {?} val
-     * @return {?}
-     */
     function isArray(val) {
         val = val.toString(16);
         for (; 6 > val.length;) {
@@ -1597,13 +1423,6 @@ function main(self, $) {
         return `#${val}`;
     }
 
-    /**
-     * @param {number} val
-     * @param {number} dataAndEvents
-     * @param {?} params
-     * @param {number} o
-     * @return {undefined}
-     */
     function setFillAndStroke(val, dataAndEvents, params, o) {
         if (val) {
             /** @type {number} */
@@ -1621,10 +1440,6 @@ function main(self, $) {
         }
     }
 
-    /**
-     * @param {Array} arr
-     * @return {undefined}
-     */
     function shuffle(arr) {
         var total = arr.length;
         var tmp1;
@@ -1639,9 +1454,7 @@ function main(self, $) {
         }
     }
 
-    /**
-     * @return {undefined}
-     */
+  
     var data: { context: any;defaultProvider: string;loginIntent: string;userInfo: { socialToken: any;tokenExpires: string;level: string;xp: string;xpNeeded: string;name: string;picture: string;displayName: string;loggedIn: string;socialId: string } };
     var tmp: { context: any;defaultProvider: string;loginIntent: string;userInfo: { socialToken: any;tokenExpires: string;level: string;xp: string;xpNeeded: string;name: string;picture: string;displayName: string;loggedIn: string;socialId: string } };
 
@@ -1649,10 +1462,7 @@ function main(self, $) {
         data = tmp;
     }
 
-    /**
-     * @param {string} text
-     * @return {undefined}
-     */
+   
     function template(text) {
         /** @type {string} */
         data.context = "google" == text ? "google" : "facebook";
@@ -1664,11 +1474,11 @@ function main(self, $) {
      */
     function callback() {
         /** @type {string} */
-        self.localStorage.storeObjectInfo = JSON.stringify(data);
+        self1.localStorage.storeObjectInfo = JSON.stringify(data);
         /** @type {*} */
-        data = JSON.parse(self.localStorage.storeObjectInfo);
+        data = JSON.parse(self1.localStorage.storeObjectInfo);
         /** @type {*} */
-        self.storageInfo = data;
+        self1.storageInfo = data;
         if ("google" == data.context) {
             $("#gPlusShare").show();
             $("#fbShare").hide();
@@ -1711,7 +1521,7 @@ function main(self, $) {
         data.userInfo.displayName = item.name;
         /** @type {string} */
         data.userInfo.loggedIn = "1";
-        self.updateStorage();
+        self1.updateStorage();
     }
 
     /**
@@ -1777,10 +1587,10 @@ function main(self, $) {
                             render();
                         }
                         if (1 > t) {
-                            self.requestAnimationFrame(update);
+                            self1.requestAnimationFrame1(update);
                         }
                     };
-                    self.requestAnimationFrame(update);
+                    self1.requestAnimationFrame1(update);
                 }
             }
         }
@@ -1811,17 +1621,17 @@ function main(self, $) {
             if (null == actualAria || ("undefined" == actualAria || "" == actualAria)) {
                 if (3 > lc) {
                     lc++;
-                    self.facebookRelogin();
+                    self1.facebookRelogin();
                 }
-                self.logout();
+                self1.logout();
             } else {
-                self.MC.doLoginWithFB(actualAria);
+                self1.MC.doLoginWithFB(actualAria);
                 /** @type {Array} */
                 options.cache.login_info = [actualAria, "facebook"];
-                self.FB.api("/me/picture?width=180&height=180",
+                self1.FB.api("/me/picture?width=180&height=180",
                     messageEvent => {
                     data.userInfo.picture = messageEvent.data.url;
-                    self.updateStorage();
+                    self1.updateStorage();
                     $(".agario-profile-picture").attr("src", messageEvent.data.url);
                     data.userInfo.socialId = response.authResponse.userID;
                     h();
@@ -1831,7 +1641,7 @@ function main(self, $) {
                 data.context = "facebook";
                 /** @type {string} */
                 data.loginIntent = "1";
-                self.updateStorage();
+                self1.updateStorage();
             }
         }
     }
@@ -1845,7 +1655,7 @@ function main(self, $) {
         $("#helloContainer").attr("data-party-state", "4");
         /** @type {string} */
         param = decodeURIComponent(param).replace(/.*#/gim, "");
-        cb(`#${self.encodeURIComponent(param)}`);
+        cb(`#${self1.encodeURIComponent(param)}`);
         $.ajax(url + "getToken", {
             /**
              * @return {undefined}
@@ -1858,10 +1668,10 @@ function main(self, $) {
              * @return {undefined}
              */ success(status) {
                 status = status.split("\n");
-                $(".partyToken").val(`agar.io/#${self.encodeURIComponent(param)}`);
+                $(".partyToken").val(`agar.io/#${self1.encodeURIComponent(param)}`);
                 $("#helloContainer").attr("data-party-state", "5");
                 show(":party");
-                open(`ws://${status[0]}`, param);
+                open1(`ws://${status[0]}`, param);
             },
             dataType: "text",
             method: "POST",
@@ -1876,48 +1686,26 @@ function main(self, $) {
      * @return {undefined}
      */
     function cb(path) {
-        if (self.history) {
-            if (self.history.replaceState) {
-                self.history.replaceState({}, self.document.title, path);
+        if (self1.history) {
+            if (self1.history.replaceState) {
+                self1.history.replaceState({}, self1.document.title, path);
             }
         }
     }
 
-    /**
-     * @return {undefined}
-     */
-    var max: number;
-
-    function fn() {
-        /** @type {boolean} */
-        Ba = false;
-        clearTimeout(timer);
-        if (null == self.storageInfo) {
-            self.createDefaultStorage();
-        }
-        /** @type {number} */
-        max = Date.now();
-        if (0 >= aux) {
-            /** @type {number} */
-            aux = max;
-        }
-        /** @type {boolean} */
-        Aa = false;
-        setPosition();
-    }
 
     /**
      * @param {Element} params
-     * @param {Object} self
+     * @param {Object} self1
      * @return {undefined}
      */
-    function hasClass(params, self) {
+    function hasClass(params, self1) {
         /** @type {boolean} */
         var d = -1 != that.indexOf(params.id);
         /** @type {boolean} */
-        var c = -1 != that.indexOf(self.id);
+        var c = -1 != that.indexOf(self1.id);
         /** @type {boolean} */
-        var e = 30 > self.size;
+        var e = 30 > self1.size;
         if (d) {
             if (e) {
                 ++pauseText;
@@ -1926,7 +1714,7 @@ function main(self, $) {
         if (!e) {
             if (d) {
                 if (!c) {
-                    if (!(self.ea & 32)) {
+                    if (!(self1.ea & 32)) {
                         ++path;
                     }
                 }
@@ -2037,14 +1825,15 @@ function main(self, $) {
         }
     }
 
-    /**
+    var id = true;
+/**
      * @return {undefined}
      */
     function setPosition() {
         if (!to) {
             if (!from) {
                 if (id) {
-                    self.refreshAd(self.adSlots.ab);
+                    self1.refreshAd(self1.adSlots.ab);
                     DrawPolyline();
                     /** @type {boolean} */
                     from = true;
@@ -2052,7 +1841,7 @@ function main(self, $) {
                         $("#overlays").fadeIn(500, start);
                         $("#stats").show();
                         var onComplete = trigger("g_plus_share_stats");
-                        self.fillSocialValues(onComplete, "gPlusShare");
+                        self1.fillSocialValues(onComplete, "gPlusShare");
                     }, 1500);
                 } else {
                     showError(500);
@@ -2067,25 +1856,26 @@ function main(self, $) {
      */
     function trigger(data) {
         var uHostName = $(".stats-time-alive").text();
-        return self.parseString(data, "%@", [uHostName.split(":")[0], uHostName.split(":")[1], $(".stats-highest-mass").text()]);
+        return self1.parseString(data, "%@", [uHostName.split(":")[0], uHostName.split(":")[1], $(".stats-highest-mass").text()]);
     }
 
     /**
      * @return {undefined}
      */
     function onMouseMove() {
-        self.open("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", `width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self.screenX + self.innerWidth / 2 - 242},top=${(self.innerHeight - 580) / 2}`);
+        self1.open1("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", `width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self1.screenX + self1.innerWidth / 2 - 242},top=${(self1.innerHeight - 580) / 2}`);
     }
+function main(self1, $) {
 
     /** @type {Element} */
     var test_canvas = document.createElement("canvas");
-    if ("undefined" == typeof console || ("undefined" == typeof DataView || ("undefined" == typeof WebSocket || (null == test_canvas || (null == test_canvas.getContext || null == self.localStorage))))) {
+    if ("undefined" == typeof console || ("undefined" == typeof DataView || ("undefined" == typeof WebSocket || (null == test_canvas || (null == test_canvas.getContext || null == self1.localStorage))))) {
         alert("You browser does not support this game, we recommend you to use Firefox to play this");
     } else {
         result = new Result();
         (function () {
             /** @type {string} */
-            var params = self.location.search;
+            var params = self1.location.search;
             if ("?" == params.charAt(0)) {
                 /** @type {string} */
                 params = params.slice(1);
@@ -2101,7 +1891,7 @@ function main(self, $) {
                 result[both[0]] = both[1];
             }
         })();
-        self.queryString = result;
+        self1.queryString = result;
         /** @type {boolean} */
         var fb = "fb" in result;
         /** @type {boolean} */
@@ -2121,7 +1911,7 @@ function main(self, $) {
             setCookie("", -1);
         };
         /** @type {boolean} */
-        var _tryInitOnFocus = "http:" != self.location.protocol;
+        var _tryInitOnFocus = "http:" != self1.location.protocol;
         /** @type {boolean} */
         var _isFocused = "1" == fnReadCookie();
         /** @type {boolean} */
@@ -2131,7 +1921,7 @@ function main(self, $) {
                 if (_tryInitOnFocus && !_isFocused) {
                     setCookie("1", 1);
                     /** @type {string} */
-                    self.location.href = `http:${self.location.href.substring(self.location.protocol.length)}`;
+                    self1.location.href = `http:${self1.location.href.substring(self1.location.protocol.length)}`;
                     /** @type {boolean} */
                     sc = true;
                 } else {
@@ -2145,7 +1935,7 @@ function main(self, $) {
         if (!sc) {
             setTimeout(after, 3E3);
         }
-        if (!self.agarioNoInit) {
+        if (!self1.agarioNoInit) {
             /** @type {boolean} */
             ssl = "https:" == base;
             if (result.master) {
@@ -2154,26 +1944,26 @@ function main(self, $) {
             /** @type {string} */
             url = base + "//" + EnvConfig.master_url + "/";
             /** @type {string} */
-            var userAgent = self.navigator.userAgent;
+            var userAgent = self1.navigator.userAgent;
             if (-1 != userAgent.indexOf("Android")) {
-                if (self.ga) {
-                    self.ga("send", "event", "MobileRedirect", "PlayStore");
+                if (self1.ga) {
+                    self1.ga("send", "event", "MobileRedirect", "PlayStore");
                 }
                 setTimeout(function () {
                     /** @type {string} */
-                    self.location.href = "https://play.google.com/store/apps/details?id=com.miniclip.agar.io";
+                    self1.location.href = "https://play.google.com/store/apps/details?id=com.miniclip.agar.io";
                 }, 1E3);
             } else {
                 if (-1 != userAgent.indexOf("iPhone") || (-1 != userAgent.indexOf("iPad") || -1 != userAgent.indexOf("iPod"))) {
-                    if (self.ga) {
-                        self.ga("send", "event", "MobileRedirect", "AppStore");
+                    if (self1.ga) {
+                        self1.ga("send", "event", "MobileRedirect", "AppStore");
                     }
                     setTimeout(function () {
                         /** @type {string} */
-                        self.location.href = "https://itunes.apple.com/app/agar.io/id995999703?mt=8&at=1l3vajp";
+                        self1.location.href = "https://itunes.apple.com/app/agar.io/id995999703?mt=8&at=1l3vajp";
                     }, 1E3);
                 } else {
-                    self.agarApp = options;
+                    self1.agarApp = options;
                     if ("gamepad" in result) {
                         setInterval(function () {
                             if (Xa) {
@@ -2187,7 +1977,7 @@ function main(self, $) {
                      * @param {number} m3
                      * @return {undefined}
                      */
-                    self.gamepadAxisUpdate = (dataAndEvents, m3) => {
+                    self1.gamepadAxisUpdate = (dataAndEvents, m3) => {
                         /** @type {boolean} */
                         var d = 0.1 > m3 * m3;
                         if (0 == dataAndEvents) {
@@ -2216,15 +2006,15 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.agarioInit = () => {
+                    self1.agarioInit = () => {
                         /** @type {boolean} */
                         ab = true;
                         postLink();
                         startServer();
                         options.core.init();
-                        if (null != self.localStorage.settings) {
+                        if (null != self1.localStorage.settings) {
                             /** @type {*} */
-                            settings = JSON.parse(self.localStorage.settings);
+                            settings = JSON.parse(self1.localStorage.settings);
                             metadata = settings.showMass;
                             color = settings.blackTheme;
                             text = settings.namesEnabled;
@@ -2293,14 +2083,14 @@ function main(self, $) {
                             /**
                              * @return {undefined}
                              */
-                            self.onblur = function () {
+                            self1.onblur = function () {
                                 emit(19);
                                 /** @type {boolean} */
                                 stack = memory = firing = false;
                             };
                             /** @type {function (): undefined} */
-                            self.onresize = update;
-                            self.requestAnimationFrame(which);
+                            self1.onresize = update;
+                            self1.requestAnimationFrame1(which);
                             setInterval(read, 40);
                             if (newValue) {
                                 $("#region").val(newValue);
@@ -2314,9 +2104,9 @@ function main(self, $) {
                             }
                             showError(0);
                             update();
-                            if (self.location.hash) {
-                                if (6 <= self.location.hash.length) {
-                                    request(self.location.hash);
+                            if (self1.location.hash) {
+                                if (6 <= self1.location.hash.length) {
+                                    request(self1.location.hash);
                                 }
                             }
                         }
@@ -2327,9 +2117,9 @@ function main(self, $) {
                      * @param {Function} v
                      * @return {undefined}
                      */
-                    self.setNick = function (v) {
-                        if (self.ga) {
-                            self.ga("send", "event", "Nick", v.toLowerCase());
+                    self1.setNick = function (v) {
+                        if (self1.ga) {
+                            self1.ga("send", "event", "Nick", v.toLowerCase());
                         }
                         _init();
                         /** @type {Function} */
@@ -2344,14 +2134,14 @@ function main(self, $) {
                         settings.showMass = metadata;
                         settings.statsEnabled = id;
                         /** @type {string} */
-                        self.localStorage.settings = JSON.stringify(settings);
+                        self1.localStorage.settings = JSON.stringify(settings);
                         playerCalc();
                     };
                     /**
                      * @param {string} part
                      * @return {undefined}
                      */
-                    self.setSkins = function (part) {
+                    self1.setSkins = function (part) {
                         /** @type {string} */
                         root = part;
                     };
@@ -2359,7 +2149,7 @@ function main(self, $) {
                      * @param {string} textAlt
                      * @return {undefined}
                      */
-                    self.setNames = function (textAlt) {
+                    self1.setNames = function (textAlt) {
                         /** @type {string} */
                         text = textAlt;
                     };
@@ -2367,7 +2157,7 @@ function main(self, $) {
                      * @param {boolean} newColor
                      * @return {undefined}
                      */
-                    self.setDarkTheme = function (newColor) {
+                    self1.setDarkTheme = function (newColor) {
                         /** @type {boolean} */
                         color = newColor;
                     };
@@ -2375,7 +2165,7 @@ function main(self, $) {
                      * @param {string} color
                      * @return {undefined}
                      */
-                    self.setColors = color => {
+                    self1.setColors = color => {
                         /** @type {string} */
                         type = color;
                     };
@@ -2383,14 +2173,14 @@ function main(self, $) {
                      * @param {string} response
                      * @return {undefined}
                      */
-                    self.setShowMass = response => {
+                    self1.setShowMass = response => {
                         /** @type {string} */
                         metadata = response;
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.spectate = () => {
+                    self1.spectate = () => {
                         /** @type {null} */
                         b = null;
                         playerCalc();
@@ -2398,14 +2188,14 @@ function main(self, $) {
                         _init();
                     };
                     /** @type {function ((Object|string)): undefined} */
-                    self.setRegion = reset;
+                    self1.setRegion = reset;
                     /** @type {boolean} */
                     selector = true;
                     /**
                      * @param {string} expected
                      * @return {undefined}
                      */
-                    self.setGameMode = expected => {
+                    self1.setGameMode = expected => {
                         if (expected != actual) {
                             if (":party" == actual) {
                                 $("#helloContainer").attr("data-party-state", "0");
@@ -2420,11 +2210,11 @@ function main(self, $) {
                      * @param {boolean} _$timeout_
                      * @return {undefined}
                      */
-                    self.setAcid = _$timeout_ => {
+                    self1.setAcid = _$timeout_ => {
                         /** @type {boolean} */
                         $timeout = _$timeout_;
                     };
-                    var POST = function (self) {
+                    var POST = function (self1) {
                         var $window = {};
                         /** @type {boolean} */
                         var text = false;
@@ -2435,11 +2225,11 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        self.init = function () {
+                        self1.init = function () {
                             options.account.init();
                             options.google.xa();
                             options.fa.init();
-                            if (text = "debug" in self.queryString) {
+                            if (text = "debug" in self1.queryString) {
                                 options.debug.showDebug();
                             }
                         };
@@ -2448,7 +2238,7 @@ function main(self, $) {
                          * @param {Function} callback
                          * @return {undefined}
                          */
-                        self.bind = function (event_name, callback) {
+                        self1.bind = function (event_name, callback) {
                             $($window).bind(event_name, callback);
                         };
                         /**
@@ -2456,7 +2246,7 @@ function main(self, $) {
                          * @param {?} cb
                          * @return {undefined}
                          */
-                        self.unbind = function (callback, cb) {
+                        self1.unbind = function (callback, cb) {
                             $($window).unbind(callback, cb);
                         };
                         /**
@@ -2464,22 +2254,22 @@ function main(self, $) {
                          * @param {?} extra
                          * @return {undefined}
                          */
-                        self.trigger = function (type, extra) {
+                        self1.trigger = function (type, extra) {
                             $($window).trigger(type, extra);
                         };
-                        self.__defineGetter__("debug", function () {
+                        self1.__defineGetter__("debug", function () {
                             return text;
                         });
-                        self.__defineSetter__("debug", function (textAlt) {
+                        self1.__defineSetter__("debug", function (textAlt) {
                             return text = textAlt;
                         });
-                        self.__defineGetter__("proxy", function () {
-                            return self.MC;
+                        self1.__defineGetter__("proxy", function () {
+                            return self1.MC;
                         });
-                        self.__defineGetter__("config", function () {
+                        self1.__defineGetter__("config", function () {
                             return skipDraw;
                         });
-                        return self;
+                        return self1;
                     } ({});
                     options.core = POST;
                     options.cache = {};
@@ -2870,7 +2660,7 @@ function main(self, $) {
                     /** @type {boolean} */
                     Ba = false;
                     /** @type {function (string, string): undefined} */
-                    self.connect = open;
+                    self1.connect = open1;
                     /** @type {number} */
                     backoff = 500;
                     /** @type {number} */
@@ -2886,9 +2676,9 @@ function main(self, $) {
                     /** @type {number} */
                     t1 = -1;
                     /** @type {function (): undefined} */
-                    self.sendMitosis = end;
+                    self1.sendMitosis = end;
                     /** @type {function (): undefined} */
-                    self.sendEject = emitter;
+                    self1.sendEject = emitter;
                     options.networking = function (opt_attributes) {
                         opt_attributes.loginRealm = {
                             GG: "google",
@@ -2932,7 +2722,7 @@ function main(self, $) {
                         /** @type {number} */
                         var b = 1E3 / 60;
                         return function () {
-                            self.requestAnimationFrame(which);
+                            self1.requestAnimationFrame1(which);
                             /** @type {number} */
                             var x = Date.now();
                             /** @type {number} */
@@ -2967,7 +2757,7 @@ function main(self, $) {
                         };
                     } ();
                     /** @type {function (Object): undefined} */
-                    self.setQuality = set;
+                    self1.setQuality = set;
                     var images = {};
                     /** @type {Array.<string>} */
                     excludes = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;chaplin;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;ea;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook;putin;merkel;tsipras;obama;kim jong-un;dilma;hollande;berlusconi;cameron;clinton;hillary;venezuela;blatter;chavez;cuba;fidel;merkel;palin;queen;boris;bush;trump;underwood".split(";");
@@ -3305,7 +3095,7 @@ function main(self, $) {
                                                     /** @type {Image} */
                                                     images[key] = new Image;
                                                     /** @type {string} */
-                                                    images[key].src = self.ASSETS_ROOT + "skins/" + key + ".png";
+                                                    images[key].src = self1.ASSETS_ROOT + "skins/" + key + ".png";
                                                 }
                                                 map = 0 != images[key].width && images[key].complete ? images[key] : null;
                                             } else {
@@ -3501,7 +3291,7 @@ function main(self, $) {
                         };
                         return item;
                     } ({});
-                    self.Maths = val;
+                    self1.Maths = val;
                     exports = function (opt_attributes) {
                         /**
                          * @return {?}
@@ -3524,7 +3314,7 @@ function main(self, $) {
                         };
                         return opt_attributes;
                     } ({});
-                    self.Utils = exports;
+                    self1.Utils = exports;
                     setFillAndStroke.prototype = {
                         F: "",
                         W: "#000000",
@@ -3627,23 +3417,23 @@ function main(self, $) {
                         var vendors = ["ms", "moz", "webkit", "o"];
                         /** @type {number} */
                         var x = 0;
-                        for (; x < vendors.length && !self.requestAnimationFrame; ++x) {
-                            self.requestAnimationFrame = self[vendors[x] + "RequestAnimationFrame"];
-                            self.cancelAnimationFrame = self[vendors[x] + "CancelAnimationFrame"] || self[vendors[x] + "CancelRequestAnimationFrame"];
+                        for (; x < vendors.length && !self1.requestAnimationFrame1; ++x) {
+                            self1.requestAnimationFrame1 = self1[vendors[x] + "RequestAnimationFrame"];
+                            self1.cancelAnimationFrame = self1[vendors[x] + "CancelAnimationFrame"] || self1[vendors[x] + "CancelRequestAnimationFrame"];
                         }
-                        if (!self.requestAnimationFrame) {
+                        if (!self1.requestAnimationFrame1) {
                             /**
                              * @param {function (number): ?} callback
                              * @return {number}
                              */
-                            self.requestAnimationFrame = function (callback) {
+                            self1.requestAnimationFrame1 = function (callback) {
                                 return setTimeout(callback, 1E3 / 60);
                             };
                             /**
                              * @param {number} id
                              * @return {?}
                              */
-                            self.cancelAnimationFrame = function (id) {
+                            self1.cancelAnimationFrame = function (id) {
                                 clearTimeout(id);
                             };
                         }
@@ -3747,7 +3537,7 @@ function main(self, $) {
                         }
                     };
                     valueAccessor = function () {
-                        var that = new Node(0, 0, 0, 32, "#ED1C24", "");
+                        var that = new Node1(0, 0, 0, 32, "#ED1C24", "");
                         /** @type {Element} */
                         var canvas = document.createElement("canvas");
                         /** @type {number} */
@@ -3794,16 +3584,16 @@ function main(self, $) {
                             socialId: ""
                         }
                     };
-                    data = self.defaultSt = tmp;
-                    self.storageInfo = data;
+                    data = self1.defaultSt = tmp;
+                    self1.storageInfo = data;
                     /** @type {function (): undefined} */
-                    self.createDefaultStorage = compassResult;
+                    self1.createDefaultStorage = compassResult;
                     /** @type {function (): undefined} */
-                    self.updateStorage = callback;
+                    self1.updateStorage = callback;
                     $(function () {
-                        if (null != self.localStorage.storeObjectInfo) {
+                        if (null != self1.localStorage.storeObjectInfo) {
                             /** @type {*} */
-                            data = JSON.parse(self.localStorage.storeObjectInfo);
+                            data = JSON.parse(self1.localStorage.storeObjectInfo);
                         }
                         if ("1" == data.loginIntent) {
                             template(data.context);
@@ -3815,7 +3605,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.checkLoginStatus = function () {
+                    self1.checkLoginStatus = function () {
                         if ("1" == data.loginIntent) {
                             h();
                             template(data.context);
@@ -3825,17 +3615,17 @@ function main(self, $) {
                      * @return {undefined}
                      */
                     h = function () {
-                        self.MC.setProfilePicture(data.userInfo.picture);
-                        self.MC.setSocialId(data.userInfo.socialId);
+                        self1.MC.setProfilePicture(data.userInfo.picture);
+                        self1.MC.setSocialId(data.userInfo.socialId);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.logout = function () {
+                    self1.logout = function () {
                         data = tmp;
-                        delete self.localStorage.storeObjectInfo;
+                        delete self1.localStorage.storeObjectInfo;
                         /** @type {string} */
-                        self.localStorage.storeObjectInfo = JSON.stringify(tmp);
+                        self1.localStorage.storeObjectInfo = JSON.stringify(tmp);
                         callback();
                         disconnect();
                         /** @type {boolean} */
@@ -3848,12 +3638,12 @@ function main(self, $) {
                         $("#fbShare").show();
                         $("#user-id-tag").text("");
                         next();
-                        self.MC.doLogout();
+                        self1.MC.doLogout();
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSocialLogin = function () {
+                    self1.toggleSocialLogin = function () {
                         $("#socialLoginContainer").toggle();
                         $("#settings").hide();
                         $("#instructions").hide();
@@ -3862,7 +3652,7 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSettings = function () {
+                    self1.toggleSettings = function () {
                         $("#settings").toggle();
                         $("#socialLoginContainer").hide();
                         $("#instructions").hide();
@@ -3884,11 +3674,11 @@ function main(self, $) {
                             if (null == p || p.id != player.id) {
                                 /** @type {(Object|string)} */
                                 p = player;
-                                if (null != self.ssa_json) {
+                                if (null != self1.ssa_json) {
                                     /** @type {string} */
-                                    self.ssa_json.applicationUserId = `${player.id}`;
+                                    self1.ssa_json.applicationUserId = `${player.id}`;
                                     /** @type {string} */
-                                    self.ssa_json.custom_user_id = `${player.id}`;
+                                    self1.ssa_json.custom_user_id = `${player.id}`;
                                 }
                                 if ("undefined" != typeof SSA_CORE) {
                                     SSA_CORE.start();
@@ -3945,18 +3735,18 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.fbAsyncInit = function () {
+                    self1.fbAsyncInit = function () {
                         /**
                          * @return {undefined}
                          */
                         function submitForm() {
-                            if (null == self.FB) {
+                            if (null == self1.FB) {
                                 alert("You seem to have something blocking Facebook on your browser, please check for any extensions");
                             } else {
                                 /** @type {string} */
                                 data.loginIntent = "1";
-                                self.updateStorage();
-                                self.FB.login(function (e) {
+                                self1.updateStorage();
+                                self1.FB.login(function (e) {
                                     error(e);
                                 }, {
                                         scope: "public_profile, email"
@@ -3964,31 +3754,31 @@ function main(self, $) {
                             }
                         }
 
-                        self.FB.init({
+                        self1.FB.init({
                             appId: EnvConfig.fb_app_id,
                             cookie: true,
                             xfbml: true,
                             status: true,
                             version: "v2.2"
                         });
-                        if ("1" == self.storageInfo.loginIntent && "facebook" == self.storageInfo.context || fb) {
-                            self.FB.getLoginStatus(function (response) {
+                        if ("1" == self1.storageInfo.loginIntent && "facebook" == self1.storageInfo.context || fb) {
+                            self1.FB.getLoginStatus(function (response) {
                                 if ("connected" === response.status) {
                                     error(response);
                                 } else {
                                     if ("not_authorized" === response.status) {
-                                        self.logout();
+                                        self1.logout();
                                         submitForm();
                                     } else {
-                                        self.logout();
+                                        self1.logout();
                                     }
                                 }
                             });
                         }
                         /** @type {function (): undefined} */
-                        self.facebookRelogin = submitForm;
+                        self1.facebookRelogin = submitForm;
                         /** @type {function (): undefined} */
-                        self.facebookLogin = submitForm;
+                        self1.facebookLogin = submitForm;
                     };
                     /** @type {boolean} */
                     var Kb = false;
@@ -4017,7 +3807,7 @@ function main(self, $) {
                         /**
                          * @return {undefined}
                          */
-                        self.gapiAsyncInit = function () {
+                        self1.gapiAsyncInit = function () {
                             $($window).trigger("initialized");
                         };
                         optionsString.google = {
@@ -4033,7 +3823,7 @@ function main(self, $) {
                              * @return {undefined}
                              */
                             ua: function (results, cb) {
-                                self.gapi.client.load("plus", "v1", function () {
+                                self1.gapi.client.load("plus", "v1", function () {
                                     console.log("fetching me profile");
                                     gapi.client.plus.people.get({
                                         userId: "me"
@@ -4065,7 +3855,7 @@ function main(self, $) {
                          * @return {undefined}
                          */
                         function ajax(callback) {
-                            self.MC.doLoginWithGPlus(callback);
+                            self1.MC.doLoginWithGPlus(callback);
                             /** @type {Array} */
                             options.cache.login_info = [callback, "google"];
                         }
@@ -4101,9 +3891,9 @@ function main(self, $) {
                                 var handler = this;
                                 var hasDisclosureProperty = data && ("1" == data.loginIntent && "google" == data.context);
                                 options.Fa(function () {
-                                    self.gapi.ytsubscribe.go("agarYoutube");
-                                    self.gapi.load("auth2", function () {
-                                        api = self.gapi.auth2.init(params);
+                                    self1.gapi.ytsubscribe.go("agarYoutube");
+                                    self1.gapi.load("auth2", function () {
+                                        api = self1.gapi.auth2.init(params);
                                         api.attachClickHandler(document.getElementById("gplusLogin"), {}, function (reply) {
                                             console.log(`googleUser : ${reply}`);
                                         }, function (err) {
@@ -4130,7 +3920,7 @@ function main(self, $) {
                                     data.loginIntent = "1";
                                     var extra = newVal.getAuthResponse();
                                     var restoreScript = extra.access_token;
-                                    self.qa = extra;
+                                    self1.qa = extra;
                                     console.log("loggedIn with G+!");
                                     var record = newVal.getBasicProfile();
                                     newVal = record.getImageUrl();
@@ -4148,7 +3938,7 @@ function main(self, $) {
                                                 h();
                                             } else {
                                                 alert("Please add Google+ to your Google account and try again.\nOr you can login with another account.");
-                                                self.logout();
+                                                self1.logout();
                                             }
                                         });
                                     } else {
@@ -4161,7 +3951,7 @@ function main(self, $) {
                                     }
                                     /** @type {string} */
                                     data.context = "google";
-                                    self.updateStorage();
+                                    self1.updateStorage();
                                 }
                             },
                             /**
@@ -4177,7 +3967,7 @@ function main(self, $) {
                         };
                         return optionsString;
                     } (options);
-                    self.gplusModule = app;
+                    self1.gplusModule = app;
                     /**
                      * @return {undefined}
                      */
@@ -4185,7 +3975,7 @@ function main(self, $) {
                         options.fa.ya();
                     };
                     /** @type {function (): undefined} */
-                    self.logoutGooglePlus = disconnect;
+                    self1.logoutGooglePlus = disconnect;
                     var throttledUpdate = function () {
                         /**
                          * @param {Object} l
@@ -4210,8 +4000,8 @@ function main(self, $) {
                             cctx.restore();
                         }
 
-                        var data = new Node(-1, 0, 0, 32, "#5bc0de", "");
-                        var n = new Node(-1, 0, 0, 32, "#5bc0de", "");
+                        var data = new Node1(-1, 0, 0, 32, "#5bc0de", "");
+                        var n = new Node1(-1, 0, 0, 32, "#5bc0de", "");
                         /** @type {Array.<string>} */
                         var codeSegments = "#0791ff #5a07ff #ff07fe #ffa507 #ff0774 #077fff #3aff07 #ff07ed #07a8ff #ff076e #3fff07 #ff0734 #07ff20 #ff07a2 #ff8207 #07ff0e".split(" ");
                         /** @type {Array} */
@@ -4223,7 +4013,7 @@ function main(self, $) {
                             var bisection = i / codeSegments.length * 12;
                             /** @type {number} */
                             var radius = 30 * Math.sqrt(i / codeSegments.length);
-                            items.push(new Node(-1, Math.cos(bisection) * radius, Math.sin(bisection) * radius, 10, codeSegments[i], ""));
+                            items.push(new Node1(-1, Math.cos(bisection) * radius, Math.sin(bisection) * radius, 10, codeSegments[i], ""));
                         }
                         shuffle(items);
                         /** @type {Element} */
@@ -4270,25 +4060,25 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.createParty = function () {
+                    self1.createParty = function () {
                         show(":party");
                         /**
                          * @param {string} content
                          * @return {undefined}
                          */
                         success = function (content) {
-                            cb(`/#${self.encodeURIComponent(content)}`);
-                            $(".partyToken").val(`agar.io/#${self.encodeURIComponent(content)}`);
+                            cb(`/#${self1.encodeURIComponent(content)}`);
+                            $(".partyToken").val(`agar.io/#${self1.encodeURIComponent(content)}`);
                             $("#helloContainer").attr("data-party-state", "1");
                         };
                         next();
                     };
                     /** @type {function (string): undefined} */
-                    self.joinParty = request;
+                    self1.joinParty = request;
                     /**
                      * @return {undefined}
                      */
-                    self.cancelParty = function () {
+                    self1.cancelParty = function () {
                         cb("/");
                         $("#helloContainer").attr("data-party-state", "0");
                         show("");
@@ -4309,15 +4099,13 @@ function main(self, $) {
                     /** @type {number} */
                     max = 0;
                     /** @type {number} */
-                    name = 0;
+                    name1 = 0;
                     /** @type {number} */
                     path = 0;
                     /** @type {number} */
                     count = 0;
-                    /** @type {boolean} */
-                    var id = true;
                     /** @type {function (): undefined} */
-                    self.onPlayerDeath = fn;
+                    self1.onPlayerDeath = fn;
                     setInterval(function () {
                         if (Aa) {
                             a.push(pick() / 100);
@@ -4326,7 +4114,7 @@ function main(self, $) {
                     setInterval(function () {
                         var tempCount = objEquiv();
                         if (0 != tempCount) {
-                            ++name;
+                            ++name1;
                             if (0 == count) {
                                 count = tempCount;
                             }
@@ -4337,38 +4125,38 @@ function main(self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.closeStats = function () {
+                    self1.closeStats = function () {
                         /** @type {boolean} */
                         from = false;
                         $("#stats").hide();
-                        self.destroyAd(self.adSlots.ab);
+                        self1.destroyAd(self1.adSlots.ab);
                         showError(0);
                     };
                     /**
                      * @param {?} dataAndEvents
                      * @return {undefined}
                      */
-                    self.setSkipStats = function (dataAndEvents) {
+                    self1.setSkipStats = function (dataAndEvents) {
                         /** @type {boolean} */
                         id = !dataAndEvents;
                     };
                     /** @type {function (string): ?} */
-                    self.getStatsString = trigger;
+                    self1.getStatsString = trigger;
                     /** @type {function (): undefined} */
-                    self.gPlusShare = onMouseMove;
+                    self1.gPlusShare = onMouseMove;
                     /**
                      * @return {undefined}
                      */
-                    self.twitterShareStats = function () {
-                        var url = self.getStatsString("tt_share_stats");
-                        self.open(`https://twitter.com/intent/tweet?text=${url}`, "Agar.io", `width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self.screenX + self.innerWidth / 2 - 330},top=${(self.innerHeight - 310) / 2}`);
+                    self1.twitterShareStats = function () {
+                        var url = self1.getStatsString("tt_share_stats");
+                        self1.open1(`https://twitter.com/intent/tweet?text=${url}`, "Agar.io", `width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self1.screenX + self1.innerWidth / 2 - 330},top=${(self1.innerHeight - 310) / 2}`);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.fbShareStats = function () {
-                        var groupDescription = self.getStatsString("fb_matchresults_subtitle");
-                        self.FB.ui({
+                    self1.fbShareStats = function () {
+                        var groupDescription = self1.getStatsString("fb_matchresults_subtitle");
+                        self1.FB.ui({
                             method: "feed",
                             display: "iframe",
                             name: _("fb_matchresults_title"),
@@ -4387,10 +4175,10 @@ function main(self, $) {
                      * @param {string} ctxt
                      * @return {undefined}
                      */
-                    self.fillSocialValues = function (onComplete, ctxt) {
-                        if (1 == self.isChrome) {
-                            if ("google" == self.storageInfo.context) {
-                                self.gapi.interactivepost.render(ctxt, {
+                    self1.fillSocialValues = function (onComplete, ctxt) {
+                        if (1 == self1.isChrome) {
+                            if ("google" == self1.storageInfo.context) {
+                                self1.gapi.interactivepost.render(ctxt, {
                                     contenturl: EnvConfig.game_url,
                                     clientid: EnvConfig.gplus_client_id,
                                     cookiepolicy: "http://agar.io",
@@ -4402,8 +4190,8 @@ function main(self, $) {
                         }
                     };
                     $(function () {
-                        if ("MAsyncInit" in self) {
-                            self.MAsyncInit();
+                        if ("MAsyncInit" in self1) {
+                            self1.MAsyncInit();
                         }
                     });
                 }
