@@ -5,6 +5,9 @@
     game_server_port;
     env_development;
     env_local;
+    gplus_client_id;
+    game_url;
+    fb_app_id;
 }
 class Result {
     configID;
@@ -18,6 +21,11 @@ class Options {
     debug;
     renderSettings: RenderingSettings;
     networking;
+    account;
+    google;
+    fa;
+
+    Fa(p: () => void) { throw new Error("Not implemented"); }
 }
 class RenderingSettings {
     constructor(high: OneRenSett, medium: OneRenSett, low: OneRenSett) {
@@ -81,7 +89,7 @@ class OneRenSett {
     maxDetail: number;
     minDetail: number;
     U: number;
-    ma    : boolean;
+    ma: boolean;
 }
 
 var EnvConfig: IEnvConfig;
@@ -1389,16 +1397,14 @@ var EnvConfig: IEnvConfig;
         /** @type {string} */
         context.fillStyle = "#FFFFFF";
         context.scale(d, d);
-        /** @type {null} */
-        d = null;
         /** @type {string} */
-        d = "Your computer is running slow,";
+        var d1 = "Your computer is running slow,";
         /** @type {string} */
         context.font = "18px Ubuntu";
-        context.fillText(d, 400 - context.measureText(d).width / 2, 25);
+        context.fillText(d1, 400 - context.measureText(d1).width / 2, 25);
         /** @type {string} */
-        d = "please close other applications or tabs in your browser for better game performance.";
-        context.fillText(d, 400 - context.measureText(d).width / 2, 45);
+        d1 = "please close other applications or tabs in your browser for better game performance.";
+        context.fillText(d1, 400 - context.measureText(d1).width / 2, 45);
         ctx.drawImage(map, (width - map.width) / 2, height - map.height - 10);
     }
     /**
@@ -1503,13 +1509,13 @@ var EnvConfig: IEnvConfig;
                     /** @type {number} */
                     i = 0;
                     for (; i < list.length; ++i) {
-                        d = list[i].name || _("unnamed_cell");
+                        var d3 = list[i].name || _("unnamed_cell");
                         if (!text) {
-                            d = _("unnamed_cell");
+                            d3 = _("unnamed_cell");
                         }
                         if (1 == list[i].id || -1 != that.indexOf(list[i].id)) {
                             if (items[0].name) {
-                                d = items[0].name;
+                                d3 = items[0].name;
                             }
                             /** @type {string} */
                             ctx.fillStyle = "#FFAAAA";
@@ -1518,14 +1524,14 @@ var EnvConfig: IEnvConfig;
                             ctx.fillStyle = "#FFFFFF";
                         }
                         /** @type {string} */
-                        d = i + 1 + ". " + d;
-                        originalWidth = ctx.measureText(d).width;
+                        var d2 = i + 1 + ". " + d2;
+                        originalWidth = ctx.measureText(d2).width;
                         /** @type {number} */
                         top = 70 + 24 * i;
                         if (200 < originalWidth) {
-                            ctx.fillText(d, 10, top);
+                            ctx.fillText(d2, 10, top);
                         } else {
-                            ctx.fillText(d, (200 - originalWidth) / 2, top);
+                            ctx.fillText(d2, (200 - originalWidth) / 2, top);
                         }
                     }
                 } else {
@@ -2015,12 +2021,12 @@ var EnvConfig: IEnvConfig;
         $(".stats-cells-eaten").text(path);
         $(".stats-top-position").text(0 == count ? ":(" : count);
         /** @type {(HTMLElement|null)} */
-        var h = document.getElementById("statsGraph");
-        if (h) {
-            var ctx = h.getContext("2d");
-            var width = h.width;
-            h = h.height;
-            ctx.clearRect(0, 0, width, h);
+        var h1: HTMLCanvasElement = document.getElementById("statsGraph");
+        if (h1) {
+            var ctx = h1.getContext("2d");
+            var width = h1.width;
+            var h2 = h2.height;
+            ctx.clearRect(0, 0, width, h2);
             if (2 < a.length) {
                 /** @type {number} */
                 var n = 200;
@@ -2039,7 +2045,7 @@ var EnvConfig: IEnvConfig;
                 ctx.strokeStyle = col;
                 ctx.fillStyle = col;
                 ctx.beginPath();
-                ctx.moveTo(0, h - a[0] / n * (h - 10) + 10);
+                ctx.moveTo(0, h2 - a[0] / n * (h2 - 10) + 10);
                 /** @type {number} */
                 i = 1;
                 for (; i < a.length; i += Math.max(~~(a.length / width), 1)) {
@@ -2057,16 +2063,16 @@ var EnvConfig: IEnvConfig;
                         }
                     }
                     /** @type {number} */
-                    r = r.reduce(function (far, near) {
+                    var r2 = r.reduce(function (far, near) {
                         return far + near;
                     }) / r.length / n;
-                    ctx.lineTo(x, h - r * (h - 10) + 10);
+                    ctx.lineTo(x, h2 - r2 * (h2 - 10) + 10);
                 }
                 ctx.stroke();
                 /** @type {number} */
                 ctx.globalAlpha = 0.5;
-                ctx.lineTo(width, h);
-                ctx.lineTo(0, h);
+                ctx.lineTo(width, h2);
+                ctx.lineTo(0, h2);
                 ctx.fill();
                 /** @type {number} */
                 ctx.globalAlpha = 1;
@@ -3250,9 +3256,9 @@ var EnvConfig: IEnvConfig;
                             }
                             for (; this.a.length < a;) {
                                 /** @type {number} */
-                                data = ~~(Math.random() * this.a.length);
-                                data = this.a[data];
-                                this.a.push(new Player(this, data.x, data.y, data.f, data.b));
+                                var a5 = ~~(Math.random() * this.a.length);
+                                a5 = this.a[a5];
+                                this.a.push(new Player(this, a5.x, a5.y, a5.f, a5.b));
                             }
                         },
                         /**
@@ -3460,7 +3466,7 @@ var EnvConfig: IEnvConfig;
                                 /** @type {null} */
                                 var glockBottomWidth = null;
                                 /** @type {boolean} */
-                                i = false;
+                                var a6 = false;
                                 var fs = this.color;
                                 /** @type {boolean} */
                                 var l = false;
@@ -3482,7 +3488,7 @@ var EnvConfig: IEnvConfig;
                                             if (null != map) {
                                                 if (-1 != names.indexOf(key)) {
                                                     /** @type {boolean} */
-                                                    i = true;
+                                                    a6 = true;
                                                 }
                                             } else {
                                                 if (this.I) {
@@ -3490,7 +3496,7 @@ var EnvConfig: IEnvConfig;
                                                         if ("shenron" == key) {
                                                             if (7 <= items.length) {
                                                                 /** @type {boolean} */
-                                                                cc = i = true;
+                                                                cc = a6 = true;
                                                                 glockBottomWidth = loop("%starball1");
                                                             }
                                                         }
@@ -3565,25 +3571,25 @@ var EnvConfig: IEnvConfig;
                                 /** @type {boolean} */
                                 key = -1 != items.indexOf(this);
                                 /** @type {number} */
-                                y_position = ~~this.y;
+                                var a8 = ~~this.y;
                                 if (0 != this.id) {
                                     if (text || key) {
                                         if (this.name) {
-                                            if (this.i) {
-                                                if (!i) {
-                                                    map = this.i;
+                                            if (this.a6) {
+                                                if (!a6) {
+                                                    map = this.a6;
                                                     map.B(this.name);
                                                     map.O(this.m());
                                                     /** @type {number} */
-                                                    i = 0 >= this.id ? 1 : Math.ceil(10 * scale) / 10;
-                                                    map.oa(i);
+                                                    var a7 = 0 >= this.id ? 1 : Math.ceil(10 * scale) / 10;
+                                                    map.oa(a7);
                                                     map = map.N();
                                                     /** @type {number} */
-                                                    glockBottomWidth = Math.ceil(map.width / i);
+                                                    glockBottomWidth = Math.ceil(map.width / a7);
                                                     /** @type {number} */
-                                                    fs = Math.ceil(map.height / i);
-                                                    ctx.drawImage(map, ~~this.x - ~~(glockBottomWidth / 2), y_position - ~~(fs / 2), glockBottomWidth, fs);
-                                                    y_position += map.height / 2 / i + 4;
+                                                    fs = Math.ceil(map.height / a7);
+                                                    ctx.drawImage(map, ~~this.x - ~~(glockBottomWidth / 2), a8 - ~~(fs / 2), glockBottomWidth, fs);
+                                                    a8 += map.height / 2 / a7 + 4;
                                                 }
                                             }
                                         }
@@ -3599,14 +3605,14 @@ var EnvConfig: IEnvConfig;
                                             key.O(this.m() / 2);
                                             key.B(~~(this.size * this.size / 100));
                                             /** @type {number} */
-                                            i = Math.ceil(10 * scale) / 10;
-                                            key.oa(i);
+                                            var a9 = Math.ceil(10 * scale) / 10;
+                                            key.oa(a9);
                                             map = key.N();
                                             /** @type {number} */
-                                            glockBottomWidth = Math.ceil(map.width / i);
+                                            glockBottomWidth = Math.ceil(map.width / a9);
                                             /** @type {number} */
-                                            fs = Math.ceil(map.height / i);
-                                            ctx.drawImage(map, ~~this.x - ~~(glockBottomWidth / 2), y_position - ~~(fs / 2), glockBottomWidth, fs);
+                                            fs = Math.ceil(map.height / a9);
+                                            ctx.drawImage(map, ~~this.x - ~~(glockBottomWidth / 2), a8 - ~~(fs / 2), glockBottomWidth, fs);
                                         }
                                     }
                                 }
