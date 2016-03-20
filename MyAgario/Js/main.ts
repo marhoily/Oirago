@@ -1,13 +1,16 @@
 ﻿var gapi;
 var SSA_CORE;
 
-class TimeSeries{
+class TimeSeries {
     Ma: boolean;
+
     constructor(p: { Ma: boolean }) { return; }
 }
-class SmoothieChart{
+
+class SmoothieChart {
     constructor(res) { return; }
 }
+
 class Obj1 {
     rttSDev;
     rttMean;
@@ -24,6 +27,7 @@ interface IEnvConfig {
     game_url;
     fb_app_id;
 }
+
 class Result {
     configID;
     master;
@@ -42,6 +46,7 @@ class Options {
 
     Fa(p: () => void) { throw new Error("Not implemented"); }
 }
+
 class RenderingSettings {
     constructor(high: OneRenSett, medium: OneRenSett, low: OneRenSett) {
         this.high = high;
@@ -59,6 +64,7 @@ class RenderingSettings {
     detail = 1;
     /** @type {boolean} */
     auto = false;
+
     /**
      * @return {undefined}
      */
@@ -75,6 +81,7 @@ class RenderingSettings {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -89,6 +96,7 @@ class RenderingSettings {
     };
 
 }
+
 class OneRenSett {
     constructor(warnFps: number, simpleDraw: boolean,
         maxDetail: number, minDetail: number, U: number) {
@@ -109,27 +117,28 @@ class OneRenSett {
 
 var EnvConfig: IEnvConfig;
 
-function main (self, $) {
+function main(self, $) {
     /**
      * @param {string} value
      * @param {number} expectedNumberOfNonCommentArgs
      * @return {undefined}
      */
     function setCookie(value, expectedNumberOfNonCommentArgs) {
-        var expires1;
+        var expires1: string;
         if (expectedNumberOfNonCommentArgs) {
             /** @type {Date} */
             var expires = new Date;
             expires.setTime(expires.getTime() + 864E5 * expectedNumberOfNonCommentArgs);
             /** @type {string} */
-            expires1 = "; expires=" + expires.toUTCString();
+            expires1 = `; expires=${expires.toUTCString()}`;
         } else {
             /** @type {string} */
             expires1 = "";
         }
         /** @type {string} */
-        document.cookie = "agario_redirect=" + value + expires1 + "; path=/";
+        document.cookie = `agario_redirect=${value}${expires1}; path=/`;
     }
+
     /**
      * @return {?}
      */
@@ -151,6 +160,7 @@ function main (self, $) {
         }
         return null;
     }
+
     /**
      * @return {undefined}
      */
@@ -197,7 +207,7 @@ function main (self, $) {
          * @param {?} event
          * @return {undefined}
          */
-        self.onkeyup = function (event) {
+        self.onkeyup = function(event) {
             if (32 == event.keyCode) {
                 /** @type {boolean} */
                 firing = false;
@@ -215,6 +225,7 @@ function main (self, $) {
             }
         };
     }
+
     /**
      * @param {Event} e
      * @return {undefined}
@@ -231,6 +242,7 @@ function main (self, $) {
             ratio = 4 / scale;
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -297,6 +309,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -304,13 +317,14 @@ function main (self, $) {
         value = (cx - width / 2) / scale + px;
         t2 = (cy - height / 2) / scale + y;
     }
+
     /**
      * @return {undefined}
      */
     function run() {
         if (null == old) {
             old = {};
-            $("#region").children().each(function () {
+            $("#region").children().each(function() {
                 var option = $(this);
                 var name = option.val();
                 if (name) {
@@ -318,7 +332,7 @@ function main (self, $) {
                 }
             });
         }
-        $.get(url + "info", function (b) {
+        $.get(url + "info", function(b) {
             var testSource = {};
             var name;
             for (name in b.regions) {
@@ -328,10 +342,11 @@ function main (self, $) {
                 testSource[sourceName] += b.regions[name].numPlayers;
             }
             for (name in testSource) {
-                $('#region option[value="' + name + '"]').text(old[name] + " (" + testSource[name] + " players)");
+                $(`#region option[value="${name}"]`).text(old[name] + " (" + testSource[name] + " players)");
             }
         }, "json");
     }
+
     /**
      * @return {undefined}
      */
@@ -346,6 +361,7 @@ function main (self, $) {
         self.destroyAd(self.adSlots.aa);
         self.destroyAd(self.adSlots.ac);
     }
+
     /**
      * @param {(Object|string)} hash
      * @return {undefined}
@@ -360,7 +376,7 @@ function main (self, $) {
                 }
                 newValue = self.localStorage.location = hash;
                 $(".region-message").hide();
-                $(".region-message." + hash).show();
+                $(`.region-message.${hash}`).show();
                 $(".btn-needs-server").prop("disabled", false);
                 if (ab) {
                     next();
@@ -368,6 +384,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {number} expectedHashCode
      * @return {undefined}
@@ -409,6 +426,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {number} path
      * @return {undefined}
@@ -419,6 +437,7 @@ function main (self, $) {
         actual = path;
         $("#gamemode").val(path);
     }
+
     /**
      * @return {undefined}
      */
@@ -436,6 +455,7 @@ function main (self, $) {
             $("#locationUnknown").append($("#region"));
         }
     }
+
     /**
      * @param {string} id
      * @return {undefined}
@@ -451,6 +471,7 @@ function main (self, $) {
             self.MC.updateConfigurationID(id);
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -458,12 +479,12 @@ function main (self, $) {
         if ("configID" in result) {
             resolve(result.configID);
         } else {
-            $.get(url + "getLatestID", function (newId) {
+            $.get(url + "getLatestID", function(newId) {
                 resolve(newId);
                 /** @type {string} */
                 self.localStorage.last_config_id = newId;
-            }).fail(function () {
-                var data;
+            }).fail(function() {
+                var data: boolean | string;
                 if (data = "last_config_id" in self.localStorage) {
                     data = self.localStorage.last_config_id;
                     /** @type {boolean} */
@@ -471,17 +492,18 @@ function main (self, $) {
                 }
                 if (data) {
                     data = self.localStorage.last_config_id;
-                    console.log("Fallback to stored configID: " + data);
+                    console.log(`Fallback to stored configID: ${data}`);
                     resolve(data);
                 }
             });
         }
     }
+
     /**
      * @return {undefined}
      */
     function postLink() {
-        $.get(base + "//gc.agar.io", function (prop) {
+        $.get(base + "//gc.agar.io", function(prop) {
             var name = prop.split(" ");
             prop = name[0];
             name = name[1] || "";
@@ -503,6 +525,7 @@ function main (self, $) {
             }
         }, "text");
     }
+
     /**
      * @param {string} name
      * @return {?}
@@ -510,6 +533,7 @@ function main (self, $) {
     function _(name) {
         return self.i18n[name] || (self.i18n_dict.en[name] || name);
     }
+
     /**
      * @return {undefined}
      */
@@ -521,7 +545,7 @@ function main (self, $) {
             /**
              * @return {undefined}
              */
-            error: function () {
+            error: function() {
                 console.log("Failed to get server. Will retry in 30 seconds");
                 setTimeout(makeRequest, 3E4);
             },
@@ -529,7 +553,7 @@ function main (self, $) {
              * @param {Object} data
              * @return {undefined}
              */
-            success: function (data) {
+            success: function(data) {
                 if (uid == resizeUID) {
                     if (data.alert) {
                         alert(data.alert);
@@ -539,7 +563,7 @@ function main (self, $) {
                         /** @type {string} */
                         method = self.location.hostname + ":" + EnvConfig.game_server_port;
                     }
-                    open("ws" + (ssl ? "s" : "") + "://" + method, data.token);
+                    open(`ws${ssl ? "s" : ""}://${method}`, data.token);
                 }
             },
             dataType: "json",
@@ -549,6 +573,7 @@ function main (self, $) {
             data: (newValue + actual || "?") + "\n154669603"
         });
     }
+
     /**
      * @return {undefined}
      */
@@ -560,6 +585,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -579,6 +605,7 @@ function main (self, $) {
             ws = null;
         }
     }
+
     /**
      * @param {string} url
      * @param {string} a
@@ -588,21 +615,21 @@ function main (self, $) {
         bind();
         if (result.ip) {
             /** @type {string} */
-            url = "ws" + (ssl ? "s" : "") + "://" + result.ip;
+            url = `ws${ssl ? "s" : ""}://${result.ip}`;
         }
         if (null != success) {
             var callback = success;
             /**
              * @return {undefined}
              */
-            success = function () {
+            success = function() {
                 callback(a);
             };
         }
         if (ssl && (!EnvConfig.env_development && !EnvConfig.env_local)) {
             var attrList = url.split(":");
             /** @type {string} */
-            url = "wss://ip-" + attrList[1].replace(/\./g, "-").replace(/\//g, "") + ".tech.agar.io:" + +attrList[2];
+            url = `wss://ip-${attrList[1].replace(/\./g, "-").replace(/\//g, "")}.tech.agar.io:${+attrList[2]}`;
         }
         /** @type {Array} */
         that = [];
@@ -630,8 +657,8 @@ function main (self, $) {
         /**
          * @return {undefined}
          */
-        ws.onopen = function () {
-            var data;
+        ws.onopen = function() {
+            var data: DataView;
             /** @type {number} */
             j = t = Date.now();
             /** @type {number} */
@@ -664,10 +691,11 @@ function main (self, $) {
         /**
          * @return {undefined}
          */
-        ws.onerror = function () {
+        ws.onerror = function() {
             console.log(exports.la() + " socket error", arguments);
         };
     }
+
     /**
      * @param {number} expectedNumberOfNonCommentArgs
      * @return {?}
@@ -675,6 +703,7 @@ function main (self, $) {
     function stringify(expectedNumberOfNonCommentArgs) {
         return new DataView(new ArrayBuffer(expectedNumberOfNonCommentArgs));
     }
+
     /**
      * @param {Object} data
      * @return {undefined}
@@ -682,6 +711,7 @@ function main (self, $) {
     function log(data) {
         ws.send(data.buffer);
     }
+
     /**
      * @return {undefined}
      */
@@ -695,6 +725,7 @@ function main (self, $) {
         setTimeout(next, backoff);
         backoff *= 2;
     }
+
     /**
      * @param {MessageEvent} a
      * @return {undefined}
@@ -702,6 +733,7 @@ function main (self, $) {
     function onmessage(a) {
         parse(new DataView(a.data));
     }
+
     /**
      * @param {DataView} data
      * @return {undefined}
@@ -713,7 +745,7 @@ function main (self, $) {
         function encode() {
             /** @type {string} */
             var str = "";
-            for (; ;) {
+            for (;;) {
                 var b = data.getUint16(offset, true);
                 offset += 2;
                 if (0 == b) {
@@ -723,115 +755,117 @@ function main (self, $) {
             }
             return str;
         }
+
         /** @type {number} */
         var offset = 0;
         if (240 == data.getUint8(offset)) {
             fn();
         } else {
             switch (data.getUint8(offset++)) {
-                case 16:
-                    init(data, offset);
+            case 16:
+                init(data, offset);
+                break;
+            case 17:
+                chunk = data.getFloat32(offset, true);
+                offset += 4;
+                x = data.getFloat32(offset, true);
+                offset += 4;
+                argumentOffset = data.getFloat32(offset, true);
+                offset += 4;
+                break;
+            case 18:
+                /** @type {Array} */
+                that = [];
+                /** @type {Array} */
+                items = [];
+                args = {};
+                /** @type {Array} */
+                parts = [];
+                break;
+            case 20:
+                /** @type {Array} */
+                items = [];
+                /** @type {Array} */
+                that = [];
+                break;
+            case 21:
+                matches = data.getInt16(offset, true);
+                offset += 2;
+                s = data.getInt16(offset, true);
+                offset += 2;
+                if (!nb) {
+                    /** @type {boolean} */
+                    nb = true;
+                    xr = matches;
+                    pos = s;
+                }
+                break;
+            case 32:
+                that.push(data.getUint32(offset, true));
+                offset += 4;
+                break;
+            case 49:
+                if (null != angles) {
                     break;
-                case 17:
-                    chunk = data.getFloat32(offset, true);
-                    offset += 4;
-                    x = data.getFloat32(offset, true);
-                    offset += 4;
-                    argumentOffset = data.getFloat32(offset, true);
-                    offset += 4;
-                    break;
-                case 18:
-                    /** @type {Array} */
-                    that = [];
-                    /** @type {Array} */
-                    items = [];
-                    args = {};
-                    /** @type {Array} */
-                    parts = [];
-                    break;
-                case 20:
-                    /** @type {Array} */
-                    items = [];
-                    /** @type {Array} */
-                    that = [];
-                    break;
-                case 21:
-                    matches = data.getInt16(offset, true);
-                    offset += 2;
-                    s = data.getInt16(offset, true);
-                    offset += 2;
-                    if (!nb) {
-                        /** @type {boolean} */
-                        nb = true;
-                        xr = matches;
-                        pos = s;
-                    }
-                    break;
-                case 32:
-                    that.push(data.getUint32(offset, true));
-                    offset += 4;
-                    break;
-                case 49:
-                    if (null != angles) {
-                        break;
-                    }
-                    var b = data.getUint32(offset, true);
+                }
+                var b = data.getUint32(offset, true);
+                offset = offset + 4;
+                /** @type {Array} */
+                list = [];
+                /** @type {number} */
+                var a = 0;
+                for (; a < b; ++a) {
+                    var token = data.getUint32(offset, true);
                     offset = offset + 4;
-                    /** @type {Array} */
-                    list = [];
-                    /** @type {number} */
-                    var a = 0;
-                    for (; a < b; ++a) {
-                        var token = data.getUint32(offset, true);
-                        offset = offset + 4;
-                        list.push({
-                            id: token,
-                            name: encode()
-                        });
-                    }
-                    create();
-                    break;
-                case 50:
-                    /** @type {Array} */
-                    angles = [];
+                    list.push({
+                        id: token,
+                        name: encode()
+                    });
+                }
+                create();
+                break;
+            case 50:
+                /** @type {Array} */
+                angles = [];
+                b = data.getUint32(offset, true);
+                offset += 4;
+                /** @type {number} */
+                a = 0;
+                for (; a < b; ++a) {
+                    angles.push(data.getFloat32(offset, true));
+                    offset += 4;
+                }
+                create();
+                break;
+            case 64:
+                minX = data.getFloat64(offset, true);
+                offset += 8;
+                minY = data.getFloat64(offset, true);
+                offset += 8;
+                maxX = data.getFloat64(offset, true);
+                offset += 8;
+                maxY = data.getFloat64(offset, true);
+                offset += 8;
+                if (data.byteLength > offset) {
                     b = data.getUint32(offset, true);
                     offset += 4;
-                    /** @type {number} */
-                    a = 0;
-                    for (; a < b; ++a) {
-                        angles.push(data.getFloat32(offset, true));
-                        offset += 4;
-                    }
-                    create();
-                    break;
-                case 64:
-                    minX = data.getFloat64(offset, true);
-                    offset += 8;
-                    minY = data.getFloat64(offset, true);
-                    offset += 8;
-                    maxX = data.getFloat64(offset, true);
-                    offset += 8;
-                    maxY = data.getFloat64(offset, true);
-                    offset += 8;
-                    if (data.byteLength > offset) {
-                        b = data.getUint32(offset, true);
-                        offset += 4;
-                        /** @type {boolean} */
-                        started = !!(b & 1);
-                        passes = encode();
-                        self.MC.updateServerVersion(passes);
-                        console.log("Server version " + passes);
-                    }
-                    break;
-                case 102:
-                    b = data.buffer.slice(offset);
-                    options.core.proxy.forwardProtoMessage(b);
-                    break;
-                case 104:
-                    self.logout();
+                    /** @type {boolean} */
+                    started = !!(b & 1);
+                    passes = encode();
+                    self.MC.updateServerVersion(passes);
+                    console.log(`Server version ${passes}`);
+                }
+                break;
+            case 102:
+                b = data.buffer.slice(offset);
+                options.core.proxy.forwardProtoMessage(b);
+                break;
+            case 104:
+                self.logout();
             }
         }
     }
+
     /**
      * @param {DataView} dataView
      * @param {number} offset
@@ -844,7 +878,7 @@ function main (self, $) {
         function read() {
             /** @type {string} */
             var str = "";
-            for (; ;) {
+            for (;;) {
                 var b = dataView.getUint16(offset, true);
                 offset += 2;
                 if (0 == b) {
@@ -854,13 +888,14 @@ function main (self, $) {
             }
             return str;
         }
+
         /**
          * @return {?}
          */
         function randomString() {
             /** @type {string} */
             var str = "";
-            for (; ;) {
+            for (;;) {
                 var b = dataView.getUint8(offset++);
                 if (0 == b) {
                     break;
@@ -869,6 +904,7 @@ function main (self, $) {
             }
             return str;
         }
+
         /** @type {number} */
         t = Date.now();
         /** @type {number} */
@@ -921,14 +957,14 @@ function main (self, $) {
         }
         /** @type {number} */
         i = 0;
-        for (; ;) {
+        for (;;) {
             var a2 = dataView.getUint32(offset, true);
             offset += 4;
             if (0 == a2) {
                 break;
             }
             ++i;
-            var g;
+            var g: number;
             pos = dataView.getInt32(offset, true);
             offset += 4;
             c = dataView.getInt32(offset, true);
@@ -1033,6 +1069,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1056,6 +1093,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1075,6 +1113,7 @@ function main (self, $) {
             Ba = true;
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1082,6 +1121,7 @@ function main (self, $) {
         read();
         emit(17);
     }
+
     /**
      * @return {undefined}
      */
@@ -1089,12 +1129,14 @@ function main (self, $) {
         read();
         emit(21);
     }
+
     /**
      * @return {?}
      */
     function forEach() {
         return null != ws && ws.readyState == ws.OPEN;
     }
+
     /**
      * @param {number} expectedNumberOfNonCommentArgs
      * @return {undefined}
@@ -1106,6 +1148,7 @@ function main (self, $) {
             log(data);
         }
     }
+
     /**
      * @param {Object} caption
      * @return {undefined}
@@ -1120,6 +1163,7 @@ function main (self, $) {
             opts.auto = false;
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1142,21 +1186,23 @@ function main (self, $) {
             $this.height(maxHeight);
         }
         if (maxHeight > win / 1.1) {
-            $this.css("transform", "translate(-50%, -50%) scale(" + win / maxHeight / 1.1 + ")");
+            $this.css("transform", `translate(-50%, -50%) scale(${win / maxHeight / 1.1})`);
         } else {
             $this.css("transform", "translate(-50%, -50%)");
         }
         render();
     }
+
     /**
      * @return {?}
      */
     function requestAnimationFrame() {
-        var setSize;
+        var setSize: number;
         /** @type {number} */
         setSize = 1 * Math.max(height / 1080, width / 1920);
         return setSize *= ratio;
     }
+
     /**
      * @return {undefined}
      */
@@ -1173,11 +1219,12 @@ function main (self, $) {
             scale = (9 * scale + Math.pow(Math.min(64 / imgWidth, 1), 0.4) * requestAnimationFrame()) / 10;
         }
     }
+
     /**
      * @return {undefined}
      */
     function render() {
-        var size;
+        var size: number;
         /** @type {number} */
         var n = Date.now();
         ++Mc;
@@ -1234,7 +1281,7 @@ function main (self, $) {
         } else {
             redraw();
         }
-        parts.sort(function (a, b) {
+        parts.sort(function(a, b) {
             return a.size == b.size ? a.id - b.id : a.size - b.size;
         });
         ctx.save();
@@ -1390,6 +1437,7 @@ function main (self, $) {
         /** @type {number} */
         tOffset = t;
     }
+
     /**
      * @return {undefined}
      */
@@ -1423,6 +1471,7 @@ function main (self, $) {
         context.fillText(d1, 400 - context.measureText(d1).width / 2, 45);
         ctx.drawImage(map, (width - map.width) / 2, height - map.height - 10);
     }
+
     /**
      * @return {undefined}
      */
@@ -1457,6 +1506,7 @@ function main (self, $) {
         }
         ctx.restore();
     }
+
     /**
      * @return {undefined}
      */
@@ -1467,6 +1517,7 @@ function main (self, $) {
             ctx.drawImage(copy, 5, 5, dim, dim);
         }
     }
+
     /**
      * @return {?}
      */
@@ -1480,6 +1531,7 @@ function main (self, $) {
         }
         return result;
     }
+
     /**
      * @return {undefined}
      */
@@ -1518,7 +1570,7 @@ function main (self, $) {
                 ctx.font = "30px Ubuntu";
                 ctx.fillText(d, 100 - ctx.measureText(d).width / 2, 40);
                 var top;
-                var originalWidth;
+                var originalWidth: number;
                 if (null == angles) {
                     /** @type {string} */
                     ctx.font = "20px Ubuntu";
@@ -1568,6 +1620,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {string} f
      * @return {?}
@@ -1580,7 +1633,7 @@ function main (self, $) {
             if (!self.MC || !self.MC.getSkinInfo) {
                 return null;
             }
-            f = self.MC.getSkinInfo("skin_" + f.slice(1));
+            f = self.MC.getSkinInfo(`skin_${f.slice(1)}`);
             if (null == f) {
                 return null;
             }
@@ -1588,12 +1641,13 @@ function main (self, $) {
             f = (+f.color).toString(16);
             for (; 6 > f.length;) {
                 /** @type {string} */
-                f = "0" + f;
+                f = `0${f}`;
             }
-            return "#" + f;
+            return `#${f}`;
         }
         return null;
     }
+
     /**
      * @param {string} x
      * @return {?}
@@ -1612,7 +1666,7 @@ function main (self, $) {
                     if (!self.MC || !self.MC.getSkinInfo) {
                         return null;
                     }
-                    var data = self.MC.getSkinInfo("skin_" + x.slice(1));
+                    var data = self.MC.getSkinInfo(`skin_${x.slice(1)}`);
                     if (null == data) {
                         return null;
                     }
@@ -1624,6 +1678,7 @@ function main (self, $) {
         }
         return 0 != results[x].width && results[x].complete ? results[x] : null;
     }
+
     /**
      * @param {(Object|string)} client
      * @param {number} x
@@ -1644,6 +1699,7 @@ function main (self, $) {
         /** @type {number} */
         this.b = opt_vars;
     }
+
     /**
      * @param {number} id
      * @param {?} opt_parent
@@ -1666,6 +1722,7 @@ function main (self, $) {
         this.ba();
         this.A(c);
     }
+
     /**
      * @param {?} val
      * @return {?}
@@ -1674,10 +1731,11 @@ function main (self, $) {
         val = val.toString(16);
         for (; 6 > val.length;) {
             /** @type {string} */
-            val = "0" + val;
+            val = `0${val}`;
         }
-        return "#" + val;
+        return `#${val}`;
     }
+
     /**
      * @param {number} val
      * @param {number} dataAndEvents
@@ -1701,6 +1759,7 @@ function main (self, $) {
             this.Z = o;
         }
     }
+
     /**
      * @param {Array} arr
      * @return {undefined}
@@ -1708,7 +1767,7 @@ function main (self, $) {
     function shuffle(arr) {
         var total = arr.length;
         var tmp1;
-        var rnd;
+        var rnd: number;
         for (; 0 < total;) {
             /** @type {number} */
             rnd = Math.floor(Math.random() * total);
@@ -1718,12 +1777,14 @@ function main (self, $) {
             arr[rnd] = tmp1;
         }
     }
+
     /**
      * @return {undefined}
      */
     function compassResult() {
         data = tmp;
     }
+
     /**
      * @param {string} text
      * @return {undefined}
@@ -1733,6 +1794,7 @@ function main (self, $) {
         data.context = "google" == text ? "google" : "facebook";
         callback();
     }
+
     /**
      * @return {undefined}
      */
@@ -1751,6 +1813,7 @@ function main (self, $) {
             $("#fbShare").show();
         }
     }
+
     /**
      * @param {Object} item
      * @return {undefined}
@@ -1786,6 +1849,7 @@ function main (self, $) {
         data.userInfo.loggedIn = "1";
         self.updateStorage();
     }
+
     /**
      * @param {string} args
      * @param {Function} render
@@ -1797,7 +1861,7 @@ function main (self, $) {
         if (data.userInfo.loggedIn) {
             var xpgen = $("#helloContainer")
                 .is(":visible") && "1" == $("#helloContainer")
-                    .attr("data-has-account-data");
+                .attr("data-has-account-data");
             if (null == options || void 0 == options) {
                 options = data.userInfo;
             }
@@ -1813,13 +1877,13 @@ function main (self, $) {
                         xp: a3,
                         xpNeeded: a3,
                         level: level
-                    }, function () {
+                    }, function() {
                         $(".agario-profile-panel .progress-bar-star").text(options.level);
                         $(".agario-exp-bar .progress-bar").css("width", "100%");
-                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function () {
+                        $(".progress-bar-star").addClass("animated tada").one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", function() {
                             $(".progress-bar-star").removeClass("animated tada");
                         });
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $(".agario-exp-bar .progress-bar-text").text(options.xpNeeded + "/" + options.xpNeeded + " XP");
                             start({
                                 xp: 0,
@@ -1834,8 +1898,8 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var update = function () {
-                        var t;
+                    var update = function() {
+                        var t: number;
                         /** @type {number} */
                         t = (Date.now() - f) / 1E3;
                         /** @type {number} */
@@ -1856,6 +1920,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1865,6 +1930,7 @@ function main (self, $) {
             $("#instructions").show();
         }
     }
+
     /**
      * @param {Object} response
      * @return {undefined}
@@ -1882,7 +1948,7 @@ function main (self, $) {
                 self.MC.doLoginWithFB(actualAria);
                 /** @type {Array} */
                 options.cache.login_info = [actualAria, "facebook"];
-                self.FB.api("/me/picture?width=180&height=180", function (messageEvent) {
+                self.FB.api("/me/picture?width=180&height=180", function(messageEvent) {
                     data.userInfo.picture = messageEvent.data.url;
                     self.updateStorage();
                     $(".agario-profile-picture").attr("src", messageEvent.data.url);
@@ -1898,6 +1964,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {string} param
      * @return {undefined}
@@ -1907,24 +1974,24 @@ function main (self, $) {
         $("#helloContainer").attr("data-party-state", "4");
         /** @type {string} */
         param = decodeURIComponent(param).replace(/.*#/gim, "");
-        cb("#" + self.encodeURIComponent(param));
+        cb(`#${self.encodeURIComponent(param)}`);
         $.ajax(url + "getToken", {
             /**
              * @return {undefined}
              */
-            error: function () {
+            error: function() {
                 $("#helloContainer").attr("data-party-state", "6");
             },
             /**
              * @param {string} status
              * @return {undefined}
              */
-            success: function (status) {
+            success: function(status) {
                 status = status.split("\n");
-                $(".partyToken").val("agar.io/#" + self.encodeURIComponent(param));
+                $(".partyToken").val(`agar.io/#${self.encodeURIComponent(param)}`);
                 $("#helloContainer").attr("data-party-state", "5");
                 show(":party");
-                open("ws://" + status[0], param);
+                open(`ws://${status[0]}`, param);
             },
             dataType: "text",
             method: "POST",
@@ -1933,6 +2000,7 @@ function main (self, $) {
             data: param
         });
     }
+
     /**
      * @param {string} path
      * @return {undefined}
@@ -1944,6 +2012,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -1964,6 +2033,7 @@ function main (self, $) {
         Aa = false;
         setPosition();
     }
+
     /**
      * @param {Element} params
      * @param {Object} self
@@ -1991,6 +2061,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {number} i
      * @return {?}
@@ -2004,10 +2075,11 @@ function main (self, $) {
         i = (~~(i / 60)).toString();
         if (2 > lineNumber.length) {
             /** @type {string} */
-            lineNumber = "0" + lineNumber;
+            lineNumber = `0${lineNumber}`;
         }
         return i + ":" + lineNumber;
     }
+
     /**
      * @return {?}
      */
@@ -2024,6 +2096,7 @@ function main (self, $) {
         }
         return 0;
     }
+
     /**
      * @return {undefined}
      */
@@ -2077,7 +2150,7 @@ function main (self, $) {
                         }
                     }
                     /** @type {number} */
-                    var r2 = r.reduce(function (far, near) {
+                    var r2 = r.reduce(function(far, near) {
                         return far + near;
                     }) / r.length / n;
                     ctx.lineTo(x, h2 - r2 * (h2 - 10) + 10);
@@ -2093,6 +2166,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @return {undefined}
      */
@@ -2104,7 +2178,7 @@ function main (self, $) {
                     DrawPolyline();
                     /** @type {boolean} */
                     from = true;
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $("#overlays").fadeIn(500, start);
                         $("#stats").show();
                         var onComplete = trigger("g_plus_share_stats");
@@ -2116,6 +2190,7 @@ function main (self, $) {
             }
         }
     }
+
     /**
      * @param {string} data
      * @return {?}
@@ -2124,19 +2199,21 @@ function main (self, $) {
         var uHostName = $(".stats-time-alive").text();
         return self.parseString(data, "%@", [uHostName.split(":")[0], uHostName.split(":")[1], $(".stats-highest-mass").text()]);
     }
+
     /**
      * @return {undefined}
      */
     function onMouseMove() {
-        self.open("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", "width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=" + (self.screenX + self.innerWidth / 2 - 242) + ",top=" + (self.innerHeight - 580) / 2);
+        self.open("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", `width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self.screenX + self.innerWidth / 2 - 242},top=${(self.innerHeight - 580) / 2}`);
     }
+
     /** @type {Element} */
     var test_canvas = document.createElement("canvas");
     if ("undefined" == typeof console || ("undefined" == typeof DataView || ("undefined" == typeof WebSocket || (null == test_canvas || (null == test_canvas.getContext || null == self.localStorage))))) {
         alert("You browser does not support this game, we recommend you to use Firefox to play this");
     } else {
         var result = new Result();
-        (function () {
+        (function() {
             /** @type {string} */
             var params = self.location.search;
             if ("?" == params.charAt(0)) {
@@ -2170,7 +2247,7 @@ function main (self, $) {
         /**
          * @return {undefined}
          */
-        var after = function () {
+        var after = function() {
             setCookie("", -1);
         };
         /** @type {boolean} */
@@ -2184,7 +2261,7 @@ function main (self, $) {
                 if (_tryInitOnFocus && !_isFocused) {
                     setCookie("1", 1);
                     /** @type {string} */
-                    self.location.href = "http:" + self.location.href.substring(self.location.protocol.length);
+                    self.location.href = `http:${self.location.href.substring(self.location.protocol.length)}`;
                     /** @type {boolean} */
                     sc = true;
                 } else {
@@ -2214,7 +2291,7 @@ function main (self, $) {
                 if (self.ga) {
                     self.ga("send", "event", "MobileRedirect", "PlayStore");
                 }
-                setTimeout(function () {
+                setTimeout(function() {
                     /** @type {string} */
                     self.location.href = "https://play.google.com/store/apps/details?id=com.miniclip.agar.io";
                 }, 1E3);
@@ -2223,18 +2300,18 @@ function main (self, $) {
                     if (self.ga) {
                         self.ga("send", "event", "MobileRedirect", "AppStore");
                     }
-                    setTimeout(function () {
+                    setTimeout(function() {
                         /** @type {string} */
                         self.location.href = "https://itunes.apple.com/app/agar.io/id995999703?mt=8&at=1l3vajp";
                     }, 1E3);
                 } else {
                     var options = new Options();
                     self.agarApp = options;
-                    var cv;
+                    var cv: HTMLCanvasElement;
                     var ctx;
-                    var canvas;
-                    var width;
-                    var height;
+                    var canvas: HTMLCanvasElement;
+                    var width: number;
+                    var height: number;
                     /** @type {null} */
                     var context = null;
                     /** @type {null} */
@@ -2358,10 +2435,10 @@ function main (self, $) {
                     var stack = false;
                     /** @type {boolean} */
                     var Xa = false;
-                    var k;
-                    var oldconfig;
+                    var k: number;
+                    var oldconfig: number;
                     if ("gamepad" in result) {
-                        setInterval(function () {
+                        setInterval(function() {
                             if (Xa) {
                                 cx = val.ha(cx, k);
                                 cy = val.ha(cy, oldconfig);
@@ -2373,7 +2450,7 @@ function main (self, $) {
                      * @param {number} m3
                      * @return {undefined}
                      */
-                    self.gamepadAxisUpdate = function (dataAndEvents, m3) {
+                    self.gamepadAxisUpdate = function(dataAndEvents, m3) {
                         /** @type {boolean} */
                         var d = 0.1 > m3 * m3;
                         if (0 == dataAndEvents) {
@@ -2402,7 +2479,7 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.agarioInit = function () {
+                    self.agarioInit = function() {
                         /** @type {boolean} */
                         ab = true;
                         postLink();
@@ -2427,14 +2504,14 @@ function main (self, $) {
                         run();
                         setInterval(run, 18E4);
                         /** @type {(HTMLElement|null)} */
-                        canvas = cv = document.getElementById("canvas");
+                        canvas = cv = <HTMLCanvasElement>document.getElementById("canvas");
                         if (null != canvas) {
                             ctx = canvas.getContext("2d");
                             /**
                              * @param {Event} e
                              * @return {undefined}
                              */
-                            canvas.onmousedown = function (e) {
+                            canvas.onmousedown = function(e) {
                                 if (gc) {
                                     /** @type {number} */
                                     var z0 = e.clientX - (5 + width / 5 / 2);
@@ -2456,7 +2533,7 @@ function main (self, $) {
                              * @param {Event} e
                              * @return {undefined}
                              */
-                            canvas.onmousemove = function (e) {
+                            canvas.onmousemove = function(e) {
                                 /** @type {boolean} */
                                 Xa = false;
                                 /** @type {number} */
@@ -2468,7 +2545,7 @@ function main (self, $) {
                             /**
                              * @return {undefined}
                              */
-                            canvas.onmouseup = function () {
+                            canvas.onmouseup = function() {
                             };
                             if (/firefox/i.test(navigator.userAgent)) {
                                 document.addEventListener("DOMMouseScroll", handleMousewheel, false);
@@ -2479,7 +2556,7 @@ function main (self, $) {
                             /**
                              * @return {undefined}
                              */
-                            self.onblur = function () {
+                            self.onblur = function() {
                                 emit(19);
                                 /** @type {boolean} */
                                 stack = memory = firing = false;
@@ -2513,7 +2590,7 @@ function main (self, $) {
                      * @param {Function} v
                      * @return {undefined}
                      */
-                    self.setNick = function (v) {
+                    self.setNick = function(v) {
                         if (self.ga) {
                             self.ga("send", "event", "Nick", v.toLowerCase());
                         }
@@ -2537,7 +2614,7 @@ function main (self, $) {
                      * @param {string} part
                      * @return {undefined}
                      */
-                    self.setSkins = function (part) {
+                    self.setSkins = function(part) {
                         /** @type {string} */
                         root = part;
                     };
@@ -2545,7 +2622,7 @@ function main (self, $) {
                      * @param {string} textAlt
                      * @return {undefined}
                      */
-                    self.setNames = function (textAlt) {
+                    self.setNames = function(textAlt) {
                         /** @type {string} */
                         text = textAlt;
                     };
@@ -2553,7 +2630,7 @@ function main (self, $) {
                      * @param {boolean} newColor
                      * @return {undefined}
                      */
-                    self.setDarkTheme = function (newColor) {
+                    self.setDarkTheme = function(newColor) {
                         /** @type {boolean} */
                         color = newColor;
                     };
@@ -2561,7 +2638,7 @@ function main (self, $) {
                      * @param {string} color
                      * @return {undefined}
                      */
-                    self.setColors = function (color) {
+                    self.setColors = function(color) {
                         /** @type {string} */
                         type = color;
                     };
@@ -2569,14 +2646,14 @@ function main (self, $) {
                      * @param {string} response
                      * @return {undefined}
                      */
-                    self.setShowMass = function (response) {
+                    self.setShowMass = function(response) {
                         /** @type {string} */
                         metadata = response;
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.spectate = function () {
+                    self.spectate = function() {
                         /** @type {null} */
                         b = null;
                         playerCalc();
@@ -2591,7 +2668,7 @@ function main (self, $) {
                      * @param {string} expected
                      * @return {undefined}
                      */
-                    self.setGameMode = function (expected) {
+                    self.setGameMode = function(expected) {
                         if (expected != actual) {
                             if (":party" == actual) {
                                 $("#helloContainer").attr("data-party-state", "0");
@@ -2606,11 +2683,11 @@ function main (self, $) {
                      * @param {boolean} _$timeout_
                      * @return {undefined}
                      */
-                    self.setAcid = function (_$timeout_) {
+                    self.setAcid = function(_$timeout_) {
                         /** @type {boolean} */
                         $timeout = _$timeout_;
                     };
-                    var POST = function (self) {
+                    var POST = function(self) {
                         var $window = {};
                         /** @type {boolean} */
                         var text = false;
@@ -2621,7 +2698,7 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        self.init = function () {
+                        self.init = function() {
                             options.account.init();
                             options.google.xa();
                             options.fa.init();
@@ -2634,7 +2711,7 @@ function main (self, $) {
                          * @param {Function} callback
                          * @return {undefined}
                          */
-                        self.bind = function (event_name, callback) {
+                        self.bind = function(event_name, callback) {
                             $($window).bind(event_name, callback);
                         };
                         /**
@@ -2642,7 +2719,7 @@ function main (self, $) {
                          * @param {?} cb
                          * @return {undefined}
                          */
-                        self.unbind = function (callback, cb) {
+                        self.unbind = function(callback, cb) {
                             $($window).unbind(callback, cb);
                         };
                         /**
@@ -2650,26 +2727,26 @@ function main (self, $) {
                          * @param {?} extra
                          * @return {undefined}
                          */
-                        self.trigger = function (type, extra) {
+                        self.trigger = function(type, extra) {
                             $($window).trigger(type, extra);
                         };
-                        self.__defineGetter__("debug", function () {
+                        self.__defineGetter__("debug", function() {
                             return text;
                         });
-                        self.__defineSetter__("debug", function (textAlt) {
+                        self.__defineSetter__("debug", function(textAlt) {
                             return text = textAlt;
                         });
-                        self.__defineGetter__("proxy", function () {
+                        self.__defineGetter__("proxy", function() {
                             return self.MC;
                         });
-                        self.__defineGetter__("config", function () {
+                        self.__defineGetter__("config", function() {
                             return skipDraw;
                         });
                         return self;
-                    } ({});
+                    }({});
                     options.core = POST;
                     options.cache = {};
-                    var debug = function (Child) {
+                    var debug = function(Child) {
                         /**
                          * @param {number} id
                          * @param {Array} data
@@ -2694,6 +2771,7 @@ function main (self, $) {
                             }
                             res.streamTo(document.getElementById(id), 0);
                         }
+
                         /**
                          * @param {?} name
                          * @param {Array} xhr
@@ -2701,12 +2779,15 @@ function main (self, $) {
                          */
                         function done(name, xhr) {
                             obj[name] = decodeURIComponent();
-                            success(name, [obj[name]], xhr, [{
-                                strokeStyle: "rgba(0, 255, 0, 1)",
-                                fillStyle: "rgba(0, 255, 0, 0.2)",
-                                lineWidth: 2
-                            }]);
+                            success(name, [obj[name]], xhr, [
+                                {
+                                    strokeStyle: "rgba(0, 255, 0, 1)",
+                                    fillStyle: "rgba(0, 255, 0, 0.2)",
+                                    lineWidth: 2
+                                }
+                            ]);
                         }
+
                         /**
                          * @return {?}
                          */
@@ -2715,6 +2796,7 @@ function main (self, $) {
                                 Ma: false
                             });
                         }
+
                         /** @type {boolean} */
                         var g = false;
                         var input;
@@ -2729,7 +2811,7 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Child.showDebug = function () {
+                        Child.showDebug = function() {
                             if (!g) {
                                 input = $("#debug-overlay");
                                 done("networkUpdate", {
@@ -2748,15 +2830,17 @@ function main (self, $) {
                                     name: "rtt",
                                     minValue: 0,
                                     maxValue: 120
-                                }, [{
-                                    strokeStyle: "rgba(255, 0, 0, 1)",
-                                    fillStyle: "rgba(0, 255, 0, 0.2)",
-                                    lineWidth: 2
-                                }, {
-                                            strokeStyle: "rgba(0, 255, 0, 1)",
-                                            fillStyle: "rgba(0, 255, 0, 0)",
-                                            lineWidth: 2
-                                        }]);
+                                }, [
+                                    {
+                                        strokeStyle: "rgba(255, 0, 0, 1)",
+                                        fillStyle: "rgba(0, 255, 0, 0.2)",
+                                        lineWidth: 2
+                                    }, {
+                                        strokeStyle: "rgba(0, 255, 0, 1)",
+                                        fillStyle: "rgba(0, 255, 0, 0)",
+                                        lineWidth: 2
+                                    }
+                                ]);
                                 /** @type {boolean} */
                                 g = true;
                             }
@@ -2767,7 +2851,7 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Child.hideDebug = function () {
+                        Child.hideDebug = function() {
                             input.hide();
                             /** @type {boolean} */
                             options.core.debug = false;
@@ -2778,21 +2862,21 @@ function main (self, $) {
                          * @param {number} data
                          * @return {undefined}
                          */
-                        Child.updateChart = function (name, a, data) {
+                        Child.updateChart = function(name, a, data) {
                             if (g) {
                                 if (name in obj) {
                                     obj[name].append(a, data);
                                 }
                             }
                         };
-                        Child.__defineGetter__("showPrediction", function () {
+                        Child.__defineGetter__("showPrediction", function() {
                             return text;
                         });
-                        Child.__defineSetter__("showPrediction", function (textAlt) {
+                        Child.__defineSetter__("showPrediction", function(textAlt) {
                             return text = textAlt;
                         });
                         return Child;
-                    } ({});
+                    }({});
                     options.debug = debug;
                     var input = {
                         AF: "JP-Tokyo",
@@ -3048,7 +3132,7 @@ function main (self, $) {
                     var success = null;
                     /** @type {boolean} */
                     var Ba = false;
-                    var timer;
+                    var timer: number;
                     /** @type {function (string, string): undefined} */
                     self.connect = open;
                     /** @type {number} */
@@ -3069,7 +3153,7 @@ function main (self, $) {
                     self.sendMitosis = end;
                     /** @type {function (): undefined} */
                     self.sendEject = emitter;
-                    options.networking = function (opt_attributes) {
+                    options.networking = function(opt_attributes) {
                         opt_attributes.loginRealm = {
                             GG: "google",
                             FB: "facebook"
@@ -3078,7 +3162,7 @@ function main (self, $) {
                          * @param {string} data
                          * @return {undefined}
                          */
-                        opt_attributes.sendMessage = function (data) {
+                        opt_attributes.sendMessage = function(data) {
                             if (forEach()) {
                                 var codeSegments = data.byteView;
                                 if (null != codeSegments) {
@@ -3094,7 +3178,7 @@ function main (self, $) {
                             }
                         };
                         return opt_attributes;
-                    } ({});
+                    }({});
                     /** @type {null} */
                     var img = null;
                     /** @type {null} */
@@ -3111,12 +3195,12 @@ function main (self, $) {
                     var Pa = 0;
                     /** @type {number} */
                     var Oa = 0;
-                    var which = function () {
+                    var which = function() {
                         /** @type {number} */
                         var d = Date.now();
                         /** @type {number} */
                         var b = 1E3 / 60;
-                        return function () {
+                        return function() {
                             self.requestAnimationFrame(which);
                             /** @type {number} */
                             var x = Date.now();
@@ -3150,7 +3234,7 @@ function main (self, $) {
                                 }
                             }
                         };
-                    } ();
+                    }();
                     /** @type {function (Object): undefined} */
                     self.setQuality = set;
                     var images = {};
@@ -3204,8 +3288,8 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        ca: function () {
-                            var i;
+                        ca: function() {
+                            var i: number;
                             /** @type {number} */
                             i = 0;
                             for (; i < parts.length; i++) {
@@ -3234,14 +3318,14 @@ function main (self, $) {
                         /**
                          * @return {?}
                          */
-                        m: function () {
+                        m: function() {
                             return Math.max(~~(0.3 * this.size), 24);
                         },
                         /**
                          * @param {?} n
                          * @return {undefined}
                          */
-                        A: function (n) {
+                        A: function(n) {
                             if (this.name = n) {
                                 if (null == this.i) {
                                     this.i = new setFillAndStroke(this.m(), "#FFFFFF", true, "#000000");
@@ -3254,7 +3338,7 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        ba: function () {
+                        ba: function() {
                             var a = this.H();
                             for (; this.a.length > a;) {
                                 /** @type {number} */
@@ -3276,7 +3360,7 @@ function main (self, $) {
                         /**
                          * @return {?}
                          */
-                        H: function () {
+                        H: function() {
                             /** @type {number} */
                             var rh = 10;
                             if (20 > this.size) {
@@ -3296,7 +3380,7 @@ function main (self, $) {
                         /**
                          * @return {undefined}
                          */
-                        Da: function () {
+                        Da: function() {
                             this.ba();
                             var items = this.a;
                             var n = items.length;
@@ -3331,7 +3415,7 @@ function main (self, $) {
                                     var k = false;
                                     var x = pos.x;
                                     var offset = pos.y;
-                                    context.Ga(x - 5, offset - 5, 10, 10, function (node) {
+                                    context.Ga(x - 5, offset - 5, 10, 10, function(node) {
                                         if (node.$ != ELEMENT_NODE) {
                                             if (25 > (x - node.x) * (x - node.x) + (offset - node.y) * (offset - node.y)) {
                                                 /** @type {boolean} */
@@ -3384,7 +3468,7 @@ function main (self, $) {
                          * @param {?} v22
                          * @return {undefined}
                          */
-                        pa: function (pos, v22) {
+                        pa: function(pos, v22) {
                             this.L = pos;
                             this.M = v22;
                             this.J = pos;
@@ -3395,7 +3479,7 @@ function main (self, $) {
                         /**
                          * @return {?}
                          */
-                        S: function () {
+                        S: function() {
                             if (0 >= this.id) {
                                 return 1;
                             }
@@ -3417,14 +3501,14 @@ function main (self, $) {
                         /**
                          * @return {?}
                          */
-                        P: function () {
+                        P: function() {
                             return 0 >= this.id ? true : this.x + this.size + 40 < px - width / 2 / scale || (this.y + this.size + 40 < y - height / 2 / scale || (this.x - this.size - 40 > px + width / 2 / scale || this.y - this.size - 40 > y + height / 2 / scale)) ? false : true;
                         },
                         /**
                          * @param {CanvasRenderingContext2D} ctx
                          * @return {undefined}
                          */
-                        sa: function (ctx) {
+                        sa: function(ctx) {
                             ctx.beginPath();
                             var len = this.H();
                             ctx.moveTo(this.a[0].x, this.a[0].y);
@@ -3442,7 +3526,7 @@ function main (self, $) {
                          * @param {CanvasRenderingContext2D} ctx
                          * @return {undefined}
                          */
-                        w: function (ctx) {
+                        w: function(ctx) {
                             if (this.P()) {
                                 ++this.da;
                                 var y_position = 0 < this.id && (!this.c && (!this.h && 0.4 > scale)) || opts.selected.simpleDraw && !this.c;
@@ -3637,7 +3721,7 @@ function main (self, $) {
                          * @param {Object} o
                          * @return {undefined}
                          */
-                        na: function (ctx, map, o) {
+                        na: function(ctx, map, o) {
                             ctx.save();
                             ctx.clip();
                             /** @type {number} */
@@ -3651,7 +3735,7 @@ function main (self, $) {
                             ctx.restore();
                         }
                     };
-                    var val = function (item) {
+                    var val = function(item) {
                         /**
                          * @param {number} value
                          * @param {number} min
@@ -3661,12 +3745,13 @@ function main (self, $) {
                         function clamp(value, min, max) {
                             return value < min ? min : value > max ? max : value;
                         }
+
                         /**
                          * @param {number} a
                          * @param {number} b
                          * @return {?}
                          */
-                        item.ha = function (a, b) {
+                        item.ha = function(a, b) {
                             var x;
                             x = clamp(0.5, 0, 1);
                             return a + x * (b - a);
@@ -3678,19 +3763,19 @@ function main (self, $) {
                          * @param {?} n
                          * @return {?}
                          */
-                        item.fixed = function (d, n) {
+                        item.fixed = function(d, n) {
                             /** @type {number} */
                             var base = Math.pow(10, n);
                             return ~~(d * base) / base;
                         };
                         return item;
-                    } ({});
+                    }({});
                     self.Maths = val;
-                    var exports = function (opt_attributes) {
+                    var exports = function(opt_attributes) {
                         /**
                          * @return {?}
                          */
-                        opt_attributes.la = function () {
+                        opt_attributes.la = function() {
                             /** @type {Date} */
                             var c = new Date;
                             /** @type {Array} */
@@ -3701,13 +3786,13 @@ function main (self, $) {
                             var eventName = 1;
                             for (; 3 > eventName; eventName++) {
                                 if (10 > c2[eventName]) {
-                                    c2[eventName] = "0" + c2[eventName];
+                                    c2[eventName] = `0${c2[eventName]}`;
                                 }
                             }
-                            return "[" + UNICODE_SPACES.join("/") + " " + c2.join(":") + "]";
+                            return `[${UNICODE_SPACES.join("/")} ${c2.join(":")}]`;
                         };
                         return opt_attributes;
-                    } ({});
+                    }({});
                     self.Utils = exports;
                     setFillAndStroke.prototype = {
                         F: "",
@@ -3723,7 +3808,7 @@ function main (self, $) {
                          * @param {number} v
                          * @return {undefined}
                          */
-                        O: function (v) {
+                        O: function(v) {
                             if (this.v != v) {
                                 /** @type {number} */
                                 this.v = v;
@@ -3735,7 +3820,7 @@ function main (self, $) {
                          * @param {?} d
                          * @return {undefined}
                          */
-                        oa: function (d) {
+                        oa: function(d) {
                             if (this.D != d) {
                                 this.D = d;
                                 /** @type {boolean} */
@@ -3746,7 +3831,7 @@ function main (self, $) {
                          * @param {number} err
                          * @return {undefined}
                          */
-                        B: function (err) {
+                        B: function(err) {
                             if (err != this.F) {
                                 /** @type {number} */
                                 this.F = err;
@@ -3757,7 +3842,7 @@ function main (self, $) {
                         /**
                          * @return {?}
                          */
-                        N: function () {
+                        N: function() {
                             if (null == this.j) {
                                 /** @type {Element} */
                                 this.j = document.createElement("canvas");
@@ -3802,11 +3887,11 @@ function main (self, $) {
                         /**
                          * @return {number}
                          */
-                        Date.now = function () {
+                        Date.now = function() {
                             return (new Date).getTime();
                         };
                     }
-                    (function () {
+                    (function() {
                         /** @type {Array} */
                         var vendors = ["ms", "moz", "webkit", "o"];
                         /** @type {number} */
@@ -3820,14 +3905,14 @@ function main (self, $) {
                              * @param {function (number): ?} callback
                              * @return {number}
                              */
-                            self.requestAnimationFrame = function (callback) {
+                            self.requestAnimationFrame = function(callback) {
                                 return setTimeout(callback, 1E3 / 60);
                             };
                             /**
                              * @param {number} id
                              * @return {?}
                              */
-                            self.cancelAnimationFrame = function (id) {
+                            self.cancelAnimationFrame = function(id) {
                                 clearTimeout(id);
                             };
                         }
@@ -3837,7 +3922,7 @@ function main (self, $) {
                          * @param {?} params
                          * @return {?}
                          */
-                        init: function (params) {
+                        init: function(params) {
                             /**
                              * @param {?} data
                              * @return {?}
@@ -3851,6 +3936,7 @@ function main (self, $) {
                                 }
                                 return ~~((data - tmp) / 32);
                             }
+
                             /**
                              * @param {?} d
                              * @return {?}
@@ -3864,6 +3950,7 @@ function main (self, $) {
                                 }
                                 return ~~((d - c) / 32);
                             }
+
                             var tmp = params.Ba;
                             var c = params.Ca;
                             var type = params.za;
@@ -3879,7 +3966,7 @@ function main (self, $) {
                                  * @param {?} val
                                  * @return {undefined}
                                  */
-                                va: function (val) {
+                                va: function(val) {
                                     var key = fire(val.x) + b(val.y) * cols;
                                     if (null == result[key]) {
                                         result[key] = val;
@@ -3900,7 +3987,7 @@ function main (self, $) {
                                  * @param {Function} func
                                  * @return {undefined}
                                  */
-                                Ga: function (memory, a, array, offset, func) {
+                                Ga: function(memory, a, array, offset, func) {
                                     var currentOffset = fire(memory);
                                     var r = b(a);
                                     memory = fire(memory + array);
@@ -3928,7 +4015,7 @@ function main (self, $) {
                             };
                         }
                     };
-                    var valueAccessor = function () {
+                    var valueAccessor = function() {
                         var that = new Node(0, 0, 0, 32, "#ED1C24", "");
                         /** @type {Element} */
                         var canvas = document.createElement("canvas");
@@ -3937,7 +4024,7 @@ function main (self, $) {
                         /** @type {number} */
                         canvas.height = 32;
                         var renderer = canvas.getContext("2d");
-                        return function () {
+                        return function() {
                             if (0 < items.length) {
                                 that.color = items[0].color;
                                 that.A(items[0].name);
@@ -3951,12 +4038,12 @@ function main (self, $) {
                             /** @type {(HTMLElement|null)} */
                             var originalFavicon = document.getElementById("favicon");
                             /** @type {Element} */
-                            var newNode: Element = <Element>originalFavicon.cloneNode(true);
+                            var newNode = <Element>originalFavicon.cloneNode(true);
                             newNode.setAttribute("href", canvas.toDataURL("image/png"));
                             originalFavicon.parentNode.replaceChild(newNode, originalFavicon);
                         };
-                    } ();
-                    $(function () {
+                    }();
+                    $(function() {
                         valueAccessor();
                     });
                     var tmp = {
@@ -3982,7 +4069,7 @@ function main (self, $) {
                     self.createDefaultStorage = compassResult;
                     /** @type {function (): undefined} */
                     self.updateStorage = callback;
-                    $(function () {
+                    $(function() {
                         if (null != self.localStorage.storeObjectInfo) {
                             /** @type {*} */
                             data = JSON.parse(self.localStorage.storeObjectInfo);
@@ -3997,7 +4084,7 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.checkLoginStatus = function () {
+                    self.checkLoginStatus = function() {
                         if ("1" == data.loginIntent) {
                             h();
                             template(data.context);
@@ -4006,14 +4093,14 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    var h = function () {
+                    var h = function() {
                         self.MC.setProfilePicture(data.userInfo.picture);
                         self.MC.setSocialId(data.userInfo.socialId);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.logout = function () {
+                    self.logout = function() {
                         data = tmp;
                         delete self.localStorage.storeObjectInfo;
                         /** @type {string} */
@@ -4035,7 +4122,7 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSocialLogin = function () {
+                    self.toggleSocialLogin = function() {
                         $("#socialLoginContainer").toggle();
                         $("#settings").hide();
                         $("#instructions").hide();
@@ -4044,18 +4131,19 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.toggleSettings = function () {
+                    self.toggleSettings = function() {
                         $("#settings").toggle();
                         $("#socialLoginContainer").hide();
                         $("#instructions").hide();
                         f();
                     };
-                    options.account = function (doc) {
+                    options.account = function(doc) {
                         /**
                          * @return {undefined}
                          */
                         function restoreScript() {
                         }
+
                         /**
                          * @param {?} cause
                          * @param {(Object|string)} player
@@ -4067,21 +4155,22 @@ function main (self, $) {
                                 p = player;
                                 if (null != self.ssa_json) {
                                     /** @type {string} */
-                                    self.ssa_json.applicationUserId = "" + player.id;
+                                    self.ssa_json.applicationUserId = `${player.id}`;
                                     /** @type {string} */
-                                    self.ssa_json.custom_user_id = "" + player.id;
+                                    self.ssa_json.custom_user_id = `${player.id}`;
                                 }
                                 if ("undefined" != typeof SSA_CORE) {
                                     SSA_CORE.start();
                                 }
                             }
                         }
+
                         /** @type {null} */
                         var p = null;
                         /**
                          * @return {undefined}
                          */
-                        doc.init = function () {
+                        doc.init = function() {
                             options.core.bind("user_login", onError);
                             options.core.bind("user_logout", restoreScript);
                         };
@@ -4089,7 +4178,7 @@ function main (self, $) {
                          * @param {Object} value
                          * @return {undefined}
                          */
-                        doc.setUserData = function (value) {
+                        doc.setUserData = function(value) {
                             apply(value);
                         };
                         /**
@@ -4097,7 +4186,7 @@ function main (self, $) {
                          * @param {?} b
                          * @return {undefined}
                          */
-                        doc.setAccountData = function (options, b) {
+                        doc.setAccountData = function(options, b) {
                             var a = $("#helloContainer").attr("data-has-account-data", "1");
                             data.userInfo.xp = options.xp;
                             data.userInfo.xpNeeded = options.xpNeeded;
@@ -4115,17 +4204,17 @@ function main (self, $) {
                          * @param {string} count
                          * @return {undefined}
                          */
-                        doc.Ia = function (count) {
+                        doc.Ia = function(count) {
                             start(count, "");
                         };
                         return doc;
-                    } ({});
+                    }({});
                     /** @type {number} */
                     var lc = 0;
                     /**
                      * @return {undefined}
                      */
-                    self.fbAsyncInit = function () {
+                    self.fbAsyncInit = function() {
                         /**
                          * @return {undefined}
                          */
@@ -4136,13 +4225,14 @@ function main (self, $) {
                                 /** @type {string} */
                                 data.loginIntent = "1";
                                 self.updateStorage();
-                                self.FB.login(function (e) {
+                                self.FB.login(function(e) {
                                     error(e);
                                 }, {
-                                        scope: "public_profile, email"
-                                    });
+                                    scope: "public_profile, email"
+                                });
                             }
                         }
+
                         self.FB.init({
                             appId: EnvConfig.fb_app_id,
                             cookie: true,
@@ -4151,7 +4241,7 @@ function main (self, $) {
                             version: "v2.2"
                         });
                         if ("1" == self.storageInfo.loginIntent && "facebook" == self.storageInfo.context || fb) {
-                            self.FB.getLoginStatus(function (response) {
+                            self.FB.getLoginStatus(function(response) {
                                 if ("connected" === response.status) {
                                     error(response);
                                 } else {
@@ -4171,7 +4261,7 @@ function main (self, $) {
                     };
                     /** @type {boolean} */
                     var Kb = false;
-                    (function (optionsString) {
+                    (function(optionsString) {
                         /**
                          * @return {undefined}
                          */
@@ -4189,20 +4279,21 @@ function main (self, $) {
                             /** @type {boolean} */
                             f = true;
                         }
+
                         var $window = {};
                         /** @type {boolean} */
                         var f = false;
                         /**
                          * @return {undefined}
                          */
-                        self.gapiAsyncInit = function () {
+                        self.gapiAsyncInit = function() {
                             $($window).trigger("initialized");
                         };
                         optionsString.google = {
                             /**
                              * @return {undefined}
                              */
-                            xa: function () {
+                            xa: function() {
                                 injectScript();
                             },
                             /**
@@ -4210,12 +4301,12 @@ function main (self, $) {
                              * @param {Function} cb
                              * @return {undefined}
                              */
-                            ua: function (results, cb) {
-                                self.gapi.client.load("plus", "v1", function () {
+                            ua: function(results, cb) {
+                                self.gapi.client.load("plus", "v1", function() {
                                     console.log("fetching me profile");
                                     gapi.client.plus.people.get({
                                         userId: "me"
-                                    }).execute(function (outErr) {
+                                    }).execute(function(outErr) {
                                         cb(outErr);
                                     });
                                 });
@@ -4225,7 +4316,7 @@ function main (self, $) {
                          * @param {Function} method
                          * @return {undefined}
                          */
-                        optionsString.Fa = function (method) {
+                        optionsString.Fa = function(method) {
                             if (!f) {
                                 injectScript();
                             }
@@ -4237,7 +4328,7 @@ function main (self, $) {
                         };
                         return optionsString;
                     })(options);
-                    var app = function (optionsString) {
+                    var app = function(optionsString) {
                         /**
                          * @param {?} callback
                          * @return {undefined}
@@ -4247,6 +4338,7 @@ function main (self, $) {
                             /** @type {Array} */
                             options.cache.login_info = [callback, "google"];
                         }
+
                         /**
                          * @param {number} newVal
                          * @return {undefined}
@@ -4256,6 +4348,7 @@ function main (self, $) {
                             data.userInfo.picture = newVal;
                             $(".agario-profile-picture").attr("src", newVal);
                         }
+
                         /** @type {null} */
                         var api = null;
                         var params = {
@@ -4267,22 +4360,22 @@ function main (self, $) {
                             /**
                              * @return {?}
                              */
-                            qa: function () {
+                            qa: function() {
                                 return api;
                             },
                             /**
                              * @return {undefined}
                              */
-                            init: function () {
+                            init: function() {
                                 var handler = this;
                                 var hasDisclosureProperty = data && ("1" == data.loginIntent && "google" == data.context);
-                                options.Fa(function () {
+                                options.Fa(function() {
                                     self.gapi.ytsubscribe.go("agarYoutube");
-                                    self.gapi.load("auth2", function () {
+                                    self.gapi.load("auth2", function() {
                                         api = self.gapi.auth2.init(params);
-                                        api.attachClickHandler(document.getElementById("gplusLogin"), {}, function (reply) {
-                                            console.log("googleUser : " + reply);
-                                        }, function (err) {
+                                        api.attachClickHandler(document.getElementById("gplusLogin"), {}, function(reply) {
+                                            console.log(`googleUser : ${reply}`);
+                                        }, function(err) {
                                             console.log("failed to login in google plus: ", JSON.stringify(err, void 0, 2));
                                         });
                                         api.currentUser.listen(_.bind(handler.Ea, handler));
@@ -4298,7 +4391,7 @@ function main (self, $) {
                              * @param {number} newVal
                              * @return {undefined}
                              */
-                            Ea: function (newVal) {
+                            Ea: function(newVal) {
                                 if (api && (newVal && (api.isSignedIn.get() && !Kb))) {
                                     /** @type {boolean} */
                                     Kb = true;
@@ -4311,7 +4404,7 @@ function main (self, $) {
                                     var record = newVal.getBasicProfile();
                                     newVal = record.getImageUrl();
                                     if (void 0 == newVal) {
-                                        options.google.ua(extra, function (r) {
+                                        options.google.ua(extra, function(r) {
                                             if (r.result.isPlusUser) {
                                                 if (r) {
                                                     handler(r.image.url);
@@ -4343,7 +4436,7 @@ function main (self, $) {
                             /**
                              * @return {undefined}
                              */
-                            ya: function () {
+                            ya: function() {
                                 if (api) {
                                     api.signOut();
                                     /** @type {boolean} */
@@ -4352,17 +4445,17 @@ function main (self, $) {
                             }
                         };
                         return optionsString;
-                    } (options);
+                    }(options);
                     self.gplusModule = app;
                     /**
                      * @return {undefined}
                      */
-                    var disconnect = function () {
+                    var disconnect = function() {
                         options.fa.ya();
                     };
                     /** @type {function (): undefined} */
                     self.logoutGooglePlus = disconnect;
-                    var throttledUpdate = function () {
+                    var throttledUpdate = function() {
                         /**
                          * @param {Object} l
                          * @param {number} map
@@ -4385,6 +4478,7 @@ function main (self, $) {
                             l.w(cctx);
                             cctx.restore();
                         }
+
                         var data = new Node(-1, 0, 0, 32, "#5bc0de", "");
                         var n = new Node(-1, 0, 0, 32, "#5bc0de", "");
                         /** @type {Array.<string>} */
@@ -4407,8 +4501,8 @@ function main (self, $) {
                         /** @type {number} */
                         map.width = map.height = 70;
                         render(n, map, "", 26, "#ebc0de");
-                        return function () {
-                            $(".cell-spinner").filter(":visible").each(function () {
+                        return function() {
+                            $(".cell-spinner").filter(":visible").each(function() {
                                 var body = $(this);
                                 /** @type {number} */
                                 var x = Date.now();
@@ -4429,7 +4523,7 @@ function main (self, $) {
                                 }
                                 render(data, this, body || "", +$(this).attr("data-size"), "#5bc0de");
                             });
-                            $("#statsPellets").filter(":visible").each(function () {
+                            $("#statsPellets").filter(":visible").each(function() {
                                 $(this);
                                 var i = this.width;
                                 var height = this.height;
@@ -4441,19 +4535,19 @@ function main (self, $) {
                                 }
                             });
                         };
-                    } ();
+                    }();
                     /**
                      * @return {undefined}
                      */
-                    self.createParty = function () {
+                    self.createParty = function() {
                         show(":party");
                         /**
                          * @param {string} content
                          * @return {undefined}
                          */
-                        success = function (content) {
-                            cb("/#" + self.encodeURIComponent(content));
-                            $(".partyToken").val("agar.io/#" + self.encodeURIComponent(content));
+                        success = function(content) {
+                            cb(`/#${self.encodeURIComponent(content)}`);
+                            $(".partyToken").val(`agar.io/#${self.encodeURIComponent(content)}`);
                             $("#helloContainer").attr("data-party-state", "1");
                         };
                         next();
@@ -4463,7 +4557,7 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.cancelParty = function () {
+                    self.cancelParty = function() {
                         cb("/");
                         $("#helloContainer").attr("data-party-state", "0");
                         show("");
@@ -4493,12 +4587,12 @@ function main (self, $) {
                     var id = true;
                     /** @type {function (): undefined} */
                     self.onPlayerDeath = fn;
-                    setInterval(function () {
+                    setInterval(function() {
                         if (Aa) {
                             a.push(pick() / 100);
                         }
                     }, 1E3 / 60);
-                    setInterval(function () {
+                    setInterval(function() {
                         var tempCount = objEquiv();
                         if (0 != tempCount) {
                             ++name;
@@ -4512,7 +4606,7 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.closeStats = function () {
+                    self.closeStats = function() {
                         /** @type {boolean} */
                         from = false;
                         $("#stats").hide();
@@ -4523,7 +4617,7 @@ function main (self, $) {
                      * @param {?} dataAndEvents
                      * @return {undefined}
                      */
-                    self.setSkipStats = function (dataAndEvents) {
+                    self.setSkipStats = function(dataAndEvents) {
                         /** @type {boolean} */
                         id = !dataAndEvents;
                     };
@@ -4534,14 +4628,14 @@ function main (self, $) {
                     /**
                      * @return {undefined}
                      */
-                    self.twitterShareStats = function () {
+                    self.twitterShareStats = function() {
                         var url = self.getStatsString("tt_share_stats");
-                        self.open("https://twitter.com/intent/tweet?text=" + url, "Agar.io", "width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=" + (self.screenX + self.innerWidth / 2 - 330) + ",top=" + (self.innerHeight - 310) / 2);
+                        self.open(`https://twitter.com/intent/tweet?text=${url}`, "Agar.io", `width=660,height=310,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self.screenX + self.innerWidth / 2 - 330},top=${(self.innerHeight - 310) / 2}`);
                     };
                     /**
                      * @return {undefined}
                      */
-                    self.fbShareStats = function () {
+                    self.fbShareStats = function() {
                         var groupDescription = self.getStatsString("fb_matchresults_subtitle");
                         self.FB.ui({
                             method: "feed",
@@ -4562,7 +4656,7 @@ function main (self, $) {
                      * @param {string} ctxt
                      * @return {undefined}
                      */
-                    self.fillSocialValues = function (onComplete, ctxt) {
+                    self.fillSocialValues = function(onComplete, ctxt) {
                         if (1 == self.isChrome) {
                             if ("google" == self.storageInfo.context) {
                                 self.gapi.interactivepost.render(ctxt, {
@@ -4576,7 +4670,7 @@ function main (self, $) {
                             }
                         }
                     };
-                    $(function () {
+                    $(function() {
                         if ("MAsyncInit" in self) {
                             self.MAsyncInit();
                         }
