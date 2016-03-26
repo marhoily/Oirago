@@ -20,7 +20,7 @@ namespace Tests
         {
         }
 
-        public void DrawCenter(double zoom)
+        public void Print(double zoom)
         {
             
         }

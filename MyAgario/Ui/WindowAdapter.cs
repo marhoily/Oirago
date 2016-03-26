@@ -39,7 +39,7 @@ namespace MyAgario
             _inner.Children.Remove(ballUi.TextBlock);
         }
 
-        public void DrawCenter(double zoom)
+        public void Print(double zoom)
         {
             _center.Text = $"zoom: {zoom:F1}";
         }

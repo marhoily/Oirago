@@ -6,6 +6,6 @@ namespace MyAgario
         void Update(Ball newGuy, Message.Spectate world);
         void Eats(Ball eater, Ball eaten);
         void Remove(Ball dying);
-        void DrawCenter(double zoom);
+        void Print(double zoom);
     }
 }

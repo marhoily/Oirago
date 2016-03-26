@@ -47,7 +47,7 @@ namespace MyAgario
                     ball.Move((int)(dx * zoom), (int)(dy * zoom));
                     _windowAdapter.Update(ball, spectate);
                 }
-            _windowAdapter.DrawCenter(zoom);
+            _windowAdapter.Print(zoom);
         }
 
         private void Process(Message.Tick tick)
