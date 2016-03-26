@@ -1,4 +1,106 @@
-﻿
+﻿// ----- Commands ---------
+var isConnected: boolean;
+var socket: WebSocket = null;
+
+function socketIsOpen() {
+    return null != socket && socket.readyState === socket.OPEN;
+}
+function sendCommand(commandCode: number) {
+    if (socketIsOpen()) {
+        var data = createBuffer(1);
+        data.setUint8(0, commandCode);
+        send(data);
+    }
+}
+
+function connectResponseCommand() {
+    if (socketIsOpen() && (matchEnd && null != b)) {
+        var buff = createBuffer(1 + 2 * b.length);
+        buff.setUint8(0, 0);
+        for (var i = 0; i < b.length; ++i) {
+            buff.setUint16(1 + 2 * i, b.charCodeAt(i), true);
+        }
+        send(buff);
+        isConnected = true;
+    }
+}
+
+function splitCommand() {
+    sendMoveCommand();
+    sendCommand(17);
+}
+function ejectCommand() {
+    sendMoveCommand();
+    sendCommand(21);
+}
+
+// ----- Directing ball ---------
+
+var leadX = -1;
+var leadY = -1;
+var mouseX = 0;
+var mouseY = 0;
+var prevX = -1;
+var prevY = -1;
+var ballsCenterX = 0;
+var ballsCenterY = 0;
+var width = browser.innerWidth; // and update
+var height = browser.innerHeight; // and update
+function updateLead() {
+    leadX = (mouseX - width / 2) / mousAdjustedWorldZoom + ballsCenterX;
+    leadY = (mouseY - height / 2) / mousAdjustedWorldZoom + ballsCenterY;
+}
+function onResize() {
+    // ...
+    render();
+}
+
+function sendMoveCommand() {
+    if (!socketIsOpen()) return;
+
+    var x = mouseX - browser.innerWidth / 2;
+    var y = mouseY - browser.innerHeight / 2;
+    var farOffCenter = x * x + y * y > 64;
+    if (!farOffCenter) return;
+
+    var differentFromPrev =
+        Math.abs(prevX - leadX) > 0.01 ||
+        Math.abs(prevY - leadY) > 0.01;
+    if (!differentFromPrev) return;
+
+    prevX = leadX;
+    prevY = leadY;
+    var buff = createBuffer(13);
+    buff.setUint8(0, 16);
+    buff.setInt32(1, leadX, true);
+    buff.setInt32(5, leadY, true);
+    buff.setUint32(9, 0, true);
+    send(buff);
+}
+
+function mouseDownHandler(e: MouseEvent) {
+    if (gc) {
+        var x = e.clientX - (5 + browser.innerWidth / 5 / 2);
+        var y = e.clientY - (5 + browser.innerWidth / 5 / 2);
+        if (Math.sqrt(x * x + y * y) <= browser.innerWidth / 5 / 2) {
+            splitCommand();
+            return;
+        }
+    }
+    mouseX = 1 * e.clientX;
+    mouseY = 1 * e.clientY;
+    updateLead();
+    sendMoveCommand();
+};
+function mouseMoveHandler(e: MouseEvent) {
+    Xa = false;
+    mouseX = 1 * e.clientX;
+    mouseY = 1 * e.clientY;
+    updateLead();
+};
+// --------------------------------
+
+
 class TimeSeries {
     Ma: boolean;
 
@@ -166,41 +268,33 @@ function fnReadCookie() {
     return null;
 }
 
-var ratio: number;
-var scale: number;
+var mouseWheelZoom: number;
+var mousAdjustedWorldZoom: number;
 
 function handleMousewheel(e: MouseWheelEvent) {
     e.preventDefault();
-    ratio *= Math.pow(0.9, e.wheelDelta / -120 || (e.detail || 0));
-    if (1 > ratio) {
-        ratio = 1;
+    mouseWheelZoom *= Math.pow(0.9, e.wheelDelta / -120 || (e.detail || 0));
+    if (1 > mouseWheelZoom) {
+        mouseWheelZoom = 1;
     }
-    if (ratio > 4 / scale) {
-        ratio = 4 / scale;
+    if (mouseWheelZoom > 4 / mousAdjustedWorldZoom) {
+        mouseWheelZoom = 4 / mousAdjustedWorldZoom;
     }
 }
 
 var ctx: CanvasRenderingContext2D;
 var options = new Options();
-var cv: HTMLCanvasElement;
+var alsoCanvas: HTMLCanvasElement;
 var canvas: HTMLCanvasElement;
-var width: number;
-var height: number;
 var context = null;
-var px: number = 0;
-var y: number = 0;
 var that = [];
-var items = [];
+var balls = [];
 
 
 var args = {};
 var parts = [];
 var chars = [];
 var list = [];
-declare var cx : number;
-var cy = 0;
-var value = -1;
-var t2 = -1;
 var Mc = 0;
 var t = 0;
 var tOffset = 0;
@@ -211,7 +305,7 @@ var minX = 0;
 var minY = 0;
 var maxX = 1E4;
 var maxY = 1E4;
-var scale = 1;
+var mousAdjustedWorldZoom = 1;
 var newValue = null;
 var root = true;
 var text = true;
@@ -222,9 +316,9 @@ var closingAnimationTime = 0;
 
 var color = false;
 var metadata = false;
-var chunk = px = ~~((minX + maxX) / 2);
-var x = y = ~~((minY + maxY) / 2);
-var argumentOffset = 1;
+var ballsCenterWhenNoBallsX = ballsCenterX = ~~((minX + maxX) / 2);
+var ballsCenterWhenNoBallsY = ballsCenterY = ~~((minY + maxY) / 2);
+var worldZoom = 1;
 var actual = "";
 var angles = null;
 var ab = false;
@@ -238,7 +332,7 @@ var $timeout = false;
 var matchEnd = false;
 
 var j = 0;
-var ratio = 1;
+var mouseWheelZoom = 1;
 var alpha = 1;
 var to = false;
 var resizeUID = 0;

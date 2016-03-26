@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Be.IO;
 using WebSocketSharp;
 
 namespace MyAgario
@@ -55,16 +56,9 @@ namespace MyAgario
 
         public void MoveTo(double x, double y)
         {
-            //var buf = new byte[13];
-            //buf[0] = 16;
-            //var b = BitConverter.GetBytes(x);
-            //Array.Copy(b, 0, buf, 1, 8);
-            //b = BitConverter.GetBytes(y);
-            //Array.Copy(b, 0, buf, 9, 8);
-            //b = BitConverter.GetBytes((uint)0);
-            //Array.Copy(b, 0, buf, 17, 4);
             var buf = new byte[13];
-            var writer = new BinaryWriter(new MemoryStream(buf));
+            var writer = new BeBinaryWriter(new MemoryStream(buf));
+            writer.Write((byte)16);
             writer.Write((int)x);
             writer.Write((int)y);
             writer.Write(0);

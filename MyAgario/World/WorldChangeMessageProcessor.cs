@@ -71,6 +71,7 @@ namespace MyAgario
                 {
                     _windowAdapter.Eats(eater, eaten);
                     _world.Balls.Remove(e.Eaten);
+                    _world.MyBalls.Remove(eaten);
                     _windowAdapter.Remove(eaten);
                 }
             }
@@ -99,6 +100,7 @@ namespace MyAgario
                     continue;
                 if (dying.IsMine) _world.MyBalls.Remove(dying);
                 _world.Balls.Remove(ballId);
+                _world.MyBalls.Remove(dying);
                 _windowAdapter.Remove(dying);
             }
         }

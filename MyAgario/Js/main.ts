@@ -2,16 +2,11 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable CoercedEqualsUsing
 
-
-
-var socket = null;
-
 var old: any;
 var url: string;
 var from: boolean;
 var proto: { init: (params: any) => { va: (val: any) => void; Ga: (memory: any, a: any, array: any, offset: any, func: any) => void } };
 var Aa: boolean;
-var Ba: boolean;
 var selector: boolean;
 var result: Result;
 var ssl: boolean;
@@ -33,7 +28,7 @@ var aux: number;
 var count: number;
 var path: number;
 var backoff: number;
-var self1;
+var browser;
 
 
 function playerCalc() {
@@ -41,25 +36,25 @@ function playerCalc() {
      * @param {Object} evt
      * @return {undefined}
      */
-    self1.onkeydown = evt => {
+    browser.onkeydown = evt => {
         if (!(32 != evt.keyCode)) {
             if (!firing) {
                 if ("nick" != evt.target.id) {
                     evt.preventDefault();
                 }
-                end();
+                splitCommand();
                 /** @type {boolean} */
                 firing = true;
             }
         }
         if (81 == evt.keyCode) {
-            emit(18);
+            sendCommand(18);
             /** @type {boolean} */
             memory = true;
         }
         if (!(87 != evt.keyCode)) {
             if (!stack) {
-                emitter();
+                ejectCommand();
                 /** @type {boolean} */
                 stack = true;
             }
@@ -68,10 +63,10 @@ function playerCalc() {
             evt.preventDefault();
             showError(300);
             if ($("#oferwallContainer").is(":visible")) {
-                self1.closeOfferwall();
+                browser.closeOfferwall();
             }
             if ($("#videoContainer").is(":visible")) {
-                self1.closeVideoContainer();
+                browser.closeVideoContainer();
             }
         }
     };
@@ -79,7 +74,7 @@ function playerCalc() {
      * @param {?} event
      * @return {undefined}
      */
-    self1.onkeyup = event => {
+    browser.onkeyup = event => {
         if (32 == event.keyCode) {
             /** @type {boolean} */
             firing = false;
@@ -90,7 +85,7 @@ function playerCalc() {
         }
         if (81 == event.keyCode) {
             if (memory) {
-                emit(19);
+                sendCommand(19);
                 /** @type {boolean} */
                 memory = false;
             }
@@ -98,7 +93,7 @@ function playerCalc() {
     };
 }
 function createObjects() {
-    if (0.4 > scale) {
+    if (0.4 > mousAdjustedWorldZoom) {
         /** @type {null} */
         context = null;
     } else {
@@ -117,7 +112,7 @@ function createObjects() {
             p1 = parts[i];
             if (!!p1.P()) {
                 if (!p1.V) {
-                    if (!(20 >= p1.size * scale)) {
+                    if (!(20 >= p1.size * mousAdjustedWorldZoom)) {
                         /** @type {number} */
                         j = Math.min(p1.x - p1.size, j);
                         /** @type {number} */
@@ -142,16 +137,16 @@ function createObjects() {
         i = 0;
         for (; i < parts.length; i++) {
             var p = parts[i];
-            if (p.P() && !(20 >= p.size * scale)) {
+            if (p.P() && !(20 >= p.size * mousAdjustedWorldZoom)) {
                 /** @type {number} */
                 j = 0;
                 for (; j < p.a.length; ++j) {
                     left = p.a[j].x;
                     maxY = p.a[j].y;
-                    if (!(left < px - width / 2 / scale)) {
-                        if (!(maxY < y - height / 2 / scale)) {
-                            if (!(left > px + width / 2 / scale)) {
-                                if (!(maxY > y + height / 2 / scale)) {
+                    if (!(left < ballsCenterX - width / 2 / mousAdjustedWorldZoom)) {
+                        if (!(maxY < ballsCenterY - height / 2 / mousAdjustedWorldZoom)) {
+                            if (!(left > ballsCenterX + width / 2 / mousAdjustedWorldZoom)) {
+                                if (!(maxY > ballsCenterY + height / 2 / mousAdjustedWorldZoom)) {
                                     context.va(p.a[j]);
                                 }
                             }
@@ -162,10 +157,7 @@ function createObjects() {
         }
     }
 }
-function preventDefault() {
-    value = (cx - width / 2) / scale + px;
-    t2 = (cy - height / 2) / scale + y;
-}
+
 function run() {
     if (null == old) {
         old = {};
@@ -198,8 +190,8 @@ function _init() {
     /** @type {boolean} */
     from = to = false;
     save();
-    self1.destroyAd(self1.adSlots.aa);
-    self1.destroyAd(self1.adSlots.ac);
+    browser.destroyAd(browser.adSlots.aa);
+    browser.destroyAd(browser.adSlots.ac);
 }
 function reset(hash) {
     if (hash) {
@@ -209,7 +201,7 @@ function reset(hash) {
             if ($("#region").val() != hash) {
                 $("#region").val(hash);
             }
-            newValue = self1.localStorage.location = hash;
+            newValue = browser.localStorage.location = hash;
             $(".region-message").hide();
             $(`.region-message.${hash}`).show();
             $(".btn-needs-server").prop("disabled", false);
@@ -228,7 +220,7 @@ function showError(expectedHashCode) {
                 $(".btn-spectate").prop("disabled", false);
             }
             /** @type {boolean} */
-            Ba = false;
+            isConnected = false;
             /** @type {null} */
             b = null;
             if (!selector) {
@@ -238,7 +230,7 @@ function showError(expectedHashCode) {
                 $("#g728x90").hide();
                 $("#a728x90").show();
             }
-            self1.refreshAd(selector ? self1.adSlots.ac : self1.adSlots.aa);
+            browser.refreshAd(selector ? browser.adSlots.ac : browser.adSlots.aa);
             /** @type {boolean} */
             selector = false;
             if (1E3 > expectedHashCode) {
@@ -258,10 +250,10 @@ function showError(expectedHashCode) {
 }
 function save() {
     if ($("#region").val()) {
-        self1.localStorage.location = $("#region").val();
+        browser.localStorage.location = $("#region").val();
     } else {
-        if (self1.localStorage.location) {
-            $("#region").val(self1.localStorage.location);
+        if (browser.localStorage.location) {
+            $("#region").val(browser.localStorage.location);
         }
     }
     if ($("#region").val()) {
@@ -279,12 +271,12 @@ function show(path) {
 function resolve(id) {
     if ("env_local" in EnvConfig) {
         if ("true" == EnvConfig.load_local_configuration) {
-            self1.MC.updateConfigurationID("base");
+            browser.MC.updateConfigurationID("base");
         } else {
-            self1.MC.updateConfigurationID(EnvConfig.configID);
+            browser.MC.updateConfigurationID(EnvConfig.configID);
         }
     } else {
-        self1.MC.updateConfigurationID(id);
+        browser.MC.updateConfigurationID(id);
     }
 }
 function startServer() {
@@ -294,16 +286,16 @@ function startServer() {
         $.get(url + "getLatestID", newId => {
             resolve(newId);
             /** @type {string} */
-            self1.localStorage.last_config_id = newId;
+            browser.localStorage.last_config_id = newId;
         }).fail(() => {
             var data: boolean | string;
-            if (data = "last_config_id" in self1.localStorage) {
-                data = self1.localStorage.last_config_id;
+            if (data = "last_config_id" in browser.localStorage) {
+                data = browser.localStorage.last_config_id;
                 /** @type {boolean} */
                 data = !(null == data || ("" === data));
             }
             if (data) {
-                data = self1.localStorage.last_config_id;
+                data = browser.localStorage.last_config_id;
                 console.log(`Fallback to stored configID: ${data}`);
                 resolve(data);
             }
@@ -334,24 +326,7 @@ function postLink() {
     }, "text");
 }
 
-function end() {
-    sendMoveCommand();
-    emit(17);
-}
-function emitter() {
-    sendMoveCommand();
-    emit(21);
-}
-function forEach() {
-    return null != socket && socket.readyState == socket.OPEN;
-}
-function emit(expectedNumberOfNonCommentArgs) {
-    if (forEach()) {
-        var data = createBuffer(1);
-        data.setUint8(0, expectedNumberOfNonCommentArgs);
-        send(data);
-    }
-}
+
 function set(caption) {
     if ("auto" === caption.toLowerCase()) {
         /** @type {boolean} */
@@ -362,86 +337,18 @@ function set(caption) {
         opts.auto = false;
     }
 }
-function update() {
-    /** @type {number} */
-    width = 1 * self1.innerWidth;
-    /** @type {number} */
-    height = 1 * self1.innerHeight;
-    /** @type {number} */
-    cv.width = canvas.width = width;
-    /** @type {number} */
-    cv.height = canvas.height = height;
-    var $this = $("#helloContainer");
-    $this.css("transform", "none");
-    var maxHeight = $this.height();
-    /** @type {number} */
-    var win = self1.innerHeight;
-    if (0 != maxHeight / 2 % 2) {
-        maxHeight++;
-        $this.height(maxHeight);
-    }
-    if (maxHeight > win / 1.1) {
-        $this.css("transform", `translate(-50%, -50%) scale(${win / maxHeight / 1.1})`);
-    } else {
-        $this.css("transform", "translate(-50%, -50%)");
-    }
-    render();
+function mouseWheelZoomAjusted() {
+    return Math.max(height / 1080, width / 1920) * mouseWheelZoom;
 }
-function requestAnimationFrame1() {
-    var setSize: number;
-    /** @type {number} */
-    setSize = 1 * Math.max(height / 1080, width / 1920);
-    return setSize *= ratio;
-}
-function frame() {
-    if (0 != items.length) {
-        /** @type {number} */
-        var imgWidth = 0;
-        /** @type {number} */
-        var i = 0;
-        for (; i < items.length; i++) {
-            imgWidth += items[i].size;
+function updateScale() {
+    if (0 != balls.length) {
+        var totalSize = 0;
+        for (var i = 0; i < balls.length; i++) {
+            totalSize += balls[i].size;
         }
-        /** @type {number} */
-        scale = (9 * scale + Math.pow(Math.min(64 / imgWidth, 1), 0.4) * requestAnimationFrame1()) / 10;
-    }
-}
-
-var closest: number;
-var t1: number;
-function sendMoveCommand() {
-    if (forEach()) {
-        var x = cx - width / 2;
-        var y = cy - height / 2;
-        if (!(64 > x * x + y * y)) {
-            if (!(0.01 > Math.abs(closest - value) &&
-                0.01 > Math.abs(t1 - t2))) {
-                closest = value;
-                t1 = t2;
-                var buff = createBuffer(13);
-                buff.setUint8(0, 16);
-                buff.setInt32(1, value, true);
-                buff.setInt32(5, t2, true);
-                buff.setUint32(9, 0, true);
-                send(buff);
-            }
-        }
-    }
-}
-function destroy() {
-    if (forEach() && (matchEnd && null != b)) {
-        var data = createBuffer(1 + 2 * b.length);
-        data.setUint8(0, 0);
-        /** @type {number} */
-        var bi = 0;
-        for (; bi < b.length; ++bi) {
-            data.setUint16(1 + 2 * bi, b.charCodeAt(bi), true);
-        }
-        send(data);
-        /** @type {null} */
-        b = null;
-        /** @type {boolean} */
-        Ba = true;
+        mousAdjustedWorldZoom = (9 * mousAdjustedWorldZoom +
+            Math.pow(Math.min(64 / totalSize, 1), 0.4)
+            * mouseWheelZoomAjusted()) / 10;
     }
 }
 
@@ -458,7 +365,7 @@ function bind() {
         /** @type {null} */
         socket.onopen = null;
         /** @type {null} */
-        socket.onmessage1 = null;
+        socket.onmessage = null;
         /** @type {null} */
         socket.onclose = null;
         try {
@@ -492,7 +399,7 @@ function open1(url, a) {
     /** @type {Array} */
     that = [];
     /** @type {Array} */
-    items = [];
+    balls = [];
     args = {};
     /** @type {Array} */
     parts = [];
@@ -543,7 +450,7 @@ function open1(url, a) {
         options.core.proxy.onSocketOpen();
     };
     /** @type {function (MessageEvent): undefined} */
-    socket.onmessage1 = onmessage1;
+    socket.onmessage = onmessage1;
     /** @type {function (): undefined} */
     socket.onclose = listener;
     /**
@@ -569,161 +476,12 @@ function listener() {
     setTimeout(next, backoff);
     backoff *= 2;
 }
-function onmessage1(a) {
-    parse(new DataView(a.data));
-}
-function parse(data) {
-    /**
-     * @return {?}
-     */
-    var offset: number;
 
-    function encode() {
-        /** @type {string} */
-        var str = "";
-        for (; ;) {
-            var b = data.getUint16(offset, true);
-            offset += 2;
-            if (0 == b) {
-                break;
-            }
-            str += String.fromCharCode(b);
-        }
-        return str;
-    }
-
-    /** @type {number} */
-    offset = 0;
-    if (240 == data.getUint8(offset)) {
-        fn();
-    } else {
-        switch (data.getUint8(offset++)) {
-            case 16:
-                init(data, offset);
-                break;
-            case 17:
-                chunk = data.getFloat32(offset, true);
-                offset += 4;
-                x = data.getFloat32(offset, true);
-                offset += 4;
-                argumentOffset = data.getFloat32(offset, true);
-                offset += 4;
-                break;
-            case 18:
-                /** @type {Array} */
-                that = [];
-                /** @type {Array} */
-                items = [];
-                args = {};
-                /** @type {Array} */
-                parts = [];
-                break;
-            case 20:
-                /** @type {Array} */
-                items = [];
-                /** @type {Array} */
-                that = [];
-                break;
-            case 21:
-                matches = data.getInt16(offset, true);
-                offset += 2;
-                s = data.getInt16(offset, true);
-                offset += 2;
-                if (!nb) {
-                    /** @type {boolean} */
-                    nb = true;
-                    xr = matches;
-                    pos = s;
-                }
-                break;
-            case 32:
-                that.push(data.getUint32(offset, true));
-                offset += 4;
-                break;
-            case 49:
-                if (null != angles) {
-                    break;
-                }
-                var b = data.getUint32(offset, true);
-                offset = offset + 4;
-                /** @type {Array} */
-                list = [];
-                /** @type {number} */
-                var a = 0;
-                for (; a < b; ++a) {
-                    var token = data.getUint32(offset, true);
-                    offset = offset + 4;
-                    list.push({
-                        id: token,
-                        name: encode()
-                    });
-                }
-                create();
-                break;
-            case 50:
-                /** @type {Array} */
-                angles = [];
-                b = data.getUint32(offset, true);
-                offset += 4;
-                /** @type {number} */
-                a = 0;
-                for (; a < b; ++a) {
-                    angles.push(data.getFloat32(offset, true));
-                    offset += 4;
-                }
-                create();
-                break;
-            case 64:
-                minX = data.getFloat64(offset, true);
-                offset += 8;
-                minY = data.getFloat64(offset, true);
-                offset += 8;
-                maxX = data.getFloat64(offset, true);
-                offset += 8;
-                maxY = data.getFloat64(offset, true);
-                offset += 8;
-                if (data.byteLength > offset) {
-                    b = data.getUint32(offset, true);
-                    offset += 4;
-                    /** @type {boolean} */
-                    started = !!(b & 1);
-                    passes = encode();
-                    self1.MC.updateServerVersion(passes);
-                    console.log(`Server version ${passes}`);
-                }
-                break;
-            case 102:
-                b = data.buffer.slice(offset);
-                options.core.proxy.forwardProtoMessage(b);
-                break;
-            case 104:
-                self1.logout();
-        }
-    }
-}
 var max: number;
-
-function fn() {
-    /** @type {boolean} */
-    Ba = false;
-    clearTimeout(timer);
-    if (null == self1.storageInfo) {
-        self1.createDefaultStorage();
-    }
-    /** @type {number} */
-    max = Date.now();
-    if (0 >= aux) {
-        /** @type {number} */
-        aux = max;
-    }
-    /** @type {boolean} */
-    Aa = false;
-    setPosition();
-}
 
 
     function _(name) {
-        return self1.i18n[name] || (self1.i18n_dict.en[name] || name);
+        return browser.i18n[name] || (browser.i18n_dict.en[name] || name);
     }
     function makeRequest() {
         /** @type {number} */
@@ -738,7 +496,7 @@ function fn() {
                     var method = data.ip;
                     if ("game_server_port" in EnvConfig) {
                         /** @type {string} */
-                        method = self1.location.hostname + ":" + EnvConfig.game_server_port;
+                        method = browser.location.hostname + ":" + EnvConfig.game_server_port;
                     }
                     open1(`ws${ssl ? "s" : ""}://${method}`, data.token);
                 }
@@ -799,7 +557,7 @@ function fn() {
             /** @type {boolean} */
             matchEnd = true;
             $("#connecting").hide();
-            destroy();
+            connectResponseCommand();
             if (success) {
                 success();
                 /** @type {null} */
@@ -897,15 +655,15 @@ function fn() {
                 data.A(content);
             }
             if (-1 != that.indexOf(a2)) {
-                if (-1 == items.indexOf(data)) {
-                    items.push(data);
+                if (-1 == balls.indexOf(data)) {
+                    balls.push(data);
                     /** @type {boolean} */
                     data.I = true;
-                    if (1 == items.length) {
+                    if (1 == balls.length) {
                         /** @type {boolean} */
                         data.wa = true;
-                        px = data.a2;
-                        y = data.y;
+                        ballsCenterX = data.a2;
+                        ballsCenterY = data.y;
                         valueAccessor();
                         /** @type {string} */
                         document.getElementById("overlays").style.display = "none";
@@ -913,7 +671,7 @@ function fn() {
                         a = [];
                         /** @type {number} */
                         pauseText = 0;
-                        col = items[0].color;
+                        col = balls[0].color;
                         /** @type {boolean} */
                         Aa = true;
                         /** @type {number} */
@@ -937,12 +695,12 @@ function fn() {
             }
         }
         if (ub) {
-            if (0 == items.length) {
-                if (0 == self1.MC.isUserLoggedIn()) {
-                    fn();
+            if (0 == balls.length) {
+                if (0 == browser.MC.isUserLoggedIn()) {
+                    handlePlayerDeath();
                 } else {
                     /** @type {number} */
-                    timer = setTimeout(fn, 2E3);
+                    timer = setTimeout(handlePlayerDeath, 2E3);
                 }
             }
         }
@@ -956,7 +714,6 @@ function fn() {
     var Pa: number;
 
     function render() {
-        var size: number;
         /** @type {number} */
         var n = Date.now();
         ++Mc;
@@ -967,38 +724,29 @@ function fn() {
                 HALF_PI = 0;
             }
         }
-        /** @type {number} */
         t = n;
-        if (0 < items.length) {
-            frame();
-            /** @type {number} */
-            var a = size = 0;
-            /** @type {number} */
-            var i = 0;
-            for (; i < items.length; i++) {
-                items[i].S();
-                size += items[i].x / items.length;
-                a += items[i].y / items.length;
+        if (0 < balls.length) {
+            updateScale();
+
+            var newCenterX = 0;
+            var newCenterY = 0;
+            for (var i = 0; i < balls.length; i++) {
+                balls[i].S();
+                newCenterX += balls[i].x / balls.length;
+                newCenterY += balls[i].y / balls.length;
             }
-            /** @type {number} */
-            chunk = size;
-            /** @type {number} */
-            x = a;
-            argumentOffset = scale;
-            /** @type {number} */
-            px = (px + size) / 2;
-            /** @type {number} */
-            y = (y + a) / 2;
+            ballsCenterWhenNoBallsX = newCenterX;
+            ballsCenterWhenNoBallsY = newCenterY;
+            worldZoom = mousAdjustedWorldZoom;
+            ballsCenterX = (ballsCenterX + newCenterX) / 2;
+            ballsCenterY = (ballsCenterY + newCenterY) / 2;
         } else {
-            /** @type {number} */
-            px = (5 * px + chunk) / 6;
-            /** @type {number} */
-            y = (5 * y + x) / 6;
-            /** @type {number} */
-            scale = (9 * scale + argumentOffset * requestAnimationFrame1()) / 10;
+            ballsCenterX = (5 * ballsCenterX + ballsCenterWhenNoBallsX) / 6;
+            ballsCenterY = (5 * ballsCenterY + ballsCenterWhenNoBallsY) / 6;
+            mousAdjustedWorldZoom = (9 * mousAdjustedWorldZoom + worldZoom * mouseWheelZoomAjusted()) / 10;
         }
         createObjects();
-        preventDefault();
+        updateLead();
         if (!$timeout) {
             ctx.clearRect(0, 0, width, height);
         }
@@ -1016,8 +764,8 @@ function fn() {
         parts.sort((a, b) => (a.size == b.size ? a.id - b.id : a.size - b.size));
         ctx.save();
         ctx.translate(width / 2, height / 2);
-        ctx.scale(scale, scale);
-        ctx.translate(-px, -y);
+        ctx.scale(mousAdjustedWorldZoom, mousAdjustedWorldZoom);
+        ctx.translate(-ballsCenterX, -ballsCenterY);
         /** @type {number} */
         var b3 = 0;
         for (; b3 < chars.length; b3++) {
@@ -1047,8 +795,8 @@ function fn() {
             ctx.beginPath();
             /** @type {number} */
             var b5 = 0;
-            for (; b5 < items.length; b5++) {
-                ctx.moveTo(items[b5].x, items[b5].y);
+            for (; b5 < balls.length; b5++) {
+                ctx.moveTo(balls[b5].x, balls[b5].y);
                 ctx.lineTo(xr, pos);
             }
             ctx.stroke();
@@ -1068,12 +816,12 @@ function fn() {
             }
             _arg.B(_("score") + ": " + ~~(closingAnimationTime / 100));
             var a11 = _arg.N();
-            size = a11.width;
+            newCenterX = a11.width;
             /** @type {number} */
             ctx.globalAlpha = 0.2;
             /** @type {string} */
             ctx.fillStyle = "#000000";
-            ctx.fillRect(10, height - 10 - 24 - 10, size + 10, 34);
+            ctx.fillRect(10, height - 10 - 24 - 10, newCenterX + 10, 34);
             /** @type {number} */
             ctx.globalAlpha = 1;
             ctx.drawImage(a11, 15, height - 10 - 24 - 5);
@@ -1102,7 +850,7 @@ function fn() {
         }
         /** @type {number} */
         n = t - tOffset;
-        if (!forEach() || (to || from)) {
+        if (!socketIsOpen() || (to || from)) {
             alpha += n / 2E3;
             if (1 < alpha) {
                 /** @type {number} */
@@ -1126,13 +874,13 @@ function fn() {
                         if (image.width / image.height < width / height) {
                             n = width;
                             /** @type {number} */
-                            size = image.height * width / image.width;
+                            newCenterX = image.height * width / image.width;
                         } else {
                             /** @type {number} */
                             n = image.width * height / image.height;
-                            size = height;
+                            newCenterX = height;
                         }
-                        ctx.drawImage(image, (width - n) / 2, (height - size) / 2, n, size);
+                        ctx.drawImage(image, (width - n) / 2, (height - newCenterX) / 2, n, newCenterX);
                         /** @type {number} */
                         ctx.globalAlpha = 0.5 * alpha;
                         ctx.fillRect(0, 0, width, height);
@@ -1150,7 +898,7 @@ function fn() {
             fc = false;
         }
         if (opts.selected.ma) {
-            if (Ba) {
+            if (isConnected) {
                 Oa++;
                 if (Oa > 10 * opts.selected.warnFps) {
                     /** @type {boolean} */
@@ -1207,25 +955,25 @@ function fn() {
         /** @type {string} */
         ctx.strokeStyle = color ? "#AAAAAA" : "#000000";
         /** @type {number} */
-        ctx.globalAlpha = 0.2 * scale;
+        ctx.globalAlpha = 0.2 * mousAdjustedWorldZoom;
         /** @type {number} */
-        var x = width / scale;
+        var x = width / mousAdjustedWorldZoom;
         /** @type {number} */
-        var y2 = height / scale;
+        var y2 = height / mousAdjustedWorldZoom;
         /** @type {number} */
-        var y1 = (-px + x / 2) % 50;
+        var y1 = (-ballsCenterX + x / 2) % 50;
         for (; y1 < x; y1 += 50) {
             ctx.beginPath();
-            ctx.moveTo(y1 * scale - 0.5, 0);
-            ctx.lineTo(y1 * scale - 0.5, y2 * scale);
+            ctx.moveTo(y1 * mousAdjustedWorldZoom - 0.5, 0);
+            ctx.lineTo(y1 * mousAdjustedWorldZoom - 0.5, y2 * mousAdjustedWorldZoom);
             ctx.stroke();
         }
         /** @type {number} */
-        y1 = (-y + y2 / 2) % 50;
+        y1 = (-ballsCenterY + y2 / 2) % 50;
         for (; y1 < y2; y1 += 50) {
             ctx.beginPath();
-            ctx.moveTo(0, y1 * scale - 0.5);
-            ctx.lineTo(x * scale, y1 * scale - 0.5);
+            ctx.moveTo(0, y1 * mousAdjustedWorldZoom - 0.5);
+            ctx.lineTo(x * mousAdjustedWorldZoom, y1 * mousAdjustedWorldZoom - 0.5);
             ctx.stroke();
         }
         ctx.restore();
@@ -1243,8 +991,8 @@ function fn() {
         var result = 0;
         /** @type {number} */
         var i = 0;
-        for (; i < items.length; i++) {
-            result += items[i].g * items[i].g;
+        for (; i < balls.length; i++) {
+            result += balls[i].g * balls[i].g;
         }
         return result;
     }
@@ -1296,8 +1044,8 @@ function fn() {
                             d3 = _("unnamed_cell");
                         }
                         if (1 == list[i].id || -1 != that.indexOf(list[i].id)) {
-                            if (items[0].name) {
-                                d3 = items[0].name;
+                            if (balls[0].name) {
+                                d3 = balls[0].name;
                             }
                             /** @type {string} */
                             ctx.fillStyle = "#FFAAAA";
@@ -1339,10 +1087,10 @@ function fn() {
             return null;
         }
         if ("%" == f[0]) {
-            if (!self1.MC || !self1.MC.getSkinInfo) {
+            if (!browser.MC || !browser.MC.getSkinInfo) {
                 return null;
             }
-            f = self1.MC.getSkinInfo(`skin_${f.slice(1)}`);
+            f = browser.MC.getSkinInfo(`skin_${f.slice(1)}`);
             if (null == f) {
                 return null;
             }
@@ -1370,14 +1118,14 @@ function fn() {
                 t.src = x.slice(1);
             } else {
                 if ("%" == x[0]) {
-                    if (!self1.MC || !self1.MC.getSkinInfo) {
+                    if (!browser.MC || !browser.MC.getSkinInfo) {
                         return null;
                     }
-                    var data = self1.MC.getSkinInfo(`skin_${x.slice(1)}`);
+                    var data = browser.MC.getSkinInfo(`skin_${x.slice(1)}`);
                     if (null == data) {
                         return null;
                     }
-                    t.src = self1.ASSETS_ROOT + data.url;
+                    t.src = browser.ASSETS_ROOT + data.url;
                 }
             }
             /** @type {Image} */
@@ -1474,11 +1222,11 @@ function fn() {
      */
     function callback() {
         /** @type {string} */
-        self1.localStorage.storeObjectInfo = JSON.stringify(data);
+        browser.localStorage.storeObjectInfo = JSON.stringify(data);
         /** @type {*} */
-        data = JSON.parse(self1.localStorage.storeObjectInfo);
+        data = JSON.parse(browser.localStorage.storeObjectInfo);
         /** @type {*} */
-        self1.storageInfo = data;
+        browser.storageInfo = data;
         if ("google" == data.context) {
             $("#gPlusShare").show();
             $("#fbShare").hide();
@@ -1521,7 +1269,7 @@ function fn() {
         data.userInfo.displayName = item.name;
         /** @type {string} */
         data.userInfo.loggedIn = "1";
-        self1.updateStorage();
+        browser.updateStorage();
     }
 
     /**
@@ -1587,10 +1335,10 @@ function fn() {
                             render();
                         }
                         if (1 > t) {
-                            self1.requestAnimationFrame1(update);
+                            browser.requestAnimationFrame1(update);
                         }
                     };
-                    self1.requestAnimationFrame1(update);
+                    browser.requestAnimationFrame1(update);
                 }
             }
         }
@@ -1621,17 +1369,17 @@ function fn() {
             if (null == actualAria || ("undefined" == actualAria || "" == actualAria)) {
                 if (3 > lc) {
                     lc++;
-                    self1.facebookRelogin();
+                    browser.facebookRelogin();
                 }
-                self1.logout();
+                browser.logout();
             } else {
-                self1.MC.doLoginWithFB(actualAria);
+                browser.MC.doLoginWithFB(actualAria);
                 /** @type {Array} */
                 options.cache.login_info = [actualAria, "facebook"];
-                self1.FB.api("/me/picture?width=180&height=180",
+                browser.FB.api("/me/picture?width=180&height=180",
                     messageEvent => {
                     data.userInfo.picture = messageEvent.data.url;
-                    self1.updateStorage();
+                    browser.updateStorage();
                     $(".agario-profile-picture").attr("src", messageEvent.data.url);
                     data.userInfo.socialId = response.authResponse.userID;
                     h();
@@ -1641,7 +1389,7 @@ function fn() {
                 data.context = "facebook";
                 /** @type {string} */
                 data.loginIntent = "1";
-                self1.updateStorage();
+                browser.updateStorage();
             }
         }
     }
@@ -1655,7 +1403,7 @@ function fn() {
         $("#helloContainer").attr("data-party-state", "4");
         /** @type {string} */
         param = decodeURIComponent(param).replace(/.*#/gim, "");
-        cb(`#${self1.encodeURIComponent(param)}`);
+        cb(`#${browser.encodeURIComponent(param)}`);
         $.ajax(url + "getToken", {
             /**
              * @return {undefined}
@@ -1668,7 +1416,7 @@ function fn() {
              * @return {undefined}
              */ success(status) {
                 status = status.split("\n");
-                $(".partyToken").val(`agar.io/#${self1.encodeURIComponent(param)}`);
+                $(".partyToken").val(`agar.io/#${browser.encodeURIComponent(param)}`);
                 $("#helloContainer").attr("data-party-state", "5");
                 show(":party");
                 open1(`ws://${status[0]}`, param);
@@ -1686,9 +1434,9 @@ function fn() {
      * @return {undefined}
      */
     function cb(path) {
-        if (self1.history) {
-            if (self1.history.replaceState) {
-                self1.history.replaceState({}, self1.document.title, path);
+        if (browser.history) {
+            if (browser.history.replaceState) {
+                browser.history.replaceState({}, browser.document.title, path);
             }
         }
     }
@@ -1833,7 +1581,7 @@ function fn() {
         if (!to) {
             if (!from) {
                 if (id) {
-                    self1.refreshAd(self1.adSlots.ab);
+                    browser.refreshAd(browser.adSlots.ab);
                     DrawPolyline();
                     /** @type {boolean} */
                     from = true;
@@ -1841,7 +1589,7 @@ function fn() {
                         $("#overlays").fadeIn(500, start);
                         $("#stats").show();
                         var onComplete = trigger("g_plus_share_stats");
-                        self1.fillSocialValues(onComplete, "gPlusShare");
+                        browser.fillSocialValues(onComplete, "gPlusShare");
                     }, 1500);
                 } else {
                     showError(500);
@@ -1856,14 +1604,14 @@ function fn() {
      */
     function trigger(data) {
         var uHostName = $(".stats-time-alive").text();
-        return self1.parseString(data, "%@", [uHostName.split(":")[0], uHostName.split(":")[1], $(".stats-highest-mass").text()]);
+        return browser.parseString(data, "%@", [uHostName.split(":")[0], uHostName.split(":")[1], $(".stats-highest-mass").text()]);
     }
 
     /**
      * @return {undefined}
      */
     function onMouseMove() {
-        self1.open1("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", `width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${self1.screenX + self1.innerWidth / 2 - 242},top=${(self1.innerHeight - 580) / 2}`);
+        browser.open1("https://plus.google.com/share?url=www.agar.io&hl=en-US", "Agar.io", `width=484,height=580,menubar=no,toolbar=no,resizable=yes,scrollbars=no,left=${browser.screenX + browser.innerWidth / 2 - 242},top=${(browser.innerHeight - 580) / 2}`);
     }
 function main(self1, $) {
 
@@ -1967,8 +1715,8 @@ function main(self1, $) {
                     if ("gamepad" in result) {
                         setInterval(function () {
                             if (Xa) {
-                                cx = val.ha(cx, k);
-                                cy = val.ha(cy, oldconfig);
+                                mouseX = val.ha(mouseX, k);
+                                mouseY = val.ha(mouseY, oldconfig);
                             }
                         }, 25);
                     }
@@ -2031,44 +1779,13 @@ function main(self1, $) {
                         run();
                         setInterval(run, 18E4);
                         /** @type {(HTMLElement|null)} */
-                        canvas = cv = <HTMLCanvasElement>document.getElementById("canvas");
+                        canvas = alsoCanvas = <HTMLCanvasElement>document.getElementById("canvas");
                         if (null != canvas) {
                             ctx = canvas.getContext("2d");
-                            /**
-                             * @param {Event} e
-                             * @return {undefined}
-                             */
-                            canvas.onmousedown = function (e) {
-                                if (gc) {
-                                    /** @type {number} */
-                                    var z0 = e.clientX - (5 + width / 5 / 2);
-                                    /** @type {number} */
-                                    var z1 = e.clientY - (5 + width / 5 / 2);
-                                    if (Math.sqrt(z0 * z0 + z1 * z1) <= width / 5 / 2) {
-                                        end();
-                                        return;
-                                    }
-                                }
-                                /** @type {number} */
-                                cx = 1 * e.clientX;
-                                /** @type {number} */
-                                cy = 1 * e.clientY;
-                                preventDefault();
-                                sendMoveCommand();
-                            };
-                            /**
-                             * @param {Event} e
-                             * @return {undefined}
-                             */
-                            canvas.onmousemove = function (e) {
-                                /** @type {boolean} */
-                                Xa = false;
-                                /** @type {number} */
-                                cx = 1 * e.clientX;
-                                /** @type {number} */
-                                cy = 1 * e.clientY;
-                                preventDefault();
-                            };
+
+                            canvas.onmousedown = mouseDownHandler;
+                            canvas.onmousemove = mouseDownHandler;
+                            
                             /**
                              * @return {undefined}
                              */
@@ -2084,12 +1801,12 @@ function main(self1, $) {
                              * @return {undefined}
                              */
                             self1.onblur = function () {
-                                emit(19);
+                                sendCommand(19);
                                 /** @type {boolean} */
                                 stack = memory = firing = false;
                             };
                             /** @type {function (): undefined} */
-                            self1.onresize = update;
+                            self1.onresize = onResize;
                             self1.requestAnimationFrame1(which);
                             setInterval(sendMoveCommand, 40);
                             if (newValue) {
@@ -2103,7 +1820,7 @@ function main(self1, $) {
                                 }
                             }
                             showError(0);
-                            update();
+                            onResize();
                             if (self1.location.hash) {
                                 if (6 <= self1.location.hash.length) {
                                     request(self1.location.hash);
@@ -2124,7 +1841,7 @@ function main(self1, $) {
                         _init();
                         /** @type {Function} */
                         b = v;
-                        destroy();
+                        connectResponseCommand();
                         /** @type {number} */
                         closingAnimationTime = 0;
                         settings.skinsEnabled = root;
@@ -2184,7 +1901,7 @@ function main(self1, $) {
                         /** @type {null} */
                         b = null;
                         playerCalc();
-                        emit(1);
+                        sendCommand(1);
                         _init();
                     };
                     /** @type {function ((Object|string)): undefined} */
@@ -2658,7 +2375,7 @@ function main(self1, $) {
                     /** @type {null} */
                     success = null;
                     /** @type {boolean} */
-                    Ba = false;
+                    isConnected = false;
                     /** @type {function (string, string): undefined} */
                     self1.connect = open1;
                     /** @type {number} */
@@ -2671,14 +2388,9 @@ function main(self1, $) {
                     ty = 0.25;
                     /** @type {number} */
                     qz = 0.125;
-                    /** @type {number} */
-                    closest = -1;
-                    /** @type {number} */
-                    t1 = -1;
+                    self1.sendMitosis = splitCommand;
                     /** @type {function (): undefined} */
-                    self1.sendMitosis = end;
-                    /** @type {function (): undefined} */
-                    self1.sendEject = emitter;
+                    self1.sendEject = ejectCommand;
                     options.networking = function (opt_attributes) {
                         opt_attributes.loginRealm = {
                             GG: "google",
@@ -2689,7 +2401,7 @@ function main(self1, $) {
                          * @return {undefined}
                          */
                         opt_attributes.sendMessage = function (data) {
-                            if (forEach()) {
+                            if (socketIsOpen()) {
                                 var codeSegments = data.byteView;
                                 if (null != codeSegments) {
                                     data = createBuffer(1 + data.length);
@@ -2732,7 +2444,7 @@ function main(self1, $) {
                                 d = x - a % b;
                                 /** @type {number} */
                                 var length = Date.now();
-                                if (!forEach() || (240 > length - j || !options.core.config.skipDraw)) {
+                                if (!socketIsOpen() || (240 > length - j || !options.core.config.skipDraw)) {
                                     render();
                                 } else {
                                     console.warn("Skipping draw");
@@ -2820,11 +2532,11 @@ function main(self1, $) {
                                 }
                             }
                             delete args[this.id];
-                            i = items.indexOf(this);
+                            i = balls.indexOf(this);
                             if (-1 != i) {
                                 /** @type {boolean} */
                                 ub = true;
-                                items.splice(i, 1);
+                                balls.splice(i, 1);
                             }
                             i = that.indexOf(this.id);
                             if (-1 != i) {
@@ -2893,7 +2605,7 @@ function main(self1, $) {
                             }
                             var minimumCellWidth = this.size;
                             if (!this.c) {
-                                minimumCellWidth *= scale;
+                                minimumCellWidth *= mousAdjustedWorldZoom;
                             }
                             minimumCellWidth *= opts.detail;
                             return ~~Math.max(minimumCellWidth, rh);
@@ -2931,7 +2643,7 @@ function main(self1, $) {
                                 var y = pos.f;
                                 width = items[(i - 1 + n) % n].f;
                                 delta = items[(i + 1) % n].f;
-                                if (15 < this.size && (null != context && (20 < this.size * scale && 0 < this.id))) {
+                                if (15 < this.size && (null != context && (20 < this.size * mousAdjustedWorldZoom && 0 < this.id))) {
                                     /** @type {boolean} */
                                     var k = false;
                                     var x = pos.x;
@@ -3023,7 +2735,7 @@ function main(self1, $) {
                          * @return {?}
                          */
                         P: function () {
-                            return 0 >= this.id ? true : this.x + this.size + 40 < px - width / 2 / scale || (this.y + this.size + 40 < y - height / 2 / scale || (this.x - this.size - 40 > px + width / 2 / scale || this.y - this.size - 40 > y + height / 2 / scale)) ? false : true;
+                            return 0 >= this.id ? true : this.x + this.size + 40 < ballsCenterX - width / 2 / mousAdjustedWorldZoom || (this.y + this.size + 40 < ballsCenterY - height / 2 / mousAdjustedWorldZoom || (this.x - this.size - 40 > ballsCenterX + width / 2 / mousAdjustedWorldZoom || this.y - this.size - 40 > ballsCenterY + height / 2 / mousAdjustedWorldZoom)) ? false : true;
                         },
                         /**
                          * @param {CanvasRenderingContext2D} ctx
@@ -3050,7 +2762,7 @@ function main(self1, $) {
                         w: function (ctx) {
                             if (this.P()) {
                                 ++this.da;
-                                var y_position = 0 < this.id && (!this.c && (!this.h && 0.4 > scale)) || opts.selected.simpleDraw && !this.c;
+                                var y_position = 0 < this.id && (!this.c && (!this.h && 0.4 > mousAdjustedWorldZoom)) || opts.selected.simpleDraw && !this.c;
                                 if (5 > this.H()) {
                                     if (0 < this.id) {
                                         /** @type {boolean} */
@@ -3111,7 +2823,7 @@ function main(self1, $) {
                                                 if (this.I) {
                                                     if ("%starball" == this.C) {
                                                         if ("shenron" == key) {
-                                                            if (7 <= items.length) {
+                                                            if (7 <= balls.length) {
                                                                 /** @type {boolean} */
                                                                 cc = a6 = true;
                                                                 glockBottomWidth = loop("%starball1");
@@ -3186,7 +2898,7 @@ function main(self1, $) {
                                 /** @type {number} */
                                 ctx.globalAlpha = 1;
                                 /** @type {boolean} */
-                                key = -1 != items.indexOf(this);
+                                key = -1 != balls.indexOf(this);
                                 /** @type {number} */
                                 var a8 = ~~this.y;
                                 if (0 != this.id) {
@@ -3198,7 +2910,7 @@ function main(self1, $) {
                                                     map.B(this.name);
                                                     map.O(this.m());
                                                     /** @type {number} */
-                                                    var a7 = 0 >= this.id ? 1 : Math.ceil(10 * scale) / 10;
+                                                    var a7 = 0 >= this.id ? 1 : Math.ceil(10 * mousAdjustedWorldZoom) / 10;
                                                     map.oa(a7);
                                                     map = map.N();
                                                     /** @type {number} */
@@ -3214,7 +2926,7 @@ function main(self1, $) {
                                 }
                                 if (0 < this.id) {
                                     if (metadata) {
-                                        if (key || 0 == items.length && ((!this.c || this.h) && 20 < this.size)) {
+                                        if (key || 0 == balls.length && ((!this.c || this.h) && 20 < this.size)) {
                                             if (null == this.R) {
                                                 this.R = new setFillAndStroke(this.m() / 2, "#FFFFFF", true, "#000000");
                                             }
@@ -3222,7 +2934,7 @@ function main(self1, $) {
                                             key.O(this.m() / 2);
                                             key.B(~~(this.size * this.size / 100));
                                             /** @type {number} */
-                                            var a9 = Math.ceil(10 * scale) / 10;
+                                            var a9 = Math.ceil(10 * mousAdjustedWorldZoom) / 10;
                                             key.oa(a9);
                                             map = key.N();
                                             /** @type {number} */
@@ -3546,9 +3258,9 @@ function main(self1, $) {
                         canvas.height = 32;
                         var renderer = canvas.getContext("2d");
                         return function () {
-                            if (0 < items.length) {
-                                that.color = items[0].color;
-                                that.A(items[0].name);
+                            if (0 < balls.length) {
+                                that.color = balls[0].color;
+                                that.A(balls[0].name);
                             }
                             renderer.clearRect(0, 0, 32, 32);
                             renderer.save();
@@ -4105,7 +3817,7 @@ function main(self1, $) {
                     /** @type {number} */
                     count = 0;
                     /** @type {function (): undefined} */
-                    self1.onPlayerDeath = fn;
+                    self1.onPlayerDeath = handlePlayerDeath;
                     setInterval(function () {
                         if (Aa) {
                             a.push(pick() / 100);

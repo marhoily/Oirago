@@ -4,32 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyAgario"
+        SizeChanged="MainWindow_OnSizeChanged"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
-        Title="MainWindow" Height="350" Width="525">
-    <Canvas x:Name="Outer">
+        Title="MainWindow" Width="815" Height="637">
+    <Grid x:Name="Border" >
+        <Ellipse Width="100" Height="100" Stroke="Black"
+                 VerticalAlignment="Center" 
+                 HorizontalAlignment="Center"/>
+
+        <Canvas x:Name="Outer">
         <Canvas x:Name="Inner" RenderTransformOrigin="0.5,0.5" >
             <Canvas.RenderTransform>
                 <TransformGroup>
-                    <TranslateTransform x:Name="_tanslate" 
-                        X="{Binding ElementName=OffsetX, Path=Value}"
-                        Y="{Binding ElementName=OffsetY, Path=Value}"/>
-                    <ScaleTransform x:Name="_scale" 
-                                ScaleX="{Binding ElementName=Scale, Path=Value}" 
-                                ScaleY="{Binding ElementName=Scale, Path=Value}" />
+                    <TranslateTransform x:Name="_translate"/>
+                    <!--X="{Binding ElementName=OffsetX, Path=Value}"
+                        Y="{Binding ElementName=OffsetY, Path=Value}"
+                    
+                    ScaleX="{Binding ElementName=Scale, Path=Value}" 
+                    ScaleY="{Binding ElementName=Scale, Path=Value}" 
+                    \-->
+                    <ScaleTransform x:Name="_scale" />
                 </TransformGroup>
             </Canvas.RenderTransform>
         </Canvas>
         <Slider x:Name="Scale" Canvas.Left="10"
-                Minimum=".001" Maximum=".3"
-                Value=".1" SmallChange=".05"
+                Minimum="-.5" Maximum=".5"
+                Value="0" SmallChange=".05"
                 Canvas.Top="10" Width="300" />
         <Slider x:Name="OffsetX" Canvas.Left="10"
-                Minimum="-1000" Maximum="8000"
-                Value="4000" SmallChange="200"
+                Minimum="-2000" Maximum="2000"
+                Value="0" SmallChange="200"
                 Canvas.Top="33" Width="148" />
         <Slider x:Name="OffsetY" Canvas.Left="10"
-                Minimum="-1000" Maximum="8000"
-                Value="3000" SmallChange="200"
+                Minimum="-2000" Maximum="2000"
+                Value="0" SmallChange="200"
                 Canvas.Top="56" Width="148" />
     </Canvas>
+    </Grid>
 </Window>
