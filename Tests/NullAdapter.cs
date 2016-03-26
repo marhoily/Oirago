@@ -20,7 +20,7 @@ namespace Tests
         {
         }
 
-        public void Print(double zoom)
+        public void Print(string text)
         {
             
         }

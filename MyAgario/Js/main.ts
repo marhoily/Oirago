@@ -4,6 +4,8 @@
 
 
 
+var socket = null;
+
 var old: any;
 var url: string;
 var from: boolean;
@@ -333,21 +335,21 @@ function postLink() {
 }
 
 function end() {
-    read();
+    sendMoveCommand();
     emit(17);
 }
 function emitter() {
-    read();
+    sendMoveCommand();
     emit(21);
 }
 function forEach() {
-    return null != ws && ws.readyState == ws.OPEN;
+    return null != socket && socket.readyState == socket.OPEN;
 }
 function emit(expectedNumberOfNonCommentArgs) {
     if (forEach()) {
-        var data = stringify(1);
+        var data = createBuffer(1);
         data.setUint8(0, expectedNumberOfNonCommentArgs);
-        log(data);
+        send(data);
     }
 }
 function set(caption) {
@@ -407,37 +409,35 @@ function frame() {
 
 var closest: number;
 var t1: number;
-function read() {
+function sendMoveCommand() {
     if (forEach()) {
-        /** @type {number} */
         var x = cx - width / 2;
-        /** @type {number} */
         var y = cy - height / 2;
         if (!(64 > x * x + y * y)) {
             if (!(0.01 > Math.abs(closest - value) &&
                 0.01 > Math.abs(t1 - t2))) {
                 closest = value;
                 t1 = t2;
-                var buff = stringify(13);
+                var buff = createBuffer(13);
                 buff.setUint8(0, 16);
                 buff.setInt32(1, value, true);
                 buff.setInt32(5, t2, true);
                 buff.setUint32(9, 0, true);
-                log(buff);
+                send(buff);
             }
         }
     }
 }
 function destroy() {
     if (forEach() && (matchEnd && null != b)) {
-        var data = stringify(1 + 2 * b.length);
+        var data = createBuffer(1 + 2 * b.length);
         data.setUint8(0, 0);
         /** @type {number} */
         var bi = 0;
         for (; bi < b.length; ++bi) {
             data.setUint16(1 + 2 * bi, b.charCodeAt(bi), true);
         }
-        log(data);
+        send(data);
         /** @type {null} */
         b = null;
         /** @type {boolean} */
@@ -454,19 +454,19 @@ function next() {
     }
 }
 function bind() {
-    if (ws) {
+    if (socket) {
         /** @type {null} */
-        ws.onopen = null;
+        socket.onopen = null;
         /** @type {null} */
-        ws.onmessage1 = null;
+        socket.onmessage1 = null;
         /** @type {null} */
-        ws.onclose = null;
+        socket.onclose = null;
         try {
-            ws.close();
+            socket.close();
         } catch (a) {
         }
         /** @type {null} */
-        ws = null;
+        socket = null;
     }
 }
 function open1(url, a) {
@@ -509,13 +509,13 @@ function open1(url, a) {
     /** @type {boolean} */
     options.cache.sentGameServerLogin = false;
     /** @type {WebSocket} */
-    ws = new WebSocket(url);
+    socket = new WebSocket(url);
     /** @type {string} */
-    ws.binaryType = "arraybuffer";
+    socket.binaryType = "arraybuffer";
     /**
      * @return {undefined}
      */
-    ws.onopen = () => {
+    socket.onopen = () => {
         var data: DataView;
         /** @type {number} */
         j = t = Date.now();
@@ -524,40 +524,40 @@ function open1(url, a) {
         /** @type {number} */
         a1 = 0;
         console.log("socket open1");
-        data = stringify(5);
+        data = createBuffer(5);
         data.setUint8(0, 254);
         data.setUint32(1, 5, true);
-        log(data);
-        data = stringify(5);
+        send(data);
+        data = createBuffer(5);
         data.setUint8(0, 255);
         data.setUint32(1, 154669603, true);
-        log(data);
-        data = stringify(1 + a.length);
+        send(data);
+        data = createBuffer(1 + a.length);
         data.setUint8(0, 80);
         /** @type {number} */
         var i = 0;
         for (; i < a.length; ++i) {
             data.setUint8(i + 1, a.charCodeAt(i));
         }
-        log(data);
+        send(data);
         options.core.proxy.onSocketOpen();
     };
     /** @type {function (MessageEvent): undefined} */
-    ws.onmessage1 = onmessage1;
+    socket.onmessage1 = onmessage1;
     /** @type {function (): undefined} */
-    ws.onclose = listener;
+    socket.onclose = listener;
     /**
      * @return {undefined}
      */
-    ws.onerror = function () {
+    socket.onerror = function () {
         console.log(exports.la() + " socket error", arguments);
     };
 }
-function stringify(expectedNumberOfNonCommentArgs) {
+function createBuffer(expectedNumberOfNonCommentArgs) {
     return new DataView(new ArrayBuffer(expectedNumberOfNonCommentArgs));
 }
-function log(data) {
-    ws.send(data.buffer);
+function send(data) {
+    socket.send(data.buffer);
 }
 function listener() {
     if (matchEnd) {
@@ -2054,7 +2054,7 @@ function main(self1, $) {
                                 /** @type {number} */
                                 cy = 1 * e.clientY;
                                 preventDefault();
-                                read();
+                                sendMoveCommand();
                             };
                             /**
                              * @param {Event} e
@@ -2091,7 +2091,7 @@ function main(self1, $) {
                             /** @type {function (): undefined} */
                             self1.onresize = update;
                             self1.requestAnimationFrame1(which);
-                            setInterval(read, 40);
+                            setInterval(sendMoveCommand, 40);
                             if (newValue) {
                                 $("#region").val(newValue);
                             }
@@ -2692,14 +2692,14 @@ function main(self1, $) {
                             if (forEach()) {
                                 var codeSegments = data.byteView;
                                 if (null != codeSegments) {
-                                    data = stringify(1 + data.length);
+                                    data = createBuffer(1 + data.length);
                                     data.setUint8(0, 102);
                                     /** @type {number} */
                                     var i = 0;
                                     for (; i < codeSegments.length; ++i) {
                                         data.setUint8(1 + i, codeSegments[i]);
                                     }
-                                    log(data);
+                                    send(data);
                                 }
                             }
                         };

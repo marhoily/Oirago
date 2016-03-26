@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -13,14 +14,15 @@ namespace MyAgario
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
+        public WindowAdapter Adapter { get; }
+        public World World { get; } = new World();
 
         public AgarioClient(Canvas outer, Canvas inner)
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(
-                new WindowAdapter(outer, inner),
-                new World());
+            Adapter = new WindowAdapter(outer, inner);
+            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(Adapter, World);
             _credentials = Servers.GetFfaServer();
 
             Console.WriteLine("Server {0}", _credentials.Server);
@@ -53,14 +55,19 @@ namespace MyAgario
 
         public void MoveTo(double x, double y)
         {
-            var buf = new byte[21];
-            buf[0] = 16;
-            var b = BitConverter.GetBytes(x);
-            Array.Copy(b, 0, buf, 1, 8);
-            b = BitConverter.GetBytes(y);
-            Array.Copy(b, 0, buf, 9, 8);
-            b = BitConverter.GetBytes((uint)0);
-            Array.Copy(b, 0, buf, 17, 4);
+            //var buf = new byte[13];
+            //buf[0] = 16;
+            //var b = BitConverter.GetBytes(x);
+            //Array.Copy(b, 0, buf, 1, 8);
+            //b = BitConverter.GetBytes(y);
+            //Array.Copy(b, 0, buf, 9, 8);
+            //b = BitConverter.GetBytes((uint)0);
+            //Array.Copy(b, 0, buf, 17, 4);
+            var buf = new byte[13];
+            var writer = new BinaryWriter(new MemoryStream(buf));
+            writer.Write((int)x);
+            writer.Write((int)y);
+            writer.Write(0);
             _ws.Send(buf);
         }
 
