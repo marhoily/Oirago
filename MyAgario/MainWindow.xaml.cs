@@ -62,10 +62,7 @@ namespace MyAgario
                 _prevCamera = _currCamera;
                 LeadBalls(my);
             }
-            else
-            {
-                _agarioClient.Spawn("blah");
-            }
+            else _agarioClient.Spawn("blah");
         }
         private void LeadBalls(Ball my)
         {
