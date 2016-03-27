@@ -47,8 +47,8 @@ namespace MyAgario
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            OffsetX.Value = Border.ActualWidth;
-            OffsetY.Value = Border.ActualHeight;
+            OffsetX.Value = Border.ActualWidth/2;
+            OffsetY.Value = Border.ActualHeight/2;
         }
 
         public void Appears(Ball newGuy)
@@ -100,6 +100,8 @@ namespace MyAgario
             var t = _measure.Frame();
             _translate.X = (_targetOffsetX + _translate.X) / 2;
             _translate.Y = (_targetOffsetY + _translate.Y) / 2;
+            _scale.CenterX = Border.ActualWidth/2;
+            _scale.CenterY = Border.ActualHeight/ 2;
             _scale.ScaleX = _scale.ScaleY =  _targetZoom;
 
             foreach (var ball in _world.Balls)
