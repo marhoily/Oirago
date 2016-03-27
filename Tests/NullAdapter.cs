@@ -20,11 +20,6 @@ namespace Tests
         {
         }
 
-        public void Print(string text)
-        {
-            
-        }
-
         public void AfterTick()
         {
             

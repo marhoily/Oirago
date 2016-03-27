@@ -72,9 +72,6 @@ namespace MyAgario
             Inner.Children.Remove(ballUi.TextBlock);
         }
 
-        public void Print(string text)
-        {
-        }
 
         public void AfterTick()
         {
