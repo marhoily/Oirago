@@ -1,6 +1,6 @@
 namespace MyAgario
 {
-    public class ServerCredentials
+    public class WebSocketServerCredentials
     {
         public string Key;
         public string Server;

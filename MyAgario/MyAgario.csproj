@@ -67,11 +67,11 @@
     <Compile Include="Ui\IWindowAdapter.cs" />
     <Compile Include="Protocol\Message.cs" />
     <Compile Include="Protocol\Protocol.cs" />
-    <Compile Include="Client\ServerCredentials.cs" />
-    <Compile Include="Client\Servers.cs" />
+    <Compile Include="Client\WebSocketServerCredentials.cs" />
+    <Compile Include="Client\EntryServer.cs" />
     <Compile Include="Utils\Class1.cs" />
     <Compile Include="World\World.cs" />
-    <Compile Include="World\WorldChangeMessageProcessor.cs" />
+    <Compile Include="World\MessageProcessor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

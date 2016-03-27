@@ -12,13 +12,26 @@ namespace MyAgario
         private readonly World _world = new World();
         private readonly TimeMeasure _measure = new TimeMeasure();
         private Camera _prevCamera, _currCamera;
+        private double _zoom = 5;
 
         public MainWindow()
         {
             InitializeComponent();
-            _agarioClient = 
+
+            var entryServer = new EntryServer(this);
+            _agarioClient =
                 //new AgarioPlayback(this, _world);
-                new AgarioClient(this, _world, new AgarioRecorder());
+                new AgarioClient(this,
+                    new AgarioRecorder(), 
+                    entryServer.GetFfaServer());
+
+            var processor = new MessageProcessor(this, _world);
+            _agarioClient.OnMessage += (s, msg) =>
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    processor.ProcessMessage(msg);
+                }));
+
             CompositionTarget.Rendering += OnRenderFrame;
         }
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -56,9 +69,9 @@ namespace MyAgario
             {
                 _measure.Tick();
                 _currCamera = new Camera(
-                    CalcZoom() - Math.Log10(Scale.Value),
-                    Border.ActualWidth/2 - my.State.X,
-                    Border.ActualHeight/2 - my.State.Y);
+                    CalcZoom() - Math.Log10(_zoom),
+                    Border.ActualWidth / 2 - my.State.X,
+                    Border.ActualHeight / 2 - my.State.Y);
                 _prevCamera = _currCamera;
                 LeadBalls(my);
             }
@@ -67,7 +80,7 @@ namespace MyAgario
 
         public void Error(string message)
         {
-            _error.Text = message;
+            ErrorLabel.Text = message;
         }
 
         private void LeadBalls(Ball my)
@@ -85,19 +98,19 @@ namespace MyAgario
         private double CalcZoom()
         {
             var totalSize = _world.MyBalls.Sum(x => x.State.Size);
-            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.1)+.15;
+            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.1) + .15;
         }
-        
+
         private void OnRenderFrame(object sender, EventArgs args)
         {
             if (_currCamera == null) return;
             var t = _measure.Frame();
             var camera = Camera.Middle(t, _prevCamera, _currCamera);
-            _translate.X = (_translate.X * 9 + camera.X) / 10;
-            _translate.Y = (_translate.Y * 9 + camera.Y) / 10;
-            _scale.CenterX = Border.ActualWidth / 2;
-            _scale.CenterY = Border.ActualHeight / 2;
-            _scale.ScaleX = _scale.ScaleY = camera.Zoom;
+            TranslateTransform.X = (TranslateTransform.X * 9 + camera.X) / 10;
+            TranslateTransform.Y = (TranslateTransform.Y * 9 + camera.Y) / 10;
+            ScaleTransform.CenterX = Border.ActualWidth / 2;
+            ScaleTransform.CenterY = Border.ActualHeight / 2;
+            ScaleTransform.ScaleX = ScaleTransform.ScaleY = camera.Zoom;
 
             foreach (var ball in _world.Balls)
                 ((BallUi)ball.Value.Tag).RenderFrame(t);
@@ -105,7 +118,8 @@ namespace MyAgario
 
         private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Scale.Value -= Math.Sign(e.Delta) * Scale.SmallChange;
+            _zoom -= Math.Sign(e.Delta) * .1;
+            ZoomLabel.Text = _zoom.ToString("f1");
         }
     }
 }

@@ -13,38 +13,34 @@ namespace MyAgario
         void Spectate();
         void Split();
         void Eject();
+        event EventHandler<Message> OnMessage;
     }
 
     public sealed class AgarioClient : IAgarioClient
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly AgarioRecorder _agarioRecorder;
-        private readonly ServerCredentials _credentials;
-        private readonly WorldChangeMessageProcessor _processor;
-
+        private readonly WebSocketServerCredentials _credentials;
         private readonly WebSocket _ws;
-        private readonly Dispatcher _dispatcher;
 
-        public AgarioClient(IWindowAdapter windowAdapter, 
-            World world, AgarioRecorder agarioRecorder)
+        public AgarioClient(IWindowAdapter windowAdapter,
+            AgarioRecorder agarioRecorder,
+            WebSocketServerCredentials credentials)
         {
             _windowAdapter = windowAdapter;
             _agarioRecorder = agarioRecorder;
-            _dispatcher = Dispatcher.CurrentDispatcher;
-            _processor = new WorldChangeMessageProcessor(windowAdapter, world);
-            _credentials = Servers.GetFfaServer();
-            
-            var uri = "ws://" + _credentials.Server;
-
-            windowAdapter.Error("opening...");
-            _ws = new WebSocket(uri) { Origin = "http://agar.io" };
+            _credentials = credentials;
+            _windowAdapter.Error("opening...");
+            _ws = new WebSocket("ws://" + _credentials.Server)
+            {
+                Origin = "http://agar.io"
+            };
             _ws.OnOpen += OnOpen;
             _ws.OnError += (s, e) => windowAdapter.Error(e.Message);
             _ws.OnMessage += OnMessageReceived;
             _ws.OnClose += (s, e) => _ws.Connect();
             _ws.Connect();
         }
-
 
         public void Spawn(string name)
         {
@@ -85,15 +81,12 @@ namespace MyAgario
         {
             var rawData = ((MessageEventArgs)e).RawData;
             _agarioRecorder.Save(rawData);
-
-            _dispatcher.BeginInvoke(new Action(() =>
-            {
-                var p = new Packet(rawData);
-                var msg = p.ReadMessage();
-                if (msg == null) _windowAdapter.Error("buffer of length 0");
-                else _processor.ProcessMessage(msg);
-            }));
+            var p = new Packet(rawData);
+            var msg = p.ReadMessage();
+            if (msg == null) _windowAdapter.Error("buffer of length 0");
+            else OnMessage?.Invoke(this, msg);
         }
 
+        public event EventHandler<Message> OnMessage;
     }
 }

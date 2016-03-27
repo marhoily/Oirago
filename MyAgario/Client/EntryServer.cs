@@ -5,11 +5,30 @@ using System.Text;
 
 namespace MyAgario
 {
-    public static class Servers
+    public class EntryServer
     {
+        private readonly IWindowAdapter _windowAdapter;
         private const string InitKey = "154669603";
 
-        private static ServerCredentials MakePostRequest(string postData)
+        public EntryServer(IWindowAdapter windowAdapter)
+        {
+            _windowAdapter = windowAdapter;
+        }
+
+        public WebSocketServerCredentials GetFfaServer(string region = "EU-London")
+        {
+            return Do(region + "\n" + InitKey);
+        }
+        public WebSocketServerCredentials GetExperimentalServer(string region = "EU-London")
+        {
+            return Do(region + ":experimental\n" + InitKey);
+        }
+        public WebSocketServerCredentials GetTeamsServer(string region = "EU-London")
+        {
+            return Do(region + ":teams\n" + InitKey);
+        }
+
+        private WebSocketServerCredentials Do(string postData)
         {
             // Maybe we could use webclient but I didn't 
             // succeed making a correctly formated
@@ -25,15 +44,15 @@ namespace MyAgario
                 dataStream.Write(byteArray, 0, byteArray.Length);
             using (var response = request.GetResponse())
             {
-                Console.WriteLine(((HttpWebResponse) response).StatusDescription);
+                _windowAdapter.Error(((HttpWebResponse)response).StatusDescription);
                 using (var dataStream = response.GetResponseStream())
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
                         {
                             var result = reader.ReadToEnd();
-                            Console.WriteLine(result);
+                            _windowAdapter.Error(result);
                             var lines = result.Split('\n');
-                            return new ServerCredentials
+                            return new WebSocketServerCredentials
                             {
                                 Server = lines[0],
                                 Key = lines[1]
@@ -41,21 +60,6 @@ namespace MyAgario
                         }
             }
             return null;
-        }
-
-        public static ServerCredentials GetFfaServer(string region = "EU-London")
-        {
-            return MakePostRequest(region + "\n" + InitKey);
-        }
-
-        public static ServerCredentials GetExperimentalServer(string region = "EU-London")
-        {
-            return MakePostRequest(region + ":experimental\n" + InitKey);
-        }
-
-        public static ServerCredentials GetTeamsServer(string region = "EU-London")
-        {
-            return MakePostRequest(region + ":teams\n" + InitKey);
         }
     }
 }

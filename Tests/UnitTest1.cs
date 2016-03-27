@@ -11,13 +11,13 @@ namespace Tests
     [UseReporter(typeof(AraxisMergeReporter))]
     public class UnitTest1
     {
-        private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
+        private readonly MessageProcessor _messageProcessor;
         private readonly World _world;
 
         public UnitTest1()
         {
             _world = new World();
-            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(
+            _messageProcessor = new MessageProcessor(
                 new NullAdapter(), _world);
         }
 
@@ -33,7 +33,7 @@ namespace Tests
                 var parts = line.Split('|');
                 var input = parts[0].Split(',').Select(byte.Parse).ToArray();
                 var packet = new Packet(input);
-                _worldChangeMessageProcessor
+                _messageProcessor
                     .ProcessMessage(packet.ReadMessage());
             }
             Approvals.Verify(JsonConvert.SerializeObject(_world, Formatting.Indented));

@@ -1,13 +1,11 @@
-using System;
-
 namespace MyAgario
 {
-    public sealed class WorldChangeMessageProcessor
+    public sealed class MessageProcessor
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly World _world;
 
-        public WorldChangeMessageProcessor(IWindowAdapter windowAdapter, World world)
+        public MessageProcessor(IWindowAdapter windowAdapter, World world)
         {
             _windowAdapter = windowAdapter;
             _world = world;
@@ -31,8 +29,8 @@ namespace MyAgario
             if (destroyAllBalls != null) DestroyAll();
 
             var unknown = msg as Message.Unknown;
-            if (unknown != null) Console.WriteLine(
-                "Unknown packet id {0}", unknown.PacketId);
+            if (unknown != null) _windowAdapter.Error(
+                $"Unknown packet id {unknown.PacketId}");
         }
 
         private void Spectate(Message.Spectate spectate)

@@ -11,24 +11,20 @@
             <Canvas x:Name="Inner" RenderTransformOrigin="0.5,0.5" >
                 <Canvas.RenderTransform>
                     <TransformGroup>
-                        <TranslateTransform x:Name="_translate"/>
-                        <ScaleTransform x:Name="_scale" />
+                        <TranslateTransform x:Name="TranslateTransform"/>
+                        <ScaleTransform x:Name="ScaleTransform" />
                     </TransformGroup>
                 </Canvas.RenderTransform>
             </Canvas>
-            <Slider x:Name="Scale" Canvas.Left="10"
-                Minimum="1" Maximum="10"
-                Value="5" SmallChange=".05"
-                Canvas.Top="8" Width="300" />
-            <TextBlock x:Name="_print1"
+            <TextBlock x:Name="PrintLabel"
                        Canvas.Left="18"
                        Canvas.Top="90"/>
         </Canvas>
-        <TextBlock Text="{Binding ElementName=Scale, Path=Value, StringFormat=f1}" 
-                   VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="3"/>
-        <TextBlock x:Name="_error" VerticalAlignment="Top"
+        <TextBlock x:Name="ZoomLabel" 
+                   VerticalAlignment="Bottom" 
+                   HorizontalAlignment="Left" Margin="3"/>
+        <TextBlock x:Name="ErrorLabel" VerticalAlignment="Top"
                    HorizontalAlignment="Center" Foreground="DarkViolet"
                    FontWeight="Bold"/>
-
     </Grid>
 </Window>
