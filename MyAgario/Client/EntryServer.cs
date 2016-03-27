@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyAgario
 {
@@ -15,20 +16,20 @@ namespace MyAgario
             _windowAdapter = windowAdapter;
         }
 
-        public WebSocketServerCredentials GetFfaServer(string region = "EU-London")
+        public Task<WebSocketServerCredentials> GetFfaServer(string region = "EU-London")
         {
             return Do(region + "\n" + InitKey);
         }
-        public WebSocketServerCredentials GetExperimentalServer(string region = "EU-London")
+        public Task<WebSocketServerCredentials> GetExperimentalServer(string region = "EU-London")
         {
             return Do(region + ":experimental\n" + InitKey);
         }
-        public WebSocketServerCredentials GetTeamsServer(string region = "EU-London")
+        public Task<WebSocketServerCredentials> GetTeamsServer(string region = "EU-London")
         {
             return Do(region + ":teams\n" + InitKey);
         }
 
-        private WebSocketServerCredentials Do(string postData)
+        private async Task<WebSocketServerCredentials> Do(string postData)
         {
             // Maybe we could use webclient but I didn't 
             // succeed making a correctly formated
@@ -42,7 +43,7 @@ namespace MyAgario
             request.ContentLength = byteArray.Length;
             using (var dataStream = request.GetRequestStream())
                 dataStream.Write(byteArray, 0, byteArray.Length);
-            using (var response = request.GetResponse())
+            using (var response = await request.GetResponseAsync())
             {
                 _windowAdapter.Error(((HttpWebResponse)response).StatusDescription);
                 using (var dataStream = response.GetResponseStream())

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -8,7 +7,7 @@ namespace MyAgario
 {
     public partial class MainWindow : IWindowAdapter
     {
-        private readonly IAgarioClient _agarioClient;
+        private IAgarioClient _agarioClient;
         private readonly World _world = new World();
         private readonly TimeMeasure _measure = new TimeMeasure();
         private Camera _prevCamera, _currCamera;
@@ -18,27 +17,34 @@ namespace MyAgario
         {
             InitializeComponent();
 
+            //_agarioClient =new AgarioPlayback(this, _world);
             var entryServer = new EntryServer(this);
-            _agarioClient =
-                //new AgarioPlayback(this, _world);
-                new AgarioClient(this,
-                    new AgarioRecorder(), 
-                    entryServer.GetFfaServer());
-
-            var processor = new MessageProcessor(this, _world);
-            _agarioClient.OnMessage += (s, msg) =>
-                Dispatcher.BeginInvoke(new Action(() =>
+            entryServer.GetFfaServer().ContinueWith(t =>
+            {
+                if (t.IsFaulted && t.Exception != null)
                 {
-                    processor.ProcessMessage(msg);
-                }));
+                    Error(t.Exception.InnerExceptions[0].ToString());
+                }
+                else if (t.IsCompleted)
+                {
+                    _agarioClient = new AgarioClient(this,
+                        new AgarioRecorder(), t.Result);
+                    var processor = new MessageProcessor(this, _world);
+                    _agarioClient.OnMessage += (s, msg) =>
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            processor.ProcessMessage(msg);
+                        }));
+                    _agarioClient.Spawn("blah");
+                }
+            });
+
+
+
 
             CompositionTarget.Rendering += OnRenderFrame;
         }
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            _agarioClient.Spawn("blah");
-        }
-
+       
         public void Appears(Ball newGuy)
         {
             var ballUi = new BallUi();
@@ -80,7 +86,8 @@ namespace MyAgario
 
         public void Error(string message)
         {
-            ErrorLabel.Text = message;
+            Dispatcher.BeginInvoke(new Action(
+                () => ErrorLabel.Text = message));
         }
 
         private void LeadBalls(Ball my)
@@ -108,8 +115,6 @@ namespace MyAgario
             var camera = Camera.Middle(t, _prevCamera, _currCamera);
             TranslateTransform.X = (TranslateTransform.X * 9 + camera.X) / 10;
             TranslateTransform.Y = (TranslateTransform.Y * 9 + camera.Y) / 10;
-            ScaleTransform.CenterX = Container.ActualWidth / 2;
-            ScaleTransform.CenterY = Container.ActualHeight / 2;
             ScaleTransform.ScaleX = ScaleTransform.ScaleY = camera.Zoom;
 
             foreach (var ball in _world.Balls)

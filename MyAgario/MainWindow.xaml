@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         MouseWheel="MainWindow_OnMouseWheel"
-        mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
+        mc:Ignorable="d" 
         Title="MainWindow" Width="815" Height="637">
     <Grid x:Name="Container" >
         <Canvas x:Name="MainCanvas" RenderTransformOrigin="0.5,0.5" >
