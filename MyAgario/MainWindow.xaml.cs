@@ -72,8 +72,9 @@ namespace MyAgario
             var sdx = position.X - Border.ActualWidth / 2;
             var sdy = position.Y - Border.ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
-            var dx = sdx * _currCamera.Zoom + my.State.X;
-            var dy = sdy * _currCamera.Zoom + my.State.Y;
+            var calcZoom = Math.Sqrt(CalcZoom());
+            var dx = sdx / calcZoom + my.State.X;
+            var dy = sdy / calcZoom + my.State.Y;
             _agarioClient.MoveTo(dx, dy);
         }
 
@@ -88,8 +89,8 @@ namespace MyAgario
             if (_currCamera == null) return;
             var t = _measure.Frame();
             var camera = Camera.Middle(t, _prevCamera, _currCamera);
-            _translate.X = (_translate.X * 19 + camera.X) / 20;
-            _translate.Y = (_translate.Y * 19 + camera.Y) / 20;
+            _translate.X = (_translate.X * 9 + camera.X) / 10;
+            _translate.Y = (_translate.Y * 9 + camera.Y) / 10;
             _scale.CenterX = Border.ActualWidth / 2;
             _scale.CenterY = Border.ActualHeight / 2;
             _scale.ScaleX = _scale.ScaleY = camera.Zoom;
