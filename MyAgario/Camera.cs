@@ -22,5 +22,10 @@ namespace MyAgario
                 u*p.X + t*c.X, 
                 u*p.Y + t*c.Y);
         }
+
+        public override string ToString()
+        {
+            return $"{Zoom:f2},{X:f2},{Y:f2}";
+        }
     }
 }

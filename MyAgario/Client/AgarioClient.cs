@@ -13,6 +13,7 @@ namespace MyAgario
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
+        private FileStream _fileStream = File.Create("rec.bin");
 
         public AgarioClient(IWindowAdapter windowAdapter, World world)
         {
@@ -20,13 +21,13 @@ namespace MyAgario
             Console.WriteLine(BitConverter.IsLittleEndian);
             _worldChangeMessageProcessor = new WorldChangeMessageProcessor(windowAdapter, world);
             _credentials = Servers.GetFfaServer();
-
+            
             Console.WriteLine("Server {0}", _credentials.Server);
             Console.WriteLine("Key {0}", _credentials.Key);
-
+            
             var uri = "ws://" + _credentials.Server;
             Console.WriteLine(uri);
-
+            
             _ws = new WebSocket(uri) { Origin = "http://agar.io" };
             _ws.OnOpen += OnOpen;
             _ws.OnError += (s, e) => Console.WriteLine("OnError");
@@ -73,9 +74,12 @@ namespace MyAgario
 
         private void OnMessageReceived(object sender, EventArgs e)
         {
+            var rawData = ((MessageEventArgs)e).RawData;
+            _fileStream.Write(rawData, 0, rawData.Length);
+
             _dispatcher.BeginInvoke(new Action(() =>
             {
-                var p = new Packet(((MessageEventArgs)e).RawData);
+                var p = new Packet(rawData);
                 var msg = p.ReadMessage();
                 if (msg == null) Console.WriteLine("buffer of length 0");
                 else _worldChangeMessageProcessor.ProcessMessage(msg);

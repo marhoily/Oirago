@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Camera.cs" />
+    <Compile Include="Client\AgarioPlayback.cs" />
     <Compile Include="TimeMeasure.cs" />
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />
