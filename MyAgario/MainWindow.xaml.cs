@@ -22,38 +22,15 @@ namespace MyAgario
             });
         }
 
-
         private void On(object sender, EventArgs e)
         {
             var my = _agarioClient.World.MyBalls.FirstOrDefault();
             if (my == null) return;
-
-            var b = my.State;
-
-            var calcZoom = CalcZoom();
-            if (!IsNaN(calcZoom))
-                _scale.ScaleX = _scale.ScaleY = Scale.Value + calcZoom;
-            var translateTargetX = OffsetX.Value - b.X;
-            _translate.X = (translateTargetX + _translate.X)/2;
-            var translateTargetY = OffsetY.Value - b.Y;
-            _translate.Y = (translateTargetY + _translate.Y)/2;
             var position = Mouse.GetPosition(Border);
             var dx = position.X - Border.ActualWidth/2;
             var dy = position.Y - Border.ActualHeight / 2;
-
-            var d = Math.Sqrt(dx*dx + dy*dy);
-            dx = dx/d*100.0;
-            dy = dy/d*100.0;
-            _agarioClient.MoveTo(dx,dy);
-        }
-
-        private double CalcZoom()
-        {
-            if (_agarioClient.World.MyBalls.Count == 0) return NaN;
-            var totalSize = _agarioClient.World.MyBalls.Sum(x => x.State.Size);
-            return
-                Math.Pow(Math.Min(64.0 / totalSize, 1), 0.4) *
-                Math.Max(Border.ActualHeight / 1080, Border.ActualWidth / 1920);
+            var norm = Math.Sqrt(dx*dx + dy*dy);
+            _agarioClient.MoveTo(100.0*dx / norm, 100.0 * dy / norm);
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -99,7 +76,30 @@ namespace MyAgario
         public void Tick()
         {
             var my = _agarioClient.World.MyBalls.FirstOrDefault();
-            if (my == null) _agarioClient.Spawn("blah");
+            if (my == null)
+            {
+                _agarioClient.Spawn("blah");
+                return;
+            }
+
+            var b = my.State;
+
+            var calcZoom = CalcZoom();
+            if (!IsNaN(calcZoom))
+                _scale.ScaleX = _scale.ScaleY = Scale.Value + calcZoom;
+            var translateTargetX = OffsetX.Value - b.X;
+            _translate.X = (translateTargetX + _translate.X) / 2;
+            var translateTargetY = OffsetY.Value - b.Y;
+            _translate.Y = (translateTargetY + _translate.Y) / 2;
         }
+        private double CalcZoom()
+        {
+            if (_agarioClient.World.MyBalls.Count == 0) return NaN;
+            var totalSize = _agarioClient.World.MyBalls.Sum(x => x.State.Size);
+            return
+                Math.Pow(Math.Min(64.0 / totalSize, 1), 0.4) *
+                Math.Max(Border.ActualHeight / 1080, Border.ActualWidth / 1920);
+        }
+
     }
 }
