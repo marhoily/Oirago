@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static System.Double;
 
 namespace MyAgario
 {
@@ -13,6 +12,9 @@ namespace MyAgario
         private readonly AgarioClient _agarioClient;
         private readonly World _world = new World();
         private readonly TimeMeasure _measure = new TimeMeasure();
+        private double _targetZoom;
+        private double _targetOffsetX;
+        private double _targetOffsetY;
 
         public MainWindow()
         {
@@ -29,7 +31,7 @@ namespace MyAgario
 
         private void On(object sender, EventArgs e)
         {
-            var my = _agarioClient.World.MyBalls.FirstOrDefault();
+            var my = _world.MyBalls.FirstOrDefault();
             if (my == null) return;
             var position = Mouse.GetPosition(Border);
             var dx = position.X - Border.ActualWidth/2;
@@ -75,37 +77,30 @@ namespace MyAgario
 
         public void AfterTick()
         {
-            _measure.Tick();
-
-            var my = _agarioClient.World.MyBalls.FirstOrDefault();
-            if (my == null)
+            var my = _world.MyBalls.FirstOrDefault();
+            if (my != null)
             {
-                _agarioClient.Spawn("blah");
-                return;
+                _measure.Tick();
+                var calcZoom = CalcZoom();
+                _targetZoom = Scale.Value + calcZoom/2;
+                _targetOffsetX = OffsetX.Value - my.State.X;
+                _targetOffsetY = OffsetY.Value - my.State.Y;
             }
-
-            var b = my.State;
-
-            var calcZoom = CalcZoom();
-            if (!IsNaN(calcZoom))
-                _scale.ScaleX = _scale.ScaleY = Scale.Value + calcZoom;
-            var translateTargetX = OffsetX.Value - b.X;
-            _translate.X = (translateTargetX + _translate.X) / 2;
-            var translateTargetY = OffsetY.Value - b.Y;
-            _translate.Y = (translateTargetY + _translate.Y) / 2;
+            else _agarioClient.Spawn("blah");
         }
+
         private double CalcZoom()
         {
-            if (_agarioClient.World.MyBalls.Count == 0) return NaN;
-            var totalSize = _agarioClient.World.MyBalls.Sum(x => x.State.Size);
-            return
-                Math.Pow(Math.Min(64.0 / totalSize, 1), 0.4) *
-                Math.Max(Border.ActualHeight / 1080, Border.ActualWidth / 1920);
+            var totalSize = _world.MyBalls.Sum(x => x.State.Size);
+            return Math.Pow(Math.Min(64.0/totalSize, 1), 0.4);
         }
 
         private void OnRenderFrame(object sender, EventArgs args)
         {
             var t = _measure.Frame();
+            _translate.X = (_targetOffsetX + _translate.X) / 2;
+            _translate.Y = (_targetOffsetY + _translate.Y) / 2;
+            _scale.ScaleX = _scale.ScaleY =  _targetZoom;
 
             foreach (var ball in _world.Balls)
                 ((BallUi)ball.Value.Tag).RenderFrame(t);

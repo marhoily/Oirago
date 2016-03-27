@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Windows.Media;
 using System.Windows.Threading;
 using Be.IO;
 using WebSocketSharp;
@@ -15,16 +14,12 @@ namespace MyAgario
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
-        public IWindowAdapter Adapter { get; }
-        public World World { get; }
 
         public AgarioClient(IWindowAdapter windowAdapter, World world)
         {
-            World = world;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            Adapter = windowAdapter;
-            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(Adapter, World);
+            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(windowAdapter, world);
             _credentials = Servers.GetFfaServer();
 
             Console.WriteLine("Server {0}", _credentials.Server);
@@ -34,7 +29,6 @@ namespace MyAgario
             Console.WriteLine(uri);
 
             _ws = new WebSocket(uri) { Origin = "http://agar.io" };
-
             _ws.OnOpen += OnOpen;
             _ws.OnError += (s, e) => Console.WriteLine("OnError");
             _ws.OnMessage += OnMessageReceived;
