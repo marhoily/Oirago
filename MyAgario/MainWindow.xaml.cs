@@ -12,9 +12,7 @@ namespace MyAgario
         private readonly AgarioClient _agarioClient;
         private readonly World _world = new World();
         private readonly TimeMeasure _measure = new TimeMeasure();
-        private double _targetZoom;
-        private double _targetOffsetX;
-        private double _targetOffsetY;
+        private Camera _prevCamera, _currCamera;
 
         public MainWindow()
         {
@@ -81,9 +79,11 @@ namespace MyAgario
             if (my != null)
             {
                 _measure.Tick();
-                _targetZoom = Scale.Value + CalcZoom();
-                _targetOffsetX = OffsetX.Value - my.State.X;
-                _targetOffsetY = OffsetY.Value - my.State.Y;
+                _currCamera = new Camera(
+                    Scale.Value + CalcZoom(),
+                    OffsetX.Value - my.State.X, 
+                    OffsetY.Value - my.State.Y);
+                _prevCamera = _currCamera;
             }
             else _agarioClient.Spawn("blah");
         }
@@ -96,12 +96,14 @@ namespace MyAgario
 
         private void OnRenderFrame(object sender, EventArgs args)
         {
+            if (_currCamera == null) return;
             var t = _measure.Frame();
-            _translate.X = (_targetOffsetX + _translate.X) / 2;
-            _translate.Y = (_targetOffsetY + _translate.Y) / 2;
+            var camera = Camera.Middle(t, _prevCamera, _currCamera);
+            _translate.X = camera.X;
+            _translate.Y = camera.Y;
             _scale.CenterX = Border.ActualWidth/2;
             _scale.CenterY = Border.ActualHeight/ 2;
-            _scale.ScaleX = _scale.ScaleY =  _targetZoom;
+            _scale.ScaleX = _scale.ScaleY = camera.Zoom;
 
             foreach (var ball in _world.Balls)
                 ((BallUi)ball.Value.Tag).RenderFrame(t);
