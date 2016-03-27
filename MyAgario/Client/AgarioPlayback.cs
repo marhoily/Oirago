@@ -11,16 +11,19 @@ namespace MyAgario
             var processor = new WorldChangeMessageProcessor(windowAdapter, world);
             var stream = new BinaryReader(File.OpenRead("rec.bin"));
             GC.KeepAlive(new DispatcherTimer(
-                TimeSpan.FromMilliseconds(40),
+                TimeSpan.FromMilliseconds(10),
                 DispatcherPriority.Normal,
                 (s, e) =>
                 {
-                    if (stream.PeekChar() == -1) return;
-                    var packetLength = stream.ReadInt32();
-                    var p = new Packet(stream.ReadBytes(packetLength));
-                    var msg = p.ReadMessage();
-                    if (msg == null) Console.WriteLine("buffer of length 0");
-                    else processor.ProcessMessage(msg);
+                    for (var i = 0; i < 1; i++)
+                    {
+                        if (stream.BaseStream.Length == stream.BaseStream.Position) return;
+                        var packetLength = stream.ReadInt32();
+                        var p = new Packet(stream.ReadBytes(packetLength));
+                        var msg = p.ReadMessage();
+                        if (msg == null) Console.WriteLine("buffer of length 0");
+                        else processor.ProcessMessage(msg);
+                    }
                 }, Dispatcher.CurrentDispatcher));
         }
 

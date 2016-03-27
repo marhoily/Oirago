@@ -16,7 +16,8 @@ namespace MyAgario
         public MainWindow()
         {
             InitializeComponent();
-            _agarioClient = //new AgarioPlayback(this, _world);
+            _agarioClient = 
+                //new AgarioPlayback(this, _world);
                 new AgarioClient(this, _world, new AgarioRecorder());
             CompositionTarget.Rendering += OnRenderFrame;
         }
@@ -81,7 +82,7 @@ namespace MyAgario
         private double CalcZoom()
         {
             var totalSize = _world.MyBalls.Sum(x => x.State.Size);
-            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.4);
+            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.1)+.15;
         }
         
         private void OnRenderFrame(object sender, EventArgs args)
