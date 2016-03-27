@@ -20,29 +20,30 @@ namespace MyAgario
             _agarioClient = new AgarioClient(this, _world);
             GC.KeepAlive(new DispatcherTimer(
                 TimeSpan.FromMilliseconds(40),
-                DispatcherPriority.Background, On, Dispatcher)
+                DispatcherPriority.Normal, On, Dispatcher)
             {
                 IsEnabled = true
             });
             CompositionTarget.Rendering += OnRenderFrame;
         }
-
         private void On(object sender, EventArgs e)
         {
+            if (_currCamera == null) return;
             var my = _world.MyBalls.FirstOrDefault();
             if (my == null) return;
             var position = Mouse.GetPosition(Border);
-            var dx = position.X - Border.ActualWidth/2;
-            var dy = position.Y - Border.ActualHeight / 2;
-            var norm = Math.Sqrt(dx*dx + dy*dy);
-            _agarioClient.MoveTo(100.0*dx / norm, 100.0 * dy / norm);
+            var sdx = position.X - Border.ActualWidth / 2;
+            var sdy = position.Y - Border.ActualHeight / 2;
+            if (sdx*sdx + sdy*sdy < 64) return;
+            var dx = sdx * _currCamera.Zoom + my.State.X;
+            var dy = sdy * _currCamera.Zoom + my.State.Y;
+            _agarioClient.MoveTo(dx, dy);
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             _agarioClient.Spawn("blah");
         }
-
 
         public void Appears(Ball newGuy)
         {
@@ -85,7 +86,7 @@ namespace MyAgario
         private double CalcZoom()
         {
             var totalSize = _world.MyBalls.Sum(x => x.State.Size);
-            return Math.Pow(Math.Min(64.0/totalSize, 1), 0.4);
+            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.4);
         }
 
         private void OnRenderFrame(object sender, EventArgs args)
@@ -93,10 +94,10 @@ namespace MyAgario
             if (_currCamera == null) return;
             var t = _measure.Frame();
             var camera = Camera.Middle(t, _prevCamera, _currCamera);
-            _translate.X = camera.X;
-            _translate.Y = camera.Y;
-            _scale.CenterX = Border.ActualWidth/2;
-            _scale.CenterY = Border.ActualHeight/ 2;
+            _translate.X = (_translate.X * 19 + camera.X) / 20;
+            _translate.Y = (_translate.Y * 19 + camera.Y) / 20;
+            _scale.CenterX = Border.ActualWidth / 2;
+            _scale.CenterY = Border.ActualHeight / 2;
             _scale.ScaleX = _scale.ScaleY = camera.Zoom;
 
             foreach (var ball in _world.Balls)
