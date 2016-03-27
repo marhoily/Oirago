@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Be.IO;
@@ -16,14 +15,14 @@ namespace MyAgario
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
-        public WindowAdapter Adapter { get; }
+        public IWindowAdapter Adapter { get; }
         public World World { get; } = new World();
 
-        public AgarioClient(Canvas outer, Canvas inner)
+        public AgarioClient(IWindowAdapter windowAdapter)
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
-            Adapter = new WindowAdapter(outer, inner);
+            Adapter = windowAdapter;
             _worldChangeMessageProcessor = new WorldChangeMessageProcessor(Adapter, World);
             _credentials = Servers.GetFfaServer();
 

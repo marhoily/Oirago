@@ -65,7 +65,6 @@
     </ApplicationDefinition>
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />
-    <Compile Include="Ui\WindowAdapter.cs" />
     <Compile Include="Protocol\Message.cs" />
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerCredentials.cs" />

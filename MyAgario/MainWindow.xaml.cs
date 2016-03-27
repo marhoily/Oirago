@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -9,20 +10,19 @@ using static System.Double;
 
 namespace MyAgario
 {
-    public partial class MainWindow
+    public partial class MainWindow : IWindowAdapter
     {
         private AgarioClient _agarioClient;
-        private DispatcherTimer _dispatcherTimer;
 
         public MainWindow()
         {
             InitializeComponent();
-            _dispatcherTimer = new DispatcherTimer(
+            GC.KeepAlive(new DispatcherTimer(
                 TimeSpan.FromMilliseconds(40),
                 DispatcherPriority.Background, On, Dispatcher)
             {
                 IsEnabled = true
-            };
+            });
         }
 
 
@@ -81,7 +81,7 @@ namespace MyAgario
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _agarioClient = new AgarioClient(Outer, Inner);
+            _agarioClient = new AgarioClient(this);
             //_agarioClient.Spawn("blah");
             //_agarioClient.Spectate();
         }
@@ -90,6 +90,33 @@ namespace MyAgario
         {
             OffsetX.Value = Border.ActualWidth;
             OffsetY.Value = Border.ActualHeight;
+        }
+
+        public void Appears(Ball newGuy)
+        {
+            var ballUi = new BallUi();
+            newGuy.Tag = ballUi;
+            Inner.Children.Add(ballUi.Ellipse);
+            Inner.Children.Add(ballUi.TextBlock);
+        }
+        public void Update(Ball newGuy, Message.Spectate world)
+        {
+            ((BallUi)newGuy.Tag).Update(newGuy.State, world);
+        }
+
+        public void Eats(Ball eater, Ball eaten)
+        {
+        }
+
+        public void Remove(Ball dying)
+        {
+            var ballUi = (BallUi)dying.Tag;
+            Inner.Children.Remove(ballUi.Ellipse);
+            Inner.Children.Remove(ballUi.TextBlock);
+        }
+
+        public void Print(string text)
+        {
         }
     }
 }
