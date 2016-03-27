@@ -23,20 +23,20 @@ namespace MyAgario
             };
         }
 
-        public void Update(Message.Updates appears, Message.Spectate world)
+        public void Update(Message.Updates nextBallState, Message.Spectate world)
         {
-            _solidColorBrush.Color = appears.IsVirus
-                ? Colors.Green : Color.FromRgb(appears.R, appears.G, appears.B);
+            _solidColorBrush.Color = nextBallState.IsVirus
+                ? Colors.Green : Color.FromRgb(nextBallState.R, nextBallState.G, nextBallState.B);
 
-            var s = Math.Max(25.0, appears.Size);
+            var s = Math.Max(25.0, nextBallState.Size);
             Ellipse.Width = Ellipse.Height = s*2;
-            Canvas.SetLeft(Ellipse, appears.X - world.X - s);
-            Canvas.SetTop(Ellipse, appears.Y - world.Y - s);
-            Canvas.SetLeft(TextBlock, appears.X - world.X - TextBlock.ActualWidth / 2);
-            Canvas.SetTop(TextBlock, appears.Y - world.Y - TextBlock.ActualHeight / 2);
+            Canvas.SetLeft(Ellipse, nextBallState.X - world.X - s);
+            Canvas.SetTop(Ellipse, nextBallState.Y - world.Y - s);
+            Canvas.SetLeft(TextBlock, nextBallState.X - world.X - TextBlock.ActualWidth / 2);
+            Canvas.SetTop(TextBlock, nextBallState.Y - world.Y - TextBlock.ActualHeight / 2);
 
-            if (string.IsNullOrEmpty(appears.Name)) return;
-            TextBlock.Text = appears.Name;
+            if (string.IsNullOrEmpty(nextBallState.Name)) return;
+            TextBlock.Text = nextBallState.Name;
             TextBlock.Visibility = Visibility.Visible;
         }
     }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Be.IO;
 using WebSocketSharp;
@@ -39,7 +40,12 @@ namespace MyAgario
             _ws.OnMessage += OnMessageReceived;
             _ws.OnClose += (s, e) => Console.WriteLine("OnClose");
             _ws.Connect();
+
+            CompositionTarget.Rendering +=
+                _worldChangeMessageProcessor.RenderFrame;
+
         }
+
 
         public void Spawn(string name)
         {

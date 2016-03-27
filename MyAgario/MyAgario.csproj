@@ -70,6 +70,7 @@
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerCredentials.cs" />
     <Compile Include="Client\Servers.cs" />
+    <Compile Include="Utils\Class1.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\WorldChangeMessageProcessor.cs" />
     <Page Include="MainWindow.xaml">

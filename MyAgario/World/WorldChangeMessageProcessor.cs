@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
+using MyAgario.Utils;
 
 namespace MyAgario
 {
@@ -6,6 +9,9 @@ namespace MyAgario
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly World _world;
+        private readonly CircularBuffer<double> _prevFramesLengthsMs
+            = new CircularBuffer<double>(10);
+        private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
         public WorldChangeMessageProcessor(IWindowAdapter windowAdapter, World world)
         {
@@ -54,6 +60,9 @@ namespace MyAgario
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
+            _prevFramesLengthsMs.Enqueue(_stopwatch.Elapsed.TotalMilliseconds);
+            _stopwatch.Restart();
+            _windowAdapter.Print($"{_prevFramesLengthsMs.Average():f1}");
         }
         private void ProcessEating(Message.Tick tick)
         {
@@ -119,6 +128,11 @@ namespace MyAgario
                 _windowAdapter.Remove(ball.Value);
             _world.Balls.Clear();
             _world.MyBalls.Clear();
+        }
+
+        public void RenderFrame(object sender, EventArgs e)
+        {
+            
         }
     }
 }

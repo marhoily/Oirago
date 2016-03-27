@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using static System.Double;
 
@@ -22,6 +24,7 @@ namespace MyAgario
                 IsEnabled = true
             };
         }
+
 
         private double _t;
         private bool _spawn = true;
@@ -49,19 +52,21 @@ namespace MyAgario
             var calcZoom = CalcZoom();
             if (!IsNaN(calcZoom))
                 _scale.ScaleX = _scale.ScaleY = Scale.Value + calcZoom;
-            _translate.X = OffsetX.Value - b.X;
-            _translate.Y = OffsetY.Value - b.Y;
+            var translateTargetX = OffsetX.Value - b.X;
+            _translate.X = (translateTargetX + _translate.X)/2;
+            var translateTargetY = OffsetY.Value - b.Y;
+            _translate.Y = (translateTargetY + _translate.Y)/2;
             //_agarioClient.MoveTo(5+10 * Math.Sin(_t), 5+10 * Math.Cos(_t));
             var position = Mouse.GetPosition(Border);
-
+            Trace.WriteLine($"{b.X}: {b.Y}");
             var dx = position.X - Border.ActualWidth/2;
             var dy = position.Y - Border.ActualHeight / 2;
 
             var d = Math.Sqrt(dx*dx + dy*dy);
-            dx = (dx/d)*10.0;
-            dy = (dy/d)*10.0;
+            dx = (dx/d)*100.0;
+            dy = (dy/d)*100.0;
             _agarioClient.MoveTo(dx,dy);
-            _agarioClient.Adapter.Print($"{dx:f3}: {dy:f3}");
+            //_agarioClient.Adapter.Print($"{dx:f3}: {dy:f3}");
             _t += .02;
         }
 
