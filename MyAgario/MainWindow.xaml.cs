@@ -43,11 +43,6 @@ namespace MyAgario
             _agarioClient.Spawn("blah");
         }
 
-        private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            OffsetX.Value = Border.ActualWidth/2;
-            OffsetY.Value = Border.ActualHeight/2;
-        }
 
         public void Appears(Ball newGuy)
         {
@@ -72,7 +67,6 @@ namespace MyAgario
             Inner.Children.Remove(ballUi.TextBlock);
         }
 
-
         public void AfterTick()
         {
             var my = _world.MyBalls.FirstOrDefault();
@@ -80,9 +74,9 @@ namespace MyAgario
             {
                 _measure.Tick();
                 _currCamera = new Camera(
-                    Scale.Value + CalcZoom(),
-                    OffsetX.Value - my.State.X, 
-                    OffsetY.Value - my.State.Y);
+                    CalcZoom() - Math.Log10(Scale.Value),
+                    Border.ActualWidth / 2 - my.State.X,
+                    Border.ActualHeight / 2 - my.State.Y);
                 _prevCamera = _currCamera;
             }
             else _agarioClient.Spawn("blah");
@@ -111,7 +105,7 @@ namespace MyAgario
 
         private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Scale.Value += Math.Sign(e.Delta) * Scale.SmallChange;
+            Scale.Value -= Math.Sign(e.Delta) * Scale.SmallChange;
 
         }
     }
