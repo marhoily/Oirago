@@ -81,8 +81,7 @@ namespace MyAgario
             if (my != null)
             {
                 _measure.Tick();
-                var calcZoom = CalcZoom();
-                _targetZoom = Scale.Value + calcZoom/2;
+                _targetZoom = Scale.Value + CalcZoom();
                 _targetOffsetX = OffsetX.Value - my.State.X;
                 _targetOffsetY = OffsetY.Value - my.State.Y;
             }
@@ -106,6 +105,12 @@ namespace MyAgario
 
             foreach (var ball in _world.Balls)
                 ((BallUi)ball.Value.Tag).RenderFrame(t);
+        }
+
+        private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            Scale.Value += Math.Sign(e.Delta) * Scale.SmallChange;
+
         }
     }
 }

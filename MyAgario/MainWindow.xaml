@@ -4,24 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         SizeChanged="MainWindow_OnSizeChanged"
+        MouseWheel="MainWindow_OnMouseWheel"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Width="815" Height="637">
     <Grid x:Name="Border" >
         <Ellipse Width="100" Height="100" Stroke="Black"
                  VerticalAlignment="Center" 
                  HorizontalAlignment="Center"/>
-
         <Canvas>
             <Canvas x:Name="Inner" RenderTransformOrigin="0.5,0.5" >
                 <Canvas.RenderTransform>
                     <TransformGroup>
                         <TranslateTransform x:Name="_translate"/>
-                        <!--X="{Binding ElementName=OffsetX, Path=Value}"
-                        Y="{Binding ElementName=OffsetY, Path=Value}"
-                    
-                    ScaleX="{Binding ElementName=Scale, Path=Value}" 
-                    ScaleY="{Binding ElementName=Scale, Path=Value}" 
-                    \-->
                         <ScaleTransform x:Name="_scale" />
                     </TransformGroup>
                 </Canvas.RenderTransform>
@@ -38,7 +32,9 @@
                 Minimum="-2000" Maximum="2000"
                 Value="0" SmallChange="200"
                 Canvas.Top="56" Width="148" />
-            <TextBlock x:Name="_print1" Canvas.Left="18" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="90"/>
+            <TextBlock x:Name="_print1"
+                       Canvas.Left="18" TextWrapping="Wrap" 
+                       Text="{Binding ElementName=Scale, Path=Value, StringFormat=f1}" Canvas.Top="90"/>
         </Canvas>
     </Grid>
 </Window>
