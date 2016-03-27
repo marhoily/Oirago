@@ -7,5 +7,6 @@ namespace MyAgario
         void Eats(Ball eater, Ball eaten);
         void Remove(Ball dying);
         void AfterTick();
+        void Error(string message);
     }
 }

@@ -26,5 +26,9 @@
         </Canvas>
         <TextBlock Text="{Binding ElementName=Scale, Path=Value, StringFormat=f1}" 
                    VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="3"/>
+        <TextBlock x:Name="_error" VerticalAlignment="Top"
+                   HorizontalAlignment="Center" Foreground="DarkViolet"
+                   FontWeight="Bold"/>
+
     </Grid>
 </Window>

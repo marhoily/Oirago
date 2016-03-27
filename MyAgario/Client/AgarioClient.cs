@@ -17,33 +17,31 @@ namespace MyAgario
 
     public sealed class AgarioClient : IAgarioClient
     {
+        private readonly IWindowAdapter _windowAdapter;
         private readonly AgarioRecorder _agarioRecorder;
         private readonly ServerCredentials _credentials;
-        private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
+        private readonly WorldChangeMessageProcessor _processor;
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
 
-        public AgarioClient(IWindowAdapter windowAdapter, World world,
-            AgarioRecorder agarioRecorder)
+        public AgarioClient(IWindowAdapter windowAdapter, 
+            World world, AgarioRecorder agarioRecorder)
         {
+            _windowAdapter = windowAdapter;
             _agarioRecorder = agarioRecorder;
             _dispatcher = Dispatcher.CurrentDispatcher;
-            Console.WriteLine(BitConverter.IsLittleEndian);
-            _worldChangeMessageProcessor = new WorldChangeMessageProcessor(windowAdapter, world);
+            _processor = new WorldChangeMessageProcessor(windowAdapter, world);
             _credentials = Servers.GetFfaServer();
             
-            Console.WriteLine("Server {0}", _credentials.Server);
-            Console.WriteLine("Key {0}", _credentials.Key);
-            
             var uri = "ws://" + _credentials.Server;
-            Console.WriteLine(uri);
-            
+
+            windowAdapter.Error("opening...");
             _ws = new WebSocket(uri) { Origin = "http://agar.io" };
             _ws.OnOpen += OnOpen;
-            _ws.OnError += (s, e) => Console.WriteLine("OnError");
+            _ws.OnError += (s, e) => windowAdapter.Error(e.Message);
             _ws.OnMessage += OnMessageReceived;
-            _ws.OnClose += (s, e) => Console.WriteLine("OnClose");
+            _ws.OnClose += (s, e) => _ws.Connect();
             _ws.Connect();
         }
 
@@ -78,7 +76,7 @@ namespace MyAgario
 
         private void OnOpen(object sender, EventArgs e)
         {
-            Console.WriteLine("OnOpen");
+            _windowAdapter.Error("");
             _ws.Send(new byte[] { 254, 5, 255, 35, 18, 56, 9, 80 });
             _ws.Send(Encoding.ASCII.GetBytes(_credentials.Key));
         }
@@ -92,8 +90,8 @@ namespace MyAgario
             {
                 var p = new Packet(rawData);
                 var msg = p.ReadMessage();
-                if (msg == null) Console.WriteLine("buffer of length 0");
-                else _worldChangeMessageProcessor.ProcessMessage(msg);
+                if (msg == null) _windowAdapter.Error("buffer of length 0");
+                else _processor.ProcessMessage(msg);
             }));
         }
 

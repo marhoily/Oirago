@@ -64,6 +64,12 @@ namespace MyAgario
             }
             else _agarioClient.Spawn("blah");
         }
+
+        public void Error(string message)
+        {
+            _error.Text = message;
+        }
+
         private void LeadBalls(Ball my)
         {
             var position = Mouse.GetPosition(Border);

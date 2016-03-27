@@ -21,7 +21,7 @@ namespace MyAgario
                         var packetLength = stream.ReadInt32();
                         var p = new Packet(stream.ReadBytes(packetLength));
                         var msg = p.ReadMessage();
-                        if (msg == null) Console.WriteLine("buffer of length 0");
+                        if (msg == null) throw new Exception("buffer of length 0");
                         else processor.ProcessMessage(msg);
                     }
                 }, Dispatcher.CurrentDispatcher));

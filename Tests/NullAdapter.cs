@@ -24,5 +24,9 @@ namespace Tests
         {
             
         }
+
+        public void Error(string message)
+        {
+        }
     }
 }
