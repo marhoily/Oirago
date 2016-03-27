@@ -34,7 +34,7 @@ namespace MyAgario
         }
         public void Update(Ball newGuy, Message.Spectate world)
         {
-            ((BallUi)newGuy.Tag).Update(newGuy.State, world);
+            ((BallUi)newGuy.Tag).Update(newGuy.State, world, newGuy.IsMine);
         }
 
         public void Eats(Ball eater, Ball eaten)
@@ -72,7 +72,7 @@ namespace MyAgario
             var sdx = position.X - Border.ActualWidth / 2;
             var sdy = position.Y - Border.ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
-            var calcZoom = Math.Sqrt(CalcZoom());
+            var calcZoom = CalcZoom();
             var dx = sdx / calcZoom + my.State.X;
             var dy = sdy / calcZoom + my.State.Y;
             _agarioClient.MoveTo(dx, dy);

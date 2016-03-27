@@ -7,12 +7,12 @@
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Width="815" Height="637">
     <Grid x:Name="Border" >
-        <Ellipse Width="5" Height="5" Stroke="Black"
+        <!--<Ellipse Width="5" Height="5" Stroke="Black"
                  VerticalAlignment="Center" 
                  HorizontalAlignment="Center"/>
         <Ellipse Width="30" Height="30" Stroke="Black"
                  VerticalAlignment="Center" 
-                 HorizontalAlignment="Center"/>
+                 HorizontalAlignment="Center"/>-->
         <Canvas>
             <Canvas x:Name="Inner" RenderTransformOrigin="0.5,0.5" >
                 <Canvas.RenderTransform>
