@@ -6,25 +6,17 @@
         MouseWheel="MainWindow_OnMouseWheel"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded"
         Title="MainWindow" Width="815" Height="637">
-    <Grid x:Name="Border" >
-        <Canvas>
-            <Canvas x:Name="Inner" RenderTransformOrigin="0.5,0.5" >
-                <Canvas.RenderTransform>
-                    <TransformGroup>
-                        <TranslateTransform x:Name="TranslateTransform"/>
-                        <ScaleTransform x:Name="ScaleTransform" />
-                    </TransformGroup>
-                </Canvas.RenderTransform>
-            </Canvas>
-            <TextBlock x:Name="PrintLabel"
-                       Canvas.Left="18"
-                       Canvas.Top="90"/>
+    <Grid x:Name="Container" >
+        <Canvas x:Name="MainCanvas" RenderTransformOrigin="0.5,0.5" >
+            <Canvas.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform x:Name="TranslateTransform"/>
+                    <ScaleTransform x:Name="ScaleTransform" />
+                </TransformGroup>
+            </Canvas.RenderTransform>
         </Canvas>
-        <TextBlock x:Name="ZoomLabel" 
-                   VerticalAlignment="Bottom" 
-                   HorizontalAlignment="Left" Margin="3"/>
-        <TextBlock x:Name="ErrorLabel" VerticalAlignment="Top"
-                   HorizontalAlignment="Center" Foreground="DarkViolet"
-                   FontWeight="Bold"/>
+        <TextBlock x:Name="PrintLabel" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="ZoomLabel"  VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="3"/>
+        <TextBlock x:Name="ErrorLabel" Foreground="DarkViolet" VerticalAlignment="Top" HorizontalAlignment="Center" FontWeight="Bold"/>
     </Grid>
 </Window>

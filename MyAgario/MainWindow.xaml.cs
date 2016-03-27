@@ -43,8 +43,8 @@ namespace MyAgario
         {
             var ballUi = new BallUi();
             newGuy.Tag = ballUi;
-            Inner.Children.Add(ballUi.Ellipse);
-            Inner.Children.Add(ballUi.TextBlock);
+            MainCanvas.Children.Add(ballUi.Ellipse);
+            MainCanvas.Children.Add(ballUi.TextBlock);
         }
         public void Update(Ball newGuy, Message.Spectate world)
         {
@@ -58,8 +58,8 @@ namespace MyAgario
         public void Remove(Ball dying)
         {
             var ballUi = (BallUi)dying.Tag;
-            Inner.Children.Remove(ballUi.Ellipse);
-            Inner.Children.Remove(ballUi.TextBlock);
+            MainCanvas.Children.Remove(ballUi.Ellipse);
+            MainCanvas.Children.Remove(ballUi.TextBlock);
         }
 
         public void AfterTick()
@@ -70,8 +70,8 @@ namespace MyAgario
                 _measure.Tick();
                 _currCamera = new Camera(
                     CalcZoom() - Math.Log10(_zoom),
-                    Border.ActualWidth / 2 - my.State.X,
-                    Border.ActualHeight / 2 - my.State.Y);
+                    Container.ActualWidth / 2 - my.State.X,
+                    Container.ActualHeight / 2 - my.State.Y);
                 _prevCamera = _currCamera;
                 LeadBalls(my);
             }
@@ -85,9 +85,9 @@ namespace MyAgario
 
         private void LeadBalls(Ball my)
         {
-            var position = Mouse.GetPosition(Border);
-            var sdx = position.X - Border.ActualWidth / 2;
-            var sdy = position.Y - Border.ActualHeight / 2;
+            var position = Mouse.GetPosition(Container);
+            var sdx = position.X - Container.ActualWidth / 2;
+            var sdy = position.Y - Container.ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
             var calcZoom = CalcZoom();
             var dx = sdx / calcZoom + my.State.X;
@@ -108,8 +108,8 @@ namespace MyAgario
             var camera = Camera.Middle(t, _prevCamera, _currCamera);
             TranslateTransform.X = (TranslateTransform.X * 9 + camera.X) / 10;
             TranslateTransform.Y = (TranslateTransform.Y * 9 + camera.Y) / 10;
-            ScaleTransform.CenterX = Border.ActualWidth / 2;
-            ScaleTransform.CenterY = Border.ActualHeight / 2;
+            ScaleTransform.CenterX = Container.ActualWidth / 2;
+            ScaleTransform.CenterY = Container.ActualHeight / 2;
             ScaleTransform.ScaleX = ScaleTransform.ScaleY = camera.Zoom;
 
             foreach (var ball in _world.Balls)
