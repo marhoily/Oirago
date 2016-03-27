@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MyAgario
 {
@@ -28,13 +29,22 @@ namespace MyAgario
         {
             return Do(region + ":teams\n" + InitKey);
         }
-
+        
         private async Task<WebSocketServerCredentials> Do(string postData)
         {
-            // Maybe we could use webclient but I didn't 
-            // succeed making a correctly formated
-            // application /x-www-form-urlencoded post request
-            var request = (HttpWebRequest)WebRequest.Create("http://m.agar.io/");
+            var result = await DoInner(postData);
+            while (result == null)
+                result = await DoInner(postData);
+            return result;
+        }
+        /*
+            if (!File.Exists("cache.json")) return await DoButCache(postData);
+            var deserializeObject = JsonConvert.DeserializeObject(File.ReadAllText("cache.json"));
+        */
+        private async Task<WebSocketServerCredentials> DoInner(string postData)
+        {
+            var request = (HttpWebRequest)
+                WebRequest.Create("http://m.agar.io/");
             request.Method = "POST";
             request.Headers.Add("Origin", "http://agar.io");
             request.Referer = "http://agar.io";
@@ -45,20 +55,18 @@ namespace MyAgario
                 dataStream.Write(byteArray, 0, byteArray.Length);
             using (var response = await request.GetResponseAsync())
             {
-                _windowAdapter.Error(((HttpWebResponse)response).StatusDescription);
+                var webResponse = (HttpWebResponse)response;
+                _windowAdapter.Error(webResponse.StatusDescription);
+                if (webResponse.StatusCode != HttpStatusCode.OK)
+                    return null;
                 using (var dataStream = response.GetResponseStream())
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
-                        {
-                            var result = reader.ReadToEnd();
-                            _windowAdapter.Error(result);
-                            var lines = result.Split('\n');
                             return new WebSocketServerCredentials
                             {
-                                Server = lines[0],
-                                Key = lines[1]
+                                Server = reader.ReadLine(),
+                                Key = reader.ReadLine()
                             };
-                        }
             }
             return null;
         }
