@@ -9,7 +9,7 @@ namespace MyAgario
 {
     public partial class MainWindow : IWindowAdapter
     {
-        private readonly AgarioClient _agarioClient;
+        private readonly IAgarioClient _agarioClient;
         private readonly World _world = new World();
         private readonly TimeMeasure _measure = new TimeMeasure();
         private Camera _prevCamera, _currCamera;
@@ -17,7 +17,8 @@ namespace MyAgario
         public MainWindow()
         {
             InitializeComponent();
-            _agarioClient = new AgarioClient(this, _world);
+            _agarioClient = new AgarioPlayback(this, _world);
+                //new AgarioClient(this, _world, new AgarioRecorder());
             GC.KeepAlive(new DispatcherTimer(
                 TimeSpan.FromMilliseconds(40),
                 DispatcherPriority.Normal, On, Dispatcher)

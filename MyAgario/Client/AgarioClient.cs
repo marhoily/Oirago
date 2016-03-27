@@ -6,17 +6,28 @@ using WebSocketSharp;
 
 namespace MyAgario
 {
-    public class AgarioClient
+    public interface IAgarioClient
     {
+        void Spawn(string name);
+        void MoveTo(double x, double y);
+        void Spectate();
+        void Split();
+        void Eject();
+    }
+
+    public sealed class AgarioClient : IAgarioClient
+    {
+        private readonly AgarioRecorder _agarioRecorder;
         private readonly ServerCredentials _credentials;
         private readonly WorldChangeMessageProcessor _worldChangeMessageProcessor;
 
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
-        private FileStream _fileStream = File.Create("rec.bin");
 
-        public AgarioClient(IWindowAdapter windowAdapter, World world)
+        public AgarioClient(IWindowAdapter windowAdapter, World world,
+            AgarioRecorder agarioRecorder)
         {
+            _agarioRecorder = agarioRecorder;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
             _worldChangeMessageProcessor = new WorldChangeMessageProcessor(windowAdapter, world);
@@ -75,7 +86,7 @@ namespace MyAgario
         private void OnMessageReceived(object sender, EventArgs e)
         {
             var rawData = ((MessageEventArgs)e).RawData;
-            _fileStream.Write(rawData, 0, rawData.Length);
+            _agarioRecorder.Save(rawData);
 
             _dispatcher.BeginInvoke(new Action(() =>
             {
