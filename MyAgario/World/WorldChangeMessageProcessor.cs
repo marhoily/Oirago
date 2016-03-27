@@ -85,6 +85,7 @@ namespace MyAgario
                         .Select(t => $"{t.Item1}, {t.Item2}")));
                 }
             }
+            _windowAdapter.Tick();
         }
         static List<double> Xs1 = new List<double>();
         static List<double> Xs2 = new List<double>();
