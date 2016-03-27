@@ -7,5 +7,4 @@
         mc:Ignorable="d" 
         Title="MainWindow" Width="815" Height="637">
     <myAgario:AgarioControl/>
-
 </Window>
