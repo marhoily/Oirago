@@ -1,11 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Windows.Input;
-using System.Windows.Shapes;
-using MyAgario.Utils;
 
 namespace MyAgario
 {
@@ -13,11 +6,6 @@ namespace MyAgario
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly World _world;
-        private readonly CircularBuffer<double> _prevFramesLengthsMs = new CircularBuffer<double>(10);
-        private readonly CircularBuffer<int> _prevFrameRates = new CircularBuffer<int>(10);
-        private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-        private double _averageFrameLength;
-        private int _frameRate;
 
         public WorldChangeMessageProcessor(IWindowAdapter windowAdapter, World world)
         {
@@ -66,29 +54,8 @@ namespace MyAgario
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
-            _prevFramesLengthsMs.Enqueue(_stopwatch.Elapsed.TotalMilliseconds);
-            _stopwatch.Restart();
-            _prevFrameRates.Enqueue(_frameRate);
-            _frameRate = 0;
-            _averageFrameLength = _prevFramesLengthsMs.Average();
-            _windowAdapter.Print($"{_prevFrameRates.Average():f1}");
-            if (_world.MyBalls.Count > 0)
-            {
-                var ball = _world.MyBalls.First();
-                var ballUi = (BallUi)ball.Tag;
-                Xs1.Add(ballUi._currentState.X);
-                Xs2.Add(Mouse.GetPosition(ballUi.Ellipse).X);
-                if (Xs2.Count == 500)
-                {
-                    File.WriteAllText("output.csv",
-                        string.Join("\r\n", Xs1.Zip(Xs2, Tuple.Create)
-                        .Select(t => $"{t.Item1}, {t.Item2}")));
-                }
-            }
-            _windowAdapter.Tick();
+            _windowAdapter.AfterTick();
         }
-        static List<double> Xs1 = new List<double>();
-        static List<double> Xs2 = new List<double>();
 
         private void ProcessEating(Message.Tick tick)
         {
@@ -155,13 +122,6 @@ namespace MyAgario
             _world.Balls.Clear();
             _world.MyBalls.Clear();
         }
-        public void RenderFrame(object sender, EventArgs args)
-        {
-            _frameRate++;
-            var t = _stopwatch.Elapsed.TotalMilliseconds/_averageFrameLength;
-            foreach (var ball in _world.Balls)
-                ((BallUi)ball.Value.Tag).RenderFrame(t);
 
-        }
     }
 }

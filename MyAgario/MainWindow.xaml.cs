@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using static System.Double;
 
@@ -9,17 +10,21 @@ namespace MyAgario
 {
     public partial class MainWindow : IWindowAdapter
     {
-        private AgarioClient _agarioClient;
+        private readonly AgarioClient _agarioClient;
+        private readonly World _world = new World();
+        private readonly TimeMeasure _measure = new TimeMeasure();
 
         public MainWindow()
         {
             InitializeComponent();
+            _agarioClient = new AgarioClient(this, _world);
             GC.KeepAlive(new DispatcherTimer(
                 TimeSpan.FromMilliseconds(40),
                 DispatcherPriority.Background, On, Dispatcher)
             {
                 IsEnabled = true
             });
+            CompositionTarget.Rendering += OnRenderFrame;
         }
 
         private void On(object sender, EventArgs e)
@@ -35,9 +40,7 @@ namespace MyAgario
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _agarioClient = new AgarioClient(this);
             _agarioClient.Spawn("blah");
-            //_agarioClient.Spectate();
         }
 
         private void MainWindow_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -73,8 +76,10 @@ namespace MyAgario
         {
         }
 
-        public void Tick()
+        public void AfterTick()
         {
+            _measure.Tick();
+
             var my = _agarioClient.World.MyBalls.FirstOrDefault();
             if (my == null)
             {
@@ -101,5 +106,12 @@ namespace MyAgario
                 Math.Max(Border.ActualHeight / 1080, Border.ActualWidth / 1920);
         }
 
+        private void OnRenderFrame(object sender, EventArgs args)
+        {
+            var t = _measure.Frame();
+
+            foreach (var ball in _world.Balls)
+                ((BallUi)ball.Value.Tag).RenderFrame(t);
+        }
     }
 }

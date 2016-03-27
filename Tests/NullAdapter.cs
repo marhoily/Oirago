@@ -25,7 +25,7 @@ namespace Tests
             
         }
 
-        public void Tick()
+        public void AfterTick()
         {
             
         }

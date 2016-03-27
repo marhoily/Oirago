@@ -16,10 +16,11 @@ namespace MyAgario
         private readonly WebSocket _ws;
         private readonly Dispatcher _dispatcher;
         public IWindowAdapter Adapter { get; }
-        public World World { get; } = new World();
+        public World World { get; }
 
-        public AgarioClient(IWindowAdapter windowAdapter)
+        public AgarioClient(IWindowAdapter windowAdapter, World world)
         {
+            World = world;
             _dispatcher = Dispatcher.CurrentDispatcher;
             Console.WriteLine(BitConverter.IsLittleEndian);
             Adapter = windowAdapter;
@@ -39,9 +40,6 @@ namespace MyAgario
             _ws.OnMessage += OnMessageReceived;
             _ws.OnClose += (s, e) => Console.WriteLine("OnClose");
             _ws.Connect();
-
-            CompositionTarget.Rendering += _worldChangeMessageProcessor.RenderFrame;
-
         }
 
 
