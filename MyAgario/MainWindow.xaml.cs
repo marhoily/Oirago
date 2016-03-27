@@ -18,7 +18,7 @@ namespace MyAgario
         {
             InitializeComponent();
             _dispatcherTimer = new DispatcherTimer(
-                TimeSpan.FromMilliseconds(20),
+                TimeSpan.FromMilliseconds(40),
                 DispatcherPriority.Background, On, Dispatcher)
             {
                 IsEnabled = true
@@ -58,7 +58,7 @@ namespace MyAgario
             _translate.Y = (translateTargetY + _translate.Y)/2;
             //_agarioClient.MoveTo(5+10 * Math.Sin(_t), 5+10 * Math.Cos(_t));
             var position = Mouse.GetPosition(Border);
-            Trace.WriteLine($"{b.X}: {b.Y}");
+            //Trace.WriteLine($"{b.X}: {b.Y}");
             var dx = position.X - Border.ActualWidth/2;
             var dy = position.Y - Border.ActualHeight / 2;
 

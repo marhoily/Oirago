@@ -41,8 +41,7 @@ namespace MyAgario
             _ws.OnClose += (s, e) => Console.WriteLine("OnClose");
             _ws.Connect();
 
-            CompositionTarget.Rendering +=
-                _worldChangeMessageProcessor.RenderFrame;
+            CompositionTarget.Rendering += _worldChangeMessageProcessor.RenderFrame;
 
         }
 
