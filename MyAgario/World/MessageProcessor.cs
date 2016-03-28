@@ -30,6 +30,10 @@ namespace MyAgario
             var destroyAllBalls = msg as DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
 
+            var leadersBoard = msg as LeadersBoard;
+            if (leadersBoard != null)
+                _windowAdapter.Leaders(leadersBoard);
+
             var unknown = msg as Unknown;
             if (unknown != null) _windowAdapter.Error(
                 $"Unknown packet id {unknown.PacketId}");
@@ -48,7 +52,6 @@ namespace MyAgario
                     _windowAdapter.Update(ball, spectate);
                 }
         }
-
         private void Process(Tick tick)
         {
             ProcessEating(tick);
@@ -56,7 +59,6 @@ namespace MyAgario
             ProcessDisappearances(tick);
             _windowAdapter.AfterTick();
         }
-
         private void ProcessEating(Tick tick)
         {
             foreach (var e in tick.Eatings)
@@ -120,6 +122,7 @@ namespace MyAgario
                 msg.Id, 0, 0, 32, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }
+
         private void DestroyAll()
         {
             foreach (var ball in _world.Balls)

@@ -28,5 +28,11 @@ namespace Tests
         public void Error(string message)
         {
         }
+
+        public void Leaders(Message.LeadersBoard leadersBoard)
+        {
+            
+
+        }
     }
 }

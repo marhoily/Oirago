@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using static MyAgario.Message;
 
 namespace MyAgario
 {
@@ -42,7 +43,7 @@ namespace MyAgario
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Message.Spectate world)
+        public void Update(Ball newGuy, Spectate world)
             => ((BallUi)newGuy.Tag).Update(newGuy);
 
         public void Eats(Ball eater, Ball eaten) { }
@@ -89,6 +90,11 @@ namespace MyAgario
         {
             Dispatcher.BeginInvoke(new Action(
                 () => ErrorLabel.Text = message));
+        }
+
+        public void Leaders(LeadersBoard leadersBoard)
+        {
+            Leadersboard.ItemsSource = leadersBoard.Leaders.Select(l => l.Name);
         }
 
         private void LeadBalls(Point me)
