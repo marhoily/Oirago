@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace MyAgario
 {
@@ -10,8 +8,6 @@ namespace MyAgario
     {
         private IAgarioClient _agarioClient;
         private readonly World _world = new World();
-        private readonly TimeMeasure _measure = new TimeMeasure();
-        private Camera _prevCamera, _currCamera;
         private double _zoom = 5;
 
         public AgarioControl()
@@ -38,8 +34,6 @@ namespace MyAgario
                     _agarioClient.Spawn("blah");
                 }
             });
-
-            CompositionTarget.Rendering += OnRenderFrame;
         }
 
         public void Appears(Ball newGuy)
@@ -67,22 +61,33 @@ namespace MyAgario
 
         public void AfterTick()
         {
-            //var my = _world.MyBalls.FirstOrDefault();
             if (_world.MyBalls.Count > 0)
             {
-                var myAverage = new Point(
-                    _world.MyBalls.Average(b => b.State.X),
-                    _world.MyBalls.Average(b => b.State.Y));
-
-                _measure.Tick();
-                _currCamera = new Camera(
-                    CalcZoom() - Math.Log10(_zoom),
-                    ActualWidth / 2 - myAverage.X,
-                    ActualHeight / 2 - myAverage.Y);
-                _prevCamera = _currCamera;
+                var myAverage = _world.MyAverage;
                 LeadBalls(myAverage);
+                UpdateCenter(myAverage);
+                UpdateScale();
+                foreach (var ball in _world.Balls)
+                {
+                    ((BallUi)ball.Value.Tag).RenderFrame();
+                }
             }
             else _agarioClient.Spawn("blah");
+        }
+
+        private void UpdateScale()
+        {
+            var scale = _world.Zoom - Math.Log10(_zoom);
+            ScaleTransform.ScaleX = scale;
+            ScaleTransform.ScaleY = scale;
+        }
+
+        private void UpdateCenter(Point myAverage)
+        {
+            var x = ActualWidth/2 - myAverage.X;
+            var y = ActualHeight/2 - myAverage.Y;
+            TranslateTransform.X = (TranslateTransform.X + x)/2;
+            TranslateTransform.Y = (TranslateTransform.Y + y)/2;
         }
 
         public void Error(string message)
@@ -91,35 +96,14 @@ namespace MyAgario
                 () => ErrorLabel.Text = message));
         }
 
-        private void LeadBalls(Point my)
+        private void LeadBalls(Point me)
         {
             var position = Mouse.GetPosition(this);
             var sdx = position.X - ActualWidth / 2;
             var sdy = position.Y - ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
-            var calcZoom = CalcZoom();
-            var dx = sdx / calcZoom + my.X;
-            var dy = sdy / calcZoom + my.Y;
-            _agarioClient.MoveTo(dx, dy);
-        }
-
-        private double CalcZoom()
-        {
-            var totalSize = _world.MyBalls.Sum(x => x.State.Size);
-            return Math.Pow(Math.Min(64.0 / totalSize, 1), 0.1) + .15;
-        }
-
-        private void OnRenderFrame(object sender, EventArgs args)
-        {
-            if (_currCamera == null) return;
-            var t = _measure.Frame();
-            var camera = Camera.Middle(t, _prevCamera, _currCamera);
-            TranslateTransform.X = (TranslateTransform.X * 9 + camera.X) / 10;
-            TranslateTransform.Y = (TranslateTransform.Y * 9 + camera.Y) / 10;
-            ScaleTransform.ScaleX = ScaleTransform.ScaleY = camera.Zoom;
-
-            foreach (var ball in _world.Balls)
-                ((BallUi)ball.Value.Tag).RenderFrame(t);
+            var z = _world.Zoom;
+            _agarioClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)

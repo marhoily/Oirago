@@ -13,12 +13,11 @@ namespace MyAgario
     public class BallUi
     {
         private readonly SolidColorBrush _fillBrush = new SolidColorBrush();
+        private readonly SolidColorBrush _strokeBrush = new SolidColorBrush();
         public readonly Ellipse Ellipse;
         public readonly TextPath TextBlock;
-        private BallState _prevState;
         private BallState _currentState;
         private double _x, _y;
-        private SolidColorBrush _strokeBrush = new SolidColorBrush();
 
         public BallUi()
         {
@@ -43,7 +42,6 @@ namespace MyAgario
                 _y = st.Y;
             }
 
-            _prevState = _currentState;
             _currentState = st;
             _fillBrush.Color = st.IsVirus
                 ? Color.FromArgb(128, 0, 255, 0)
@@ -62,16 +60,15 @@ namespace MyAgario
             if (string.IsNullOrEmpty(st.Name)) return;
             TextBlock.Text = st.Name;
             TextBlock.Visibility = Visibility.Visible;
+
         }
 
-        public void RenderFrame(double t)
+        public void RenderFrame()
         {
-            if (_currentState == null) return;
-            if (_prevState == null) _prevState = _currentState;
-            var x = (1 - t) * _prevState.X + t * _currentState.X;
-            var y = (1 - t) * _prevState.Y + t * _currentState.Y;
-            _x = (9 * _x + x) / 10;
-            _y = (9 * _y + y) / 10;
+            var x = _currentState.X;
+            var y = _currentState.Y;
+            _x = ( _x + x) / 2;
+            _y = ( _y + y) / 2;
             Canvas.SetLeft(Ellipse, _x - Ellipse.Width / 2);
             Canvas.SetTop(Ellipse, _y - Ellipse.Height / 2);
             Canvas.SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
