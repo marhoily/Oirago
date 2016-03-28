@@ -28,9 +28,7 @@ namespace MyAgario
                     _agarioClient = new AgarioClient(this,
                         new AgarioRecorder(), t.Result);
                     var processor = new MessageProcessor(this, _world);
-                    _agarioClient.OnMessage += (s, msg) =>
-                        Dispatcher.BeginInvoke(new Action(() =>
-                            processor.ProcessMessage(msg)));
+                    _agarioClient.Attach(processor, Dispatcher);
                     _agarioClient.Spawn("blah");
                 }
             });

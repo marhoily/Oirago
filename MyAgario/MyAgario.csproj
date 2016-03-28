@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AgarioClientExtensions.cs" />
     <Compile Include="AgarioControl.xaml.cs">
       <DependentUpon>AgarioControl.xaml</DependentUpon>
     </Compile>
