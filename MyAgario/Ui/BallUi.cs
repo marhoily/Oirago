@@ -51,12 +51,13 @@ namespace MyAgario
             _strokeBrush.Color = st.IsVirus
                 ? Colors.Red
                 : Color.FromRgb(
-                    (byte) (st.R*.9),
-                    (byte) (st.G*.9),
-                    (byte) (st.B*.9));
+                    (byte) (st.R*.5),
+                    (byte) (st.G*.5),
+                    (byte) (st.B*.5));
 
             var s = Math.Max(20.0, st.Size);
             Ellipse.Width = Ellipse.Height = s * 2;
+            Ellipse.StrokeThickness = Math.Max(2, s / 20);
 
             if (string.IsNullOrEmpty(st.Name)) return;
             TextBlock.Text = st.Name;
