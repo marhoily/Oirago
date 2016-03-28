@@ -1,8 +1,10 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Ink;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using MyAgario.Utils;
 
 namespace MyAgario
 {
@@ -12,7 +14,7 @@ namespace MyAgario
     {
         private readonly SolidColorBrush _solidColorBrush;
         public readonly Ellipse Ellipse;
-        public readonly TextBlock TextBlock;
+        public readonly TextPath TextBlock;
         private BallState _prevState;
         private BallState _currentState;
 
@@ -20,10 +22,13 @@ namespace MyAgario
         {
             _solidColorBrush = new SolidColorBrush();
             Ellipse = new Ellipse { Fill = _solidColorBrush };
-            TextBlock = new TextBlock
+            TextBlock = new TextPath
             {
                 FontSize = 40,
-                Visibility = Visibility.Collapsed
+                Visibility = Visibility.Collapsed,
+                StrokeThickness = 1.0,
+                Fill = Brushes.White,
+                Stroke = Brushes.Black
             };
         }
 
@@ -56,12 +61,12 @@ namespace MyAgario
             if (_prevState == null) _prevState = _currentState;
             var x = (1 - t) * _prevState.X + t * _currentState.X;
             var y = (1 - t) * _prevState.Y + t * _currentState.Y;
-            _x = (9*_x + x)/10;
-            _y = (9*_y + y)/10;
+            _x = (9 * _x + x) / 10;
+            _y = (9 * _y + y) / 10;
             Canvas.SetLeft(Ellipse, _x - Ellipse.Width / 2);
             Canvas.SetTop(Ellipse, _y - Ellipse.Height / 2);
             Canvas.SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
-            Canvas.SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
+            Canvas.SetTop(TextBlock, _y - TextBlock.ActualHeight / 1.7);
         }
     }
 }
