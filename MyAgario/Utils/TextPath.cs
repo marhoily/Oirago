@@ -125,7 +125,7 @@ namespace MyAgario.Utils
         /// This method is called when any of our dependency properties change - it
         /// changes the geometry so it is drawn properly.
         /// </summary>
-        /// <param name="d">Depedency Object</param>
+        /// <param name="d">Dependency Object</param>
         /// <param name="e">EventArgs</param>
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

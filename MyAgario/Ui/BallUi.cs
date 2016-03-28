@@ -12,18 +12,21 @@ namespace MyAgario
 
     public class BallUi
     {
-        private readonly SolidColorBrush _solidColorBrush;
+        private readonly SolidColorBrush _fillBrush = new SolidColorBrush();
         public readonly Ellipse Ellipse;
         public readonly TextPath TextBlock;
         private BallState _prevState;
         private BallState _currentState;
+        private double _x, _y;
+        private SolidColorBrush _strokeBrush = new SolidColorBrush();
 
         public BallUi()
         {
-            _solidColorBrush = new SolidColorBrush();
-            Ellipse = new Ellipse { Fill = _solidColorBrush };
-            TextBlock = new TextPath
-            {
+            Ellipse = new Ellipse {
+                Fill = _fillBrush,
+                Stroke = _strokeBrush,
+            };
+            TextBlock = new TextPath {
                 FontSize = 40,
                 Visibility = Visibility.Collapsed,
                 StrokeThickness = 1.0,
@@ -32,29 +35,34 @@ namespace MyAgario
             };
         }
 
-        public void Update(BallState nextBallState, Message.Spectate world, bool isMine)
+        public void Update(BallState st, Message.Spectate world, bool isMine)
         {
             if (_currentState == null)
             {
-                _x = nextBallState.X;
-                _y = nextBallState.Y;
+                _x = st.X;
+                _y = st.Y;
             }
 
             _prevState = _currentState;
-            _currentState = nextBallState;
-            _solidColorBrush.Color = nextBallState.IsVirus
-                ? Colors.Green : Color.FromRgb(
-                    nextBallState.R, nextBallState.G, nextBallState.B);
+            _currentState = st;
+            _fillBrush.Color = st.IsVirus
+                ? Color.FromArgb(128, 0, 255, 0)
+                : Color.FromRgb(st.R, st.G, st.B);
+            _strokeBrush.Color = st.IsVirus
+                ? Colors.Red
+                : Color.FromRgb(
+                    (byte) (st.R*.9),
+                    (byte) (st.G*.9),
+                    (byte) (st.B*.9));
 
-            var s = Math.Max(20.0, nextBallState.Size);
+            var s = Math.Max(20.0, st.Size);
             Ellipse.Width = Ellipse.Height = s * 2;
 
-            if (string.IsNullOrEmpty(nextBallState.Name)) return;
-            TextBlock.Text = nextBallState.Name;
+            if (string.IsNullOrEmpty(st.Name)) return;
+            TextBlock.Text = st.Name;
             TextBlock.Visibility = Visibility.Visible;
         }
 
-        private double _x, _y;
         public void RenderFrame(double t)
         {
             if (_currentState == null) return;
