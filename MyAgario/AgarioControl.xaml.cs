@@ -45,9 +45,7 @@ namespace MyAgario
         public void Update(Ball newGuy, Message.Spectate world)
             => ((BallUi)newGuy.Tag).Update(newGuy);
 
-        public void Eats(Ball eater, Ball eaten)
-        {
-        }
+        public void Eats(Ball eater, Ball eaten) { }
 
         public void Remove(Ball dying)
         {
@@ -64,9 +62,10 @@ namespace MyAgario
                 LeadBalls(myAverage);
                 UpdateCenter(myAverage);
                 UpdateScale();
-                var zOrder = 0;
-                foreach (var ball in _world.Balls.OrderBy(b => b.Value.State.Size))
-                    ((BallUi)ball.Value.Tag).RenderFrame(++zOrder);
+                var zIndex = 0;
+                var balls = _world.Balls.OrderBy(b => b.Value.State.Size);
+                foreach (var ball in balls)
+                    ((BallUi)ball.Value.Tag).RenderFrame(++zIndex);
             }
             else _agarioClient.Spawn("blah");
         }
