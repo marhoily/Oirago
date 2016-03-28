@@ -28,9 +28,7 @@ namespace MyAgario
                     var processor = new MessageProcessor(this, _world);
                     _agarioClient.OnMessage += (s, msg) =>
                         Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            processor.ProcessMessage(msg);
-                        }));
+                            processor.ProcessMessage(msg)));
                     _agarioClient.Spawn("blah");
                 }
             });
@@ -43,10 +41,8 @@ namespace MyAgario
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Message.Spectate world)
-        {
-            ((BallUi)newGuy.Tag).Update(newGuy.State, world, newGuy.IsMine);
-        }
+        public void Update(Ball newGuy, Message.Spectate world) 
+            => ((BallUi)newGuy.Tag).Update(newGuy);
 
         public void Eats(Ball eater, Ball eaten)
         {

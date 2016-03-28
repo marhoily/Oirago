@@ -87,6 +87,11 @@ namespace MyAgario
                     _world.Balls.Add(state.Id, newGuy);
                     _windowAdapter.Appears(newGuy);
                 }
+                else
+                {
+                    if (newGuy.State.Name != null)
+                        state.Name = newGuy.State.Name;
+                }
                 newGuy.State = state;
                 _windowAdapter.Update(newGuy, _world.SpectateViewPort);
             }

@@ -112,7 +112,7 @@ namespace MyAgario
             public readonly short Size;
             public readonly byte R, G, B;
             public readonly bool IsVirus;
-            public readonly string Name;
+            public string Name;
 
             public Updates(
                 uint id, int x, int y,
