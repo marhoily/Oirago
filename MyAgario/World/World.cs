@@ -2,15 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using static System.Math;
+using static MyAgario.Message;
 
 namespace MyAgario
 {
     public sealed class World
     {
-        public readonly Dictionary<uint, Ball> Balls = new Dictionary<uint, Ball>();
+        public readonly Dictionary<uint, Ball> 
+            Balls = new Dictionary<uint, Ball>();
         public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
-        public Message.Spectate SpectateViewPort = new Message.Spectate(0, 0, 1);
-        public Message.WorldSize WorldSize;
+        public Spectate SpectateViewPort = new Spectate(0, 0, 1);
+        public WorldSize WorldSize;
 
         public Point MyAverage => new Point(
             MyBalls.Average(b => b.State.X),

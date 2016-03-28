@@ -1,3 +1,5 @@
+using static MyAgario.Message;
+
 namespace MyAgario
 {
     public sealed class MessageProcessor
@@ -13,27 +15,27 @@ namespace MyAgario
 
         public void ProcessMessage(Message msg)
         {
-            var tick = msg as Message.Tick;
+            var tick = msg as Tick;
             if (tick != null) Process(tick);
 
-            var newId = msg as Message.NewId;
+            var newId = msg as NewId;
             if (newId != null) Process(newId);
 
-            var spectate = msg as Message.Spectate;
+            var spectate = msg as Spectate;
             if (spectate != null) Spectate(spectate);
 
-            var worldSize = msg as Message.WorldSize;
+            var worldSize = msg as WorldSize;
             if (worldSize != null) _world.WorldSize = worldSize;
 
-            var destroyAllBalls = msg as Message.DestroyAllBalls;
+            var destroyAllBalls = msg as DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
 
-            var unknown = msg as Message.Unknown;
+            var unknown = msg as Unknown;
             if (unknown != null) _windowAdapter.Error(
                 $"Unknown packet id {unknown.PacketId}");
         }
 
-        private void Spectate(Message.Spectate spectate)
+        private void Spectate(Spectate spectate)
         {
             var zoom = spectate.Zoom;
             var dx = _world.SpectateViewPort.X - spectate.X;
@@ -47,7 +49,7 @@ namespace MyAgario
                 }
         }
 
-        private void Process(Message.Tick tick)
+        private void Process(Tick tick)
         {
             ProcessEating(tick);
             ProcessUpdating(tick);
@@ -55,7 +57,7 @@ namespace MyAgario
             _windowAdapter.AfterTick();
         }
 
-        private void ProcessEating(Message.Tick tick)
+        private void ProcessEating(Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
@@ -76,7 +78,7 @@ namespace MyAgario
                 }
             }
         }
-        private void ProcessUpdating(Message.Tick tick)
+        private void ProcessUpdating(Tick tick)
         {
             foreach (var state in tick.Updates)
             {
@@ -96,7 +98,7 @@ namespace MyAgario
                 _windowAdapter.Update(newGuy, _world.SpectateViewPort);
             }
         }
-        private void ProcessDisappearances(Message.Tick tick)
+        private void ProcessDisappearances(Tick tick)
         {
             foreach (var ballId in tick.Disappearances)
             {
@@ -109,12 +111,12 @@ namespace MyAgario
                 _windowAdapter.Remove(dying);
             }
         }
-        private void Process(Message.NewId msg)
+        private void Process(NewId msg)
         {
             var me = new Ball(true);
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
-            me.State = new Message.Updates(
+            me.State = new Updates(
                 msg.Id, 0, 0, 32, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }
