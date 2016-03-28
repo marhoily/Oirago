@@ -49,7 +49,7 @@ namespace MyAgario
                 if (ball.IsFood || ball.State.IsVirus)
                 {
                     ball.Move((int)(dx * zoom), (int)(dy * zoom));
-                    _windowAdapter.Update(ball, spectate);
+                    _windowAdapter.Update(ball);
                 }
         }
         private void Process(Tick tick)
@@ -97,7 +97,7 @@ namespace MyAgario
                         state.Name = newGuy.State.Name;
                 }
                 newGuy.State = state;
-                _windowAdapter.Update(newGuy, _world.SpectateViewPort);
+                _windowAdapter.Update(newGuy);
             }
         }
         private void ProcessDisappearances(Tick tick)

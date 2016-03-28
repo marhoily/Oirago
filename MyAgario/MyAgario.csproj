@@ -72,6 +72,9 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SpectateWindow.xaml.cs">
+      <DependentUpon>SpectateWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimeMeasure.cs" />
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />
@@ -94,6 +97,10 @@
     </Compile>
     <Compile Include="World\Ball.cs" />
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpectateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

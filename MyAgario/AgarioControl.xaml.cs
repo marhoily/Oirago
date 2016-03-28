@@ -43,7 +43,7 @@ namespace MyAgario
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Spectate world)
+        public void Update(Ball newGuy)
             => ((BallUi)newGuy.Tag).Update(newGuy);
 
         public void Eats(Ball eater, Ball eaten) { }
