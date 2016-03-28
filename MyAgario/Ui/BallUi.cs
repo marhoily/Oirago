@@ -3,7 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using MyAgario.Utils;
+using static System.Windows.Controls.Canvas;
+using static System.Windows.Controls.Panel;
+using static System.Windows.Media.Color;
 
 namespace MyAgario
 {
@@ -41,12 +43,11 @@ namespace MyAgario
 
             _ball = ball;
             var color = ball.State.IsVirus
-                ? Color.FromArgb(128, 0, 255, 0)
-                : Color.FromRgb(ball.State.R, ball.State.G, ball.State.B);
+                ? FromArgb(128, 0, 255, 0)
+                : FromRgb(ball.State.R, ball.State.G, ball.State.B);
             _fillBrush.Color = color;
             _strokeBrush.Color = ball.State.IsVirus
-                ? Colors.Red
-                : Color.FromRgb(
+                ? Colors.Red : FromRgb(
                     (byte)(color.R * .5),
                     (byte)(color.G * .5),
                     (byte)(color.B * .5));
@@ -59,8 +60,7 @@ namespace MyAgario
             {
                 TextBlock.Foreground = 
                     color.R + color.G + color.B > 128*3
-                    ? Brushes.Black
-                    : Brushes.White;
+                    ? Brushes.Black : Brushes.White;
 
                 TextBlock.Text = ball.State.Name == null 
                     ? ball.State.Size.ToString()
@@ -70,17 +70,20 @@ namespace MyAgario
             }
         }
 
-        public void RenderFrame()
+        public void RenderFrame(int zIndex)
         {
             var x = _ball.State.X;
             var y = _ball.State.Y;
             _x = (_x + x) / 2;
             _y = (_y + y) / 2;
 
-            Canvas.SetLeft(Ellipse, _x - Ellipse.Width / 2);
-            Canvas.SetTop(Ellipse, _y - Ellipse.Height / 2);
-            Canvas.SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
-            Canvas.SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
+            SetZIndex(Ellipse, zIndex);
+            SetZIndex(TextBlock, zIndex);
+
+            SetLeft(Ellipse, _x - Ellipse.Width / 2);
+            SetTop(Ellipse, _y - Ellipse.Height / 2);
+            SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
+            SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
         }
     }
 }

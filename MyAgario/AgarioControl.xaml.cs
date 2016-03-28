@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -41,7 +42,7 @@ namespace MyAgario
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy, Message.Spectate world) 
+        public void Update(Ball newGuy, Message.Spectate world)
             => ((BallUi)newGuy.Tag).Update(newGuy);
 
         public void Eats(Ball eater, Ball eaten)
@@ -63,10 +64,9 @@ namespace MyAgario
                 LeadBalls(myAverage);
                 UpdateCenter(myAverage);
                 UpdateScale();
-                foreach (var ball in _world.Balls)
-                {
-                    ((BallUi)ball.Value.Tag).RenderFrame();
-                }
+                var zOrder = 0;
+                foreach (var ball in _world.Balls.OrderBy(b => b.Value.State.Size))
+                    ((BallUi)ball.Value.Tag).RenderFrame(++zOrder);
             }
             else _agarioClient.Spawn("blah");
         }
@@ -80,10 +80,10 @@ namespace MyAgario
 
         private void UpdateCenter(Point myAverage)
         {
-            var x = ActualWidth/2 - myAverage.X;
-            var y = ActualHeight/2 - myAverage.Y;
-            TranslateTransform.X = (TranslateTransform.X + x)/2;
-            TranslateTransform.Y = (TranslateTransform.Y + y)/2;
+            var x = ActualWidth / 2 - myAverage.X;
+            var y = ActualHeight / 2 - myAverage.Y;
+            TranslateTransform.X = (TranslateTransform.X + x) / 2;
+            TranslateTransform.Y = (TranslateTransform.Y + y) / 2;
         }
 
         public void Error(string message)
