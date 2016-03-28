@@ -69,6 +69,9 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Client\AgarioPlayback.cs" />
     <Compile Include="Client\AgarioRecorder.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimeMeasure.cs" />
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />
@@ -84,16 +87,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Client\AgarioClient.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="World\Ball.cs" />
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Protocol\Packet.cs" />

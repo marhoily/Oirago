@@ -123,5 +123,18 @@ namespace MyAgario
             _zoom -= Math.Sign(e.Delta) * .1;
             ZoomLabel.Text = _zoom.ToString("f1");
         }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Space:
+                    _agarioClient.Split();
+                    break;
+                case Key.W:
+                    _agarioClient.Eject();
+                    break;
+            }
+        }
     }
 }
