@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -17,7 +18,6 @@ namespace MyAgario
         {
             InitializeComponent();
 
-            //_agarioClient =new AgarioPlayback(this, _world);
             var entryServer = new EntryServer(this);
             entryServer.GetFfaServer().ContinueWith(t =>
             {
@@ -67,16 +67,20 @@ namespace MyAgario
 
         public void AfterTick()
         {
-            var my = _world.MyBalls.FirstOrDefault();
-            if (my != null)
+            //var my = _world.MyBalls.FirstOrDefault();
+            if (_world.MyBalls.Count > 0)
             {
+                var myAverage = new Point(
+                    _world.MyBalls.Average(b => b.State.X),
+                    _world.MyBalls.Average(b => b.State.Y));
+
                 _measure.Tick();
                 _currCamera = new Camera(
                     CalcZoom() - Math.Log10(_zoom),
-                    ActualWidth / 2 - my.State.X,
-                    ActualHeight / 2 - my.State.Y);
+                    ActualWidth / 2 - myAverage.X,
+                    ActualHeight / 2 - myAverage.Y);
                 _prevCamera = _currCamera;
-                LeadBalls(my);
+                LeadBalls(myAverage);
             }
             else _agarioClient.Spawn("blah");
         }
@@ -87,15 +91,15 @@ namespace MyAgario
                 () => ErrorLabel.Text = message));
         }
 
-        private void LeadBalls(Ball my)
+        private void LeadBalls(Point my)
         {
             var position = Mouse.GetPosition(this);
             var sdx = position.X - ActualWidth / 2;
             var sdy = position.Y - ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
             var calcZoom = CalcZoom();
-            var dx = sdx / calcZoom + my.State.X;
-            var dy = sdy / calcZoom + my.State.Y;
+            var dx = sdx / calcZoom + my.X;
+            var dy = sdy / calcZoom + my.Y;
             _agarioClient.MoveTo(dx, dy);
         }
 
