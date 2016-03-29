@@ -41,8 +41,8 @@ namespace MyAgario
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
-        public void Update(Ball newGuy)
-            => ((BallUi)newGuy.Tag).Update(newGuy);
+        //public void Update(Ball newGuy)
+        //    => ((BallUi)newGuy.Tag).Update(newGuy);
 
         public void Eats(Ball eater, Ball eaten) { }
 
@@ -63,8 +63,13 @@ namespace MyAgario
                 UpdateScale();
                 var zIndex = 0;
                 var balls = _world.Balls.OrderBy(b => b.Value.State.Size);
+                var mySize = _world.MyBalls.Max(b => b.State.Size);
                 foreach (var ball in balls)
-                    ((BallUi)ball.Value.Tag).RenderFrame(++zIndex);
+                {
+                    var b = ball.Value;
+                    var ui = (BallUi)b.Tag;
+                    ui.Update(b, ++zIndex, mySize);
+                }
             }
             else _agarioClient.Spawn("blah");
         }

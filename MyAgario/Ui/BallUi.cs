@@ -15,8 +15,8 @@ namespace MyAgario
         private readonly SolidColorBrush _strokeBrush = new SolidColorBrush();
         public readonly Ellipse Ellipse;
         public readonly TextBlock TextBlock;
-        private Ball _ball;
-        private double _x, _y;
+        private double _x = double.NaN;
+        private double _y = double.NaN;
 
         public BallUi()
         {
@@ -33,49 +33,40 @@ namespace MyAgario
             };
         }
 
-        public void Update(Ball ball)
+        public void Update(Ball ball, int zIndex, short mySize)
         {
-            if (_ball == null)
+            var t = ball.State;
+            if (double.IsNaN(_x))
             {
-                _x = ball.State.X;
-                _y = ball.State.Y;
+                _x = t.X;
+                _y = t.Y;
+
+                var color = t.IsVirus
+                    ? FromArgb(128, 0, 255, 0) : FromRgb(t.R, t.G, t.B);
+                _fillBrush.Color = color;
+                _strokeBrush.Color = t.IsVirus ? Colors.Red
+                    : FromRgb((byte) (t.R*.5), (byte) (t.G*.5), (byte) (t.B*.5));
             }
 
-            _ball = ball;
-            var color = ball.State.IsVirus
-                ? FromArgb(128, 0, 255, 0)
-                : FromRgb(ball.State.R, ball.State.G, ball.State.B);
-            _fillBrush.Color = color;
-            _strokeBrush.Color = ball.State.IsVirus
-                ? Colors.Red : FromRgb(
-                    (byte)(color.R * .5),
-                    (byte)(color.G * .5),
-                    (byte)(color.B * .5));
-
-            var s = Math.Max(20.0, ball.State.Size);
+            var s = Math.Max(20.0, t.Size);
             Ellipse.Width = Ellipse.Height = s * 2;
             Ellipse.StrokeThickness = Math.Max(2, s / 20);
 
-            if (!ball.IsFood && !ball.State.IsVirus)
+            if (!ball.IsFood && !t.IsVirus)
             {
                 TextBlock.Foreground = 
-                    color.R + color.G + color.B > 128*3
+                    t.R + t.G + t.B > 128*3
                     ? Brushes.Black : Brushes.White;
 
-                TextBlock.Text = ball.State.Name == null 
-                    ? ball.State.Size.ToString()
-                    : ball.State.Name + "\r\n" + ball.State.Size;
+                TextBlock.Text = t.Name == null 
+                    ? t.Size.ToString()
+                    : t.Name + "\r\n" + t.Size;
                 TextBlock.FontSize = s/2;
                 TextBlock.Visibility = Visibility.Visible;
             }
-        }
 
-        public void RenderFrame(int zIndex)
-        {
-            var x = _ball.State.X;
-            var y = _ball.State.Y;
-            _x = (_x + x) / 2;
-            _y = (_y + y) / 2;
+            _x = (_x + t.X) / 2;
+            _y = (_y + t.Y) / 2;
 
             SetZIndex(Ellipse, zIndex);
             SetZIndex(TextBlock, zIndex);

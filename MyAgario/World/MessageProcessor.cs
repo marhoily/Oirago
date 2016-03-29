@@ -21,8 +21,8 @@ namespace MyAgario
             var newId = msg as NewId;
             if (newId != null) Process(newId);
 
-            var spectate = msg as Spectate;
-            if (spectate != null) Spectate(spectate);
+            //var spectate = msg as Spectate;
+            //if (spectate != null) Spectate(spectate);
 
             var worldSize = msg as WorldSize;
             if (worldSize != null) _world.WorldSize = worldSize;
@@ -39,19 +39,19 @@ namespace MyAgario
                 $"Unknown packet id {unknown.PacketId}");
         }
 
-        private void Spectate(Spectate spectate)
-        {
-            var zoom = spectate.Zoom;
-            var dx = _world.SpectateViewPort.X - spectate.X;
-            var dy = _world.SpectateViewPort.Y - spectate.Y;
-            _world.SpectateViewPort = spectate;
-            foreach (var ball in _world.Balls.Values)
-                if (ball.IsFood || ball.State.IsVirus)
-                {
-                    ball.Move((int)(dx * zoom), (int)(dy * zoom));
-                    _windowAdapter.Update(ball);
-                }
-        }
+        //private void Spectate(Spectate spectate)
+        //{
+        //    var zoom = spectate.Zoom;
+        //    var dx = _world.SpectateViewPort.X - spectate.X;
+        //    var dy = _world.SpectateViewPort.Y - spectate.Y;
+        //    _world.SpectateViewPort = spectate;
+        //    foreach (var ball in _world.Balls.Values)
+        //        if (ball.IsFood || ball.State.IsVirus)
+        //        {
+        //            ball.Move((int)(dx * zoom), (int)(dy * zoom));
+        //            _windowAdapter.Update(ball);
+        //        }
+        //}
         private void Process(Tick tick)
         {
             ProcessEating(tick);
@@ -97,7 +97,7 @@ namespace MyAgario
                         state.Name = newGuy.State.Name;
                 }
                 newGuy.State = state;
-                _windowAdapter.Update(newGuy);
+                //_windowAdapter.Update(newGuy);
             }
         }
         private void ProcessDisappearances(Tick tick)
