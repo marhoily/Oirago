@@ -104,7 +104,7 @@ namespace MyAgario
             var sdx = position.X - ActualWidth / 2;
             var sdy = position.Y - ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
-            var z = _world.Zoom;
+            var z = _world.Zoom04;
             _agarioClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 
