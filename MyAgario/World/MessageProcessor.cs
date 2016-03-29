@@ -97,7 +97,6 @@ namespace MyAgario
                         state.Name = newGuy.State.Name;
                 }
                 newGuy.State = state;
-                //_windowAdapter.Update(newGuy);
             }
         }
         private void ProcessDisappearances(Tick tick)

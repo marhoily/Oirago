@@ -40,13 +40,14 @@ namespace MyAgario
             {
                 _x = t.X;
                 _y = t.Y;
-
-                var color = t.IsVirus
-                    ? FromArgb(128, 0, 255, 0) : FromRgb(t.R, t.G, t.B);
-                _fillBrush.Color = color;
-                _strokeBrush.Color = t.IsVirus ? Colors.Red
-                    : FromRgb((byte) (t.R*.5), (byte) (t.G*.5), (byte) (t.B*.5));
             }
+            var color = t.IsVirus
+                ? FromArgb(128, 0, 255, 0) : FromRgb(t.R, t.G, t.B);
+            
+            _fillBrush.Color = color;
+            _strokeBrush.Color = t.IsVirus ? Colors.Red
+                : FromRgb((byte)(t.R * .5), (byte)(t.G * .5), (byte)(t.B * .5));
+
 
             var s = Math.Max(20.0, t.Size);
             Ellipse.Width = Ellipse.Height = s * 2;
@@ -54,14 +55,17 @@ namespace MyAgario
 
             if (!ball.IsFood && !t.IsVirus)
             {
-                TextBlock.Foreground = 
-                    t.R + t.G + t.B > 128*3
+                TextBlock.Foreground =
+                    t.R * 0.2126 + t.G * 0.7152 + t.B * 0.0722 < 128 * 3
                     ? Brushes.Black : Brushes.White;
 
-                TextBlock.Text = t.Name == null 
-                    ? t.Size.ToString()
-                    : t.Name + "\r\n" + t.Size;
-                TextBlock.FontSize = s/2;
+                var st = t.Size.ToString();
+                if (mySize*.9 > s) st += "*";
+                if (mySize*.7 * .9 > s) st += "*";
+                if (mySize < s * .9) st = "*" + st;
+                if (mySize < s * .7 * .9) st = "*" + st;
+                TextBlock.Text = t.Name == null ? st : $"{t.Name}\r\n{st}";
+                TextBlock.FontSize = s / 2;
                 TextBlock.Visibility = Visibility.Visible;
             }
 
