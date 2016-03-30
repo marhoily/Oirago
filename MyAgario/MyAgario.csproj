@@ -70,9 +70,11 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Client\AgarioPlayback.cs" />
     <Compile Include="Client\AgarioRecorder.cs" />
+    <Compile Include="Client\IAgarioClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RectangleExtensions.cs" />
     <Compile Include="SpectateWindow.xaml.cs">
       <DependentUpon>SpectateWindow.xaml</DependentUpon>
     </Compile>

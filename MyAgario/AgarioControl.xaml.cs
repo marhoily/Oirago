@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using static MyAgario.Message;
 
@@ -146,22 +145,6 @@ namespace MyAgario
                     _gameClient.Eject();
                     break;
             }
-        }
-    }
-    public static class RectangleExtensions
-    {
-        public static Rect ToRectangle(this ViewPort w)
-        {
-            return new Rect(w.MaxX, w.MaxY,
-                w.MinX - w.MaxX, w.MinY - w.MaxY);
-        }
-
-        public static void SetOnCanvas(this FrameworkElement e, Rect r)
-        {
-            Canvas.SetLeft(e, r.Left);
-            Canvas.SetTop(e, r.Top);
-            e.Width = r.Width;
-            e.Height = r.Height;
         }
     }
 }
