@@ -12,7 +12,7 @@ namespace MyAgario
             Balls = new Dictionary<uint, Ball>();
         public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
         public Spectate SpectateViewPort = new Spectate(0, 0, 1);
-        public WorldSize WorldSize;
+        public ViewPort ViewPort;
 
         public Point MyAverage => new Point(
             MyBalls.Average(b => b.State.X),

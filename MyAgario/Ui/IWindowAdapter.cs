@@ -10,5 +10,6 @@ namespace MyAgario
         void AfterTick();
         void Error(string message);
         void Leaders(LeadersBoard leadersBoard);
+        void WorldSize(ViewPort viewPort);
     }
 }

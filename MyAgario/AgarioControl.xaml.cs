@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using static MyAgario.Message;
 
 namespace MyAgario
@@ -12,7 +14,6 @@ namespace MyAgario
         private IAgarioClient _gameClient;
         private readonly World _world = new World();
         private double _zoom = 5;
-        private WorldSize _worldSize;
 
         public AgarioControl()
         {
@@ -76,7 +77,11 @@ namespace MyAgario
                     ui.Update(b, ++zIndex, mySize);
                 }
             }
-            else _gameClient.Spawn("blah");
+            else
+            {
+                _worldBoundaries = Rect.Empty;
+                _gameClient.Spawn("blah");
+            }
         }
 
         private void UpdateScale()
@@ -103,6 +108,17 @@ namespace MyAgario
         public void Leaders(LeadersBoard leadersBoard)
         {
             Leadersboard.ItemsSource = leadersBoard.Leaders.Select(l => l.Name);
+        }
+
+        private Rect _worldBoundaries;
+        public void WorldSize(ViewPort viewPort)
+        {
+            var r = viewPort.ToRectangle();
+            _worldBoundaries = !_worldBoundaries.IsEmpty
+                ? Rect.Union(_worldBoundaries, r) : r;
+            ViewPort.SetOnCanvas(r);
+            WorldBoundaries.SetOnCanvas(Rect
+                .Inflate(_worldBoundaries, -10, -10));
         }
 
         private void LeadBalls(Point me)
@@ -132,6 +148,22 @@ namespace MyAgario
                     _gameClient.Eject();
                     break;
             }
+        }
+    }
+    public static class RectangleExtensions
+    {
+        public static Rect ToRectangle(this ViewPort w)
+        {
+            return new Rect(w.MaxX, w.MaxY,
+                w.MinX - w.MaxX, w.MinY - w.MaxY);
+        }
+
+        public static void SetOnCanvas(this FrameworkElement e, Rect r)
+        {
+            Canvas.SetLeft(e, r.Left);
+            Canvas.SetTop(e, r.Top);
+            e.Width = r.Width;
+            e.Height = r.Height;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Windows.Shapes;
 using static MyAgario.Message;
 
 namespace MyAgario
@@ -24,8 +25,8 @@ namespace MyAgario
             //var spectate = msg as Spectate;
             //if (spectate != null) Spectate(spectate);
 
-            var worldSize = msg as WorldSize;
-            if (worldSize != null) _world.WorldSize = worldSize;
+            var worldSize = msg as ViewPort;
+            if (worldSize != null) ProcessSize(worldSize);
 
             var destroyAllBalls = msg as DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
@@ -37,6 +38,12 @@ namespace MyAgario
             var unknown = msg as Unknown;
             if (unknown != null) _windowAdapter.Error(
                 $"Unknown packet id {unknown.PacketId}");
+        }
+
+        private void ProcessSize(ViewPort viewPort)
+        {
+            _world.ViewPort = viewPort;
+            _windowAdapter.WorldSize(viewPort);
         }
 
         //private void Spectate(Spectate spectate)
@@ -131,4 +138,5 @@ namespace MyAgario
         }
 
     }
+
 }

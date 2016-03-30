@@ -34,5 +34,10 @@ namespace Tests
             
 
         }
+
+        public void WorldSize(Message.ViewPort viewPort)
+        {
+            
+        }
     }
 }

@@ -90,13 +90,13 @@ namespace MyAgario
             var myBallId = p.ReadUInt();
             return new NewId(myBallId);
         }
-        private static WorldSize ReadWorldSize(this Packet p)
+        private static ViewPort ReadWorldSize(this Packet p)
         {
             var minX = p.ReadDouble();
             var minY = p.ReadDouble();
             var maxX = p.ReadDouble();
             var maxY = p.ReadDouble();
-            return new WorldSize(minX, minY, maxX, maxY);
+            return new ViewPort(minX, minY, maxX, maxY);
         }
 
         private static IEnumerable<Leader> ReadLeaders(this Packet p)
