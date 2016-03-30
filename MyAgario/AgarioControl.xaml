@@ -13,10 +13,9 @@
                     <ScaleTransform x:Name="ScaleTransform" />
                 </TransformGroup>
             </Canvas.RenderTransform>
-            <Rectangle x:Name="WorldBoundaries"
-                       Fill="MidnightBlue"/>
-            <Rectangle x:Name="ViewPort"
-                       Fill="Purple"/>
+            <Rectangle x:Name="Back" Fill="Purple"/>
+            <Rectangle x:Name="WorldBoundaries" Fill="MidnightBlue"/>
+            <Rectangle x:Name="ViewPort" Fill="Black"/>
         </Canvas>
         <TextBlock x:Name="PrintLabel" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         <TextBlock x:Name="ZoomLabel"  VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="3"/>

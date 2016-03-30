@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
 using static MyAgario.Message;
 
 namespace MyAgario
@@ -117,8 +116,8 @@ namespace MyAgario
             _worldBoundaries = !_worldBoundaries.IsEmpty
                 ? Rect.Union(_worldBoundaries, r) : r;
             ViewPort.SetOnCanvas(r);
-            WorldBoundaries.SetOnCanvas(Rect
-                .Inflate(_worldBoundaries, -10, -10));
+            WorldBoundaries.SetOnCanvas(_worldBoundaries);
+            Back.SetOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
         }
 
         private void LeadBalls(Point me)
