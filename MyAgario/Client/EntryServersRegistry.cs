@@ -7,30 +7,30 @@ using Newtonsoft.Json;
 
 namespace MyAgario
 {
-    public class EntryServer
+    public class EntryServersRegistry
     {
         private readonly IWindowAdapter _windowAdapter;
         private const string InitKey = "154669603";
 
-        public EntryServer(IWindowAdapter windowAdapter)
+        public EntryServersRegistry(IWindowAdapter windowAdapter)
         {
             _windowAdapter = windowAdapter;
         }
 
-        public Task<WebSocketServerCredentials> GetFfaServer(string region = "EU-London")
+        public Task<ServerConnection> GetFfaServer(string region = "EU-London")
         {
             return Do(region + "\n" + InitKey);
         }
-        public Task<WebSocketServerCredentials> GetExperimentalServer(string region = "EU-London")
+        public Task<ServerConnection> GetExperimentalServer(string region = "EU-London")
         {
             return Do(region + ":experimental\n" + InitKey);
         }
-        public Task<WebSocketServerCredentials> GetTeamsServer(string region = "EU-London")
+        public Task<ServerConnection> GetTeamsServer(string region = "EU-London")
         {
             return Do(region + ":teams\n" + InitKey);
         }
         
-        private async Task<WebSocketServerCredentials> Do(string postData)
+        private async Task<ServerConnection> Do(string postData)
         {
             var result = await DoInner(postData);
             while (result == null)
@@ -41,7 +41,7 @@ namespace MyAgario
             if (!File.Exists("cache.json")) return await DoButCache(postData);
             var deserializeObject = JsonConvert.DeserializeObject(File.ReadAllText("cache.json"));
         */
-        private async Task<WebSocketServerCredentials> DoInner(string postData)
+        private async Task<ServerConnection> DoInner(string postData)
         {
             var request = (HttpWebRequest)
                 WebRequest.Create("http://m.agar.io/");
@@ -62,7 +62,7 @@ namespace MyAgario
                 using (var dataStream = response.GetResponseStream())
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
-                            return new WebSocketServerCredentials
+                            return new ServerConnection
                             {
                                 Server = reader.ReadLine(),
                                 Key = reader.ReadLine()

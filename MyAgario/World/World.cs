@@ -21,6 +21,6 @@ namespace MyAgario
         public double Zoom => Pow(Min(64.0 / 
             MyBalls.Sum(x => x.State.Size), 1), 0.1) + .15;
         public double Zoom04 => Pow(Min(64.0 / 
-            MyBalls.Sum(x => x.State.Size), 1), 0.4);
+            MyBalls.Sum(x => x.State.Size), 1), 0.4) + .15;
     }
 }

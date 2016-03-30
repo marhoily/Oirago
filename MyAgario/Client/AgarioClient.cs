@@ -20,25 +20,16 @@ namespace MyAgario
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly AgarioRecorder _agarioRecorder;
-        private readonly WebSocketServerCredentials _credentials;
         private readonly WebSocket _ws;
 
         public AgarioClient(IWindowAdapter windowAdapter,
-            AgarioRecorder agarioRecorder,
-            WebSocketServerCredentials credentials)
+            AgarioRecorder agarioRecorder, ServerConnection connection)
         {
             _windowAdapter = windowAdapter;
             _agarioRecorder = agarioRecorder;
-            _credentials = credentials;
-            _windowAdapter.Error("opening...");
-            _ws = new WebSocket("ws://" + _credentials.Server)
-            {
-                Origin = "http://agar.io"
-            };
-            _ws.OnOpen += OnOpen;
-            _ws.OnError += (s, e) => windowAdapter.Error(e.Message);
+
+            _ws = connection.ToWebSocket(_windowAdapter);
             _ws.OnMessage += OnMessageReceived;
-            _ws.OnClose += (s, e) => _ws.Connect();
             _ws.Connect();
         }
 
@@ -70,12 +61,6 @@ namespace MyAgario
         public void Split() { _ws.Send(new byte[] { 17 }); }
         public void Eject() { _ws.Send(new byte[] { 21 }); }
 
-        private void OnOpen(object sender, EventArgs e)
-        {
-            _windowAdapter.Error("");
-            _ws.Send(new byte[] { 254, 5, 255, 35, 18, 56, 9, 80 });
-            _ws.Send(Encoding.ASCII.GetBytes(_credentials.Key));
-        }
 
         private void OnMessageReceived(object sender, EventArgs e)
         {

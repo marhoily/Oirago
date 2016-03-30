@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using static MyAgario.Message;
@@ -16,22 +17,23 @@ namespace MyAgario
         {
             InitializeComponent();
 
-            var entryServer = new EntryServer(this);
-            entryServer.GetFfaServer().ContinueWith(t =>
-            {
+            Connect().ContinueWith(t => {
                 if (t.IsFaulted && t.Exception != null)
-                {
                     Error(t.Exception.InnerExceptions[0].ToString());
-                }
-                else if (t.IsCompleted)
-                {
-                    _agarioClient = new AgarioClient(this,
-                        new AgarioRecorder(), t.Result);
-                    var processor = new MessageProcessor(this, _world);
-                    _agarioClient.Attach(processor, Dispatcher);
-                    _agarioClient.Spawn("blah");
-                }
             });
+        }
+
+        private async Task<ServerConnection> Connect()
+        {
+            var entryServer = new EntryServersRegistry(this);
+            var credentials = await entryServer.GetFfaServer();
+            _agarioClient = new AgarioClient(this,
+                new AgarioRecorder(), credentials);
+            var processor = new MessageProcessor(this, _world);
+            _agarioClient.Attach(processor, Dispatcher);
+            _agarioClient.Spawn("blah");
+
+            return credentials;
         }
 
         public void Appears(Ball newGuy)

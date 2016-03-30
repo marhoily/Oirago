@@ -81,8 +81,8 @@
     <Compile Include="Ui\IWindowAdapter.cs" />
     <Compile Include="Protocol\Message.cs" />
     <Compile Include="Protocol\Protocol.cs" />
-    <Compile Include="Client\WebSocketServerCredentials.cs" />
-    <Compile Include="Client\EntryServer.cs" />
+    <Compile Include="Client\ServerConnection.cs" />
+    <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="Utils\CircularBuffer.cs" />
     <Compile Include="Utils\Class1.cs" />
     <Compile Include="Utils\TextPath.cs" />
