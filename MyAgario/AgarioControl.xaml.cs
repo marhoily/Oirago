@@ -133,7 +133,6 @@ namespace MyAgario
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             _zoom -= Math.Sign(e.Delta) * .1;
-            ZoomLabel.Text = _zoom.ToString("f1");
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

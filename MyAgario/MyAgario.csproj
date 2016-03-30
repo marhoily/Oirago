@@ -84,7 +84,6 @@
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="Utils\CircularBuffer.cs" />
-    <Compile Include="Utils\Class1.cs" />
     <Compile Include="Utils\TextPath.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
@@ -126,7 +125,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Js\tsconfig.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -136,14 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Js\react.ts" />
-    <TypeScriptCompile Include="Js\jquery.d.ts" />
-    <TypeScriptCompile Include="Js\lib.ts" />
-    <TypeScriptCompile Include="Js\main.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
