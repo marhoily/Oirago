@@ -87,7 +87,7 @@
     <Compile Include="Utils\Class1.cs" />
     <Compile Include="Utils\TextPath.cs" />
     <Compile Include="World\World.cs" />
-    <Compile Include="World\MessageProcessor.cs" />
+    <Compile Include="World\GameMessageProcessor.cs" />
     <Page Include="AgarioControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

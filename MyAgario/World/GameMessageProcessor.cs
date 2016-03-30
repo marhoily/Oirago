@@ -2,12 +2,12 @@ using static MyAgario.Message;
 
 namespace MyAgario
 {
-    public sealed class MessageProcessor
+    public sealed class GameMessageProcessor
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly World _world;
 
-        public MessageProcessor(IWindowAdapter windowAdapter, World world)
+        public GameMessageProcessor(IWindowAdapter windowAdapter, World world)
         {
             _windowAdapter = windowAdapter;
             _world = world;

@@ -8,7 +8,7 @@ namespace MyAgario
     {
         public AgarioPlayback(IWindowAdapter windowAdapter, World world)
         {
-            var processor = new MessageProcessor(windowAdapter, world);
+            var processor = new GameMessageProcessor(windowAdapter, world);
             var stream = new BinaryReader(File.OpenRead("rec.bin"));
             GC.KeepAlive(new DispatcherTimer(
                 TimeSpan.FromMilliseconds(10),
@@ -48,5 +48,9 @@ namespace MyAgario
         }
 
         public event EventHandler<Message> OnMessage;
+        public void Dispose()
+        {
+            
+        }
     }
 }

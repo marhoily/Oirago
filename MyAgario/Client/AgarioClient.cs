@@ -14,12 +14,14 @@ namespace MyAgario
         void Split();
         void Eject();
         event EventHandler<Message> OnMessage;
+        void Dispose();
     }
 
     public sealed class AgarioClient : IAgarioClient
     {
         private readonly IWindowAdapter _windowAdapter;
         private readonly AgarioRecorder _agarioRecorder;
+        private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
         public AgarioClient(IWindowAdapter windowAdapter,
@@ -27,6 +29,7 @@ namespace MyAgario
         {
             _windowAdapter = windowAdapter;
             _agarioRecorder = agarioRecorder;
+            _connection = connection;
 
             _ws = connection.ToWebSocket(_windowAdapter);
             _ws.OnMessage += OnMessageReceived;
@@ -73,5 +76,10 @@ namespace MyAgario
         }
 
         public event EventHandler<Message> OnMessage;
+        public void Dispose()
+        {
+            _connection.Dispose();
+            _ws.Close();
+        }
     }
 }

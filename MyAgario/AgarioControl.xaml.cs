@@ -9,31 +9,36 @@ namespace MyAgario
 {
     public partial class AgarioControl : IWindowAdapter
     {
-        private IAgarioClient _agarioClient;
+        private IAgarioClient _gameClient;
         private readonly World _world = new World();
         private double _zoom = 5;
+        private WorldSize _worldSize;
 
         public AgarioControl()
         {
             InitializeComponent();
 
-            Connect().ContinueWith(t => {
+            Connect().ContinueWith(t =>
+            {
                 if (t.IsFaulted && t.Exception != null)
                     Error(t.Exception.InnerExceptions[0].ToString());
             });
         }
 
-        private async Task<ServerConnection> Connect()
+        private async Task Connect()
         {
             var entryServer = new EntryServersRegistry(this);
             var credentials = await entryServer.GetFfaServer();
-            _agarioClient = new AgarioClient(this,
-                new AgarioRecorder(), credentials);
-            var processor = new MessageProcessor(this, _world);
-            _agarioClient.Attach(processor, Dispatcher);
-            _agarioClient.Spawn("blah");
+            CreateGameClient(credentials);
+        }
 
-            return credentials;
+        private void CreateGameClient(ServerConnection credentials)
+        {
+            _gameClient = new AgarioClient(this,
+                new AgarioRecorder(), credentials);
+            var processor = new GameMessageProcessor(this, _world);
+            _gameClient.Attach(processor, Dispatcher);
+            _gameClient.Spawn("blah");
         }
 
         public void Appears(Ball newGuy)
@@ -71,7 +76,7 @@ namespace MyAgario
                     ui.Update(b, ++zIndex, mySize);
                 }
             }
-            else _agarioClient.Spawn("blah");
+            else _gameClient.Spawn("blah");
         }
 
         private void UpdateScale()
@@ -107,7 +112,7 @@ namespace MyAgario
             var sdy = position.Y - ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
             var z = _world.Zoom04;
-            _agarioClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
+            _gameClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -121,10 +126,10 @@ namespace MyAgario
             switch (e.Key)
             {
                 case Key.Space:
-                    _agarioClient.Split();
+                    _gameClient.Split();
                     break;
                 case Key.W:
-                    _agarioClient.Eject();
+                    _gameClient.Eject();
                     break;
             }
         }
