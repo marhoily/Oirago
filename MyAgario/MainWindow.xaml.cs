@@ -12,7 +12,7 @@ namespace Oiraga
 
         private void OnContentChanged1(object sender, RoutedEventArgs e)
         {
-            AgarioControl.Focus();
+            OiragaControl.Focus();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)

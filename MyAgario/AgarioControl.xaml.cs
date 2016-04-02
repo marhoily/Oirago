@@ -6,13 +6,13 @@ using System.Windows.Input;
 
 namespace Oiraga
 {
-    public partial class AgarioControl : IWindowAdapter
+    public partial class OiragaControl : IWindowAdapter
     {
-        private IAgarioClient _gameClient;
+        private IOiragaClient _gameClient;
         private readonly World _world = new World();
         private double _zoom = 5;
 
-        public AgarioControl()
+        public OiragaControl()
         {
             InitializeComponent();
 
@@ -32,8 +32,8 @@ namespace Oiraga
 
         private void CreateGameClient(ServerConnection credentials)
         {
-            _gameClient = new AgarioClient(this,
-                new AgarioRecorder(), credentials);
+            _gameClient = new OiragaClient(this,
+                new OiragaRecorder(), credentials);
             var processor = new GameMessageProcessor(this, _world);
             _gameClient.Attach(processor, Dispatcher);
             _gameClient.Spawn("blah");

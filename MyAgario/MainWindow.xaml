@@ -7,5 +7,5 @@
         KeyUp="OnKeyDown"
         mc:Ignorable="d" Loaded="OnContentChanged1"
         Title="MainWindow" Width="815" Height="637">
-    <oiraga:AgarioControl x:Name="AgarioControl"/>
+    <oiraga:OiragaControl x:Name="OiragaControl"/>
 </Window>

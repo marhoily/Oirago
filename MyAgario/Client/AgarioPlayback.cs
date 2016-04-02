@@ -4,9 +4,9 @@ using System.Windows.Threading;
 
 namespace Oiraga
 {
-    public class AgarioPlayback : IAgarioClient
+    public class OiragaPlayback : IOiragaClient
     {
-        public AgarioPlayback(IWindowAdapter windowAdapter, World world)
+        public OiragaPlayback(IWindowAdapter windowAdapter, World world)
         {
             var processor = new GameMessageProcessor(windowAdapter, world);
             var stream = new BinaryReader(File.OpenRead("rec.bin"));

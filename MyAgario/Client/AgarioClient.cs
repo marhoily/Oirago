@@ -4,15 +4,15 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class AgarioClient : IAgarioClient
+    public sealed class OiragaClient : IOiragaClient
     {
         private readonly IWindowAdapter _windowAdapter;
-        private readonly AgarioRecorder _agarioRecorder;
+        private readonly OiragaRecorder _agarioRecorder;
         private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
-        public AgarioClient(IWindowAdapter windowAdapter,
-            AgarioRecorder agarioRecorder, ServerConnection connection)
+        public OiragaClient(IWindowAdapter windowAdapter,
+            OiragaRecorder agarioRecorder, ServerConnection connection)
         {
             _windowAdapter = windowAdapter;
             _agarioRecorder = agarioRecorder;
