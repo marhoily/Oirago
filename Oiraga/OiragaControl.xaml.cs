@@ -16,11 +16,14 @@ namespace Oiraga
         {
             InitializeComponent();
 
-            Connect().ContinueWith(t =>
-            {
-                if (t.IsFaulted && t.Exception != null)
-                    Error(t.Exception.InnerExceptions[0].ToString());
-            });
+            _gameClient = new OiragaPlayback();
+            var processor = new GameMessageProcessor(this, _world);
+            _gameClient.Attach(processor, Dispatcher);
+            //Connect().ContinueWith(t =>
+            //{
+            //    if (t.IsFaulted && t.Exception != null)
+            //        Error(t.Exception.InnerExceptions[0].ToString());
+            //});
         }
 
         private async Task Connect()
