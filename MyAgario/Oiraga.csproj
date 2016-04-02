@@ -63,14 +63,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AgarioClientExtensions.cs" />
-    <Compile Include="AgarioControl.xaml.cs">
+    <Compile Include="OiragaClientExtensions.cs" />
+    <Compile Include="OiragaControl.cs">
       <DependentUpon>AgarioControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Camera.cs" />
-    <Compile Include="Client\AgarioPlayback.cs" />
-    <Compile Include="Client\AgarioRecorder.cs" />
-    <Compile Include="Client\IAgarioClient.cs" />
+    <Compile Include="Client\OiragaPlayback.cs" />
+    <Compile Include="Client\GameRecorder.cs" />
+    <Compile Include="Client\IOiragaClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -93,7 +93,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Client\AgarioClient.cs" />
+    <Compile Include="Client\OiragaClient.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
