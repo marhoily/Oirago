@@ -33,7 +33,7 @@ namespace Oiraga
         private void CreateGameClient(ServerConnection credentials)
         {
             _gameClient = new OiragaClient(this,
-                new OiragaRecorder(), credentials);
+                new GameRecorder(), credentials);
             var processor = new GameMessageProcessor(this, _world);
             _gameClient.Attach(processor, Dispatcher);
             _gameClient.Spawn("blah");

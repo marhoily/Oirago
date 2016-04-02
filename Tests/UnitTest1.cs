@@ -24,7 +24,7 @@ namespace Tests
         [Fact]
         public void TestMethod1()
         {
-            var lines = File.ReadAllLines(@"c:\users\ilya\agario.log")
+            var lines = File.ReadAllLines(@"c:\users\ilya\game.log")
                 .Distinct()
                 .ToArray();
             foreach (var line in lines)

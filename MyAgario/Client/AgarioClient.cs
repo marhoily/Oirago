@@ -7,15 +7,15 @@ namespace Oiraga
     public sealed class OiragaClient : IOiragaClient
     {
         private readonly IWindowAdapter _windowAdapter;
-        private readonly OiragaRecorder _agarioRecorder;
+        private readonly GameRecorder _recorder;
         private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
         public OiragaClient(IWindowAdapter windowAdapter,
-            OiragaRecorder agarioRecorder, ServerConnection connection)
+            GameRecorder recorder, ServerConnection connection)
         {
             _windowAdapter = windowAdapter;
-            _agarioRecorder = agarioRecorder;
+            _recorder = recorder;
             _connection = connection;
 
             _ws = connection.ToWebSocket(_windowAdapter);
@@ -55,7 +55,7 @@ namespace Oiraga
         private void OnMessageReceived(object sender, EventArgs e)
         {
             var rawData = ((MessageEventArgs)e).RawData;
-            _agarioRecorder.Save(rawData);
+            _recorder.Save(rawData);
             var p = new Packet(rawData);
             var msg = p.ReadMessage();
             if (msg == null) _windowAdapter.Error("buffer of length 0");

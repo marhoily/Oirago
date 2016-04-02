@@ -2,7 +2,7 @@
 
 namespace Oiraga
 {
-    public sealed class OiragaRecorder
+    public sealed class GameRecorder
     {
         private readonly BinaryWriter _fileStream =
             new BinaryWriter(File.Create("rec.bin"));
