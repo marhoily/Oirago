@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using static Oiraga.Message;
 
 namespace Oiraga
@@ -58,17 +59,15 @@ namespace Oiraga
                 var coordinateX = p.ReadInt();
                 var coordinateY = p.ReadInt();
                 var size = p.ReadShort();
-                var colorR = p.ReadByte();
-                var colorG = p.ReadByte();
-                var colorB = p.ReadByte();
+                var color = Color.FromRgb(
+                    p.ReadByte(), p.ReadByte(), p.ReadByte());
                 var opt = p.ReadByte();
                 var isVirus = (opt & 1) != 0;
                 if ((opt & 2) != 0) p.Forward(p.ReadUInt());
                 if ((opt & 4) != 0) p.ReadAsciiString();
                 var name = p.ReadUnicodeString();
-                yield return new Updates(ballId,
-                    coordinateX, coordinateY, size,
-                    colorR, colorG, colorB, isVirus, name);
+                yield return new Updates(ballId, coordinateX, 
+                    coordinateY, size, color, isVirus, name);
             }
         }
         private static IEnumerable<uint> ReadDisappearances(this Packet p)

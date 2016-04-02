@@ -39,11 +39,12 @@ namespace Oiraga
                 _y = t.Y;
             }
             var color = t.IsVirus
-                ? Color.FromArgb(128, 0, 255, 0) : Color.FromRgb(t.R, t.G, t.B);
+                ? Color.FromArgb(128, 0, 255, 0) : t.Color;
             
             _fillBrush.Color = color;
-            _strokeBrush.Color = t.IsVirus ? Colors.Red
-                : Color.FromRgb((byte)(t.R * .5), (byte)(t.G * .5), (byte)(t.B * .5));
+            _strokeBrush.Color = t.IsVirus
+                ? Colors.Red
+                : color.Darker();
 
 
             var s = Math.Max(20.0, t.Size);
@@ -52,9 +53,8 @@ namespace Oiraga
 
             if (!ball.IsFood && !t.IsVirus)
             {
-                TextBlock.Foreground =
-                    t.R * 0.2126 + t.G * 0.7152 + t.B * 0.0722 < 128 * 3
-                    ? Brushes.Black : Brushes.White;
+                TextBlock.Foreground = t.Color.
+                    IsDark() ? Brushes.Black : Brushes.White;
 
                 var st = t.Size.ToString();
                 if (mySize*.9 > s) st += "*";
