@@ -11,8 +11,15 @@ namespace Oiraga
         public MainWindow()
         {
             InitializeComponent();
-            //Playback();
+            Set(new OiragaPlayback());
             RealDeal();
+        }
+
+        private void Set(IOiragaClient gameClient)
+        {
+            var oiragaControl = new OiragaControl(gameClient);
+            Content = oiragaControl;
+            _middleman.Listeners.Add(oiragaControl);
         }
 
         private void RealDeal()
@@ -24,22 +31,11 @@ namespace Oiraga
             });
         }
 
-        private void Playback()
-        {
-            var gameClient = new OiragaPlayback();
-            var oiragaControl = new OiragaControl(gameClient);
-            Content = oiragaControl;
-            _middleman.Listeners.Add(oiragaControl);
-        }
-
         private async Task Connect()
         {
             var entryServer = new EntryServersRegistry(_middleman);
             var credentials = await entryServer.GetFfaServer();
-            var gameClient = CreateGameClient(credentials);
-            var oiragaControl = new OiragaControl(gameClient);
-            Content = oiragaControl;
-            _middleman.Listeners.Add(oiragaControl);
+            Set(CreateGameClient(credentials));
         }
 
         protected override void OnContentChanged(object oldContent, object newContent)
