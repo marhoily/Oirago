@@ -11,8 +11,8 @@ namespace Oiraga
         public MainWindow()
         {
             InitializeComponent();
-            Playback();
-            //RealDeal();
+            //Playback();
+            RealDeal();
         }
 
         private void RealDeal()
@@ -32,7 +32,6 @@ namespace Oiraga
             gameClient.Attach(processor, Dispatcher);
             var oiragaControl = new OiragaControl(gameClient, world);
             Content = oiragaControl;
-            oiragaControl.Focus();
             _middleman.Listeners.Add(oiragaControl);
         }
 
@@ -45,8 +44,13 @@ namespace Oiraga
 
             var oiragaControl = new OiragaControl(gameClient, world);
             Content = oiragaControl;
-            oiragaControl.Focus();
             _middleman.Listeners.Add(oiragaControl);
+        }
+
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            ((UIElement)Content).Focus();
+            base.OnContentChanged(oldContent, newContent);
         }
 
         private OiragaClient CreateGameClient(ServerConnection credentials, 
