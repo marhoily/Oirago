@@ -6,12 +6,12 @@ namespace Oiraga
 {
     public sealed class OiragaClient : IOiragaClient
     {
-        private readonly IWindowAdapter _windowAdapter;
+        private readonly ILog _windowAdapter;
         private readonly GameRecorder _recorder;
         private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
-        public OiragaClient(IWindowAdapter windowAdapter,
+        public OiragaClient(ILog windowAdapter,
             GameRecorder recorder, ServerConnection connection)
         {
             _windowAdapter = windowAdapter;

@@ -9,11 +9,11 @@ namespace Oiraga
     {
         public string Key;
         public string Server;
-        private IWindowAdapter _windowAdapter;
+        private ILog _windowAdapter;
         private WebSocket _webSocket;
         private TimeSpan _pause = TimeSpan.FromMilliseconds(50);
 
-        public WebSocket ToWebSocket(IWindowAdapter windowAdapter)
+        public WebSocket ToWebSocket(ILog windowAdapter)
         {
             _windowAdapter = windowAdapter;
             _windowAdapter.Error("opening...");

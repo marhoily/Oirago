@@ -7,10 +7,10 @@ namespace Oiraga
 {
     public class EntryServersRegistry
     {
-        private readonly IWindowAdapter _windowAdapter;
+        private readonly ILog _windowAdapter;
         private const string InitKey = "154669603";
 
-        public EntryServersRegistry(IWindowAdapter windowAdapter)
+        public EntryServersRegistry(ILog windowAdapter)
         {
             _windowAdapter = windowAdapter;
         }
