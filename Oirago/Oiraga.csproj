@@ -64,8 +64,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="OiragaClientExtensions.cs" />
-    <Compile Include="OiragaControl.cs">
-      <DependentUpon>AgarioControl.xaml</DependentUpon>
+    <Compile Include="OiragaControl.xaml.cs">
+      <DependentUpon>OiragaControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Camera.cs" />
     <Compile Include="Client\OiragaPlayback.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Utils\TextPath.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
-    <Page Include="AgarioControl.xaml">
+    <Page Include="OiragaControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

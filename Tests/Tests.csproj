@@ -97,13 +97,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyAgario\Oiraga.csproj">
+    <Content Include="UnitTest1.TestMethod1.approved.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Oirago\Oiraga.csproj">
       <Project>{E7192C5F-ACE1-4CCE-9F0B-FADE20AC7F15}</Project>
       <Name>Oiraga</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="UnitTest1.TestMethod1.approved.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
