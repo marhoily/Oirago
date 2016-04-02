@@ -8,39 +8,15 @@ namespace Oiraga
 {
     public partial class OiragaControl : IWindowAdapter
     {
-        private IOiragaClient _gameClient;
-        private readonly World _world = new World();
+        private readonly IOiragaClient _gameClient;
+        private readonly World _world;
         private double _zoom = 5;
 
-        public OiragaControl()
+        public OiragaControl(IOiragaClient gameClient, World world)
         {
+            _gameClient = gameClient;
+            _world = world;
             InitializeComponent();
-            var middleman = new WindowAdapterComposer();
-            middleman.Listeners.Add(this);
-            _gameClient = new OiragaPlayback();
-            var processor = new GameMessageProcessor(middleman, _world);
-            _gameClient.Attach(processor, Dispatcher);
-            //Connect().ContinueWith(t =>
-            //{
-            //    if (t.IsFaulted && t.Exception != null)
-            //        Error(t.Exception.InnerExceptions[0].ToString());
-            //});
-        }
-
-        private async Task Connect()
-        {
-            var entryServer = new EntryServersRegistry(this);
-            var credentials = await entryServer.GetFfaServer();
-            CreateGameClient(credentials);
-        }
-
-        private void CreateGameClient(ServerConnection credentials)
-        {
-            _gameClient = new OiragaClient(this,
-                new GameRecorder(), credentials);
-            var processor = new GameMessageProcessor(this, _world);
-            _gameClient.Attach(processor, Dispatcher);
-            _gameClient.Spawn("blah");
         }
 
         public void Appears(Ball newGuy)
