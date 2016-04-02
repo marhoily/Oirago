@@ -8,11 +8,9 @@ namespace Oiraga
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void OnContentChanged1(object sender, RoutedEventArgs e)
-        {
-            OiragaControl.Focus();
+            var oiragaControl = new OiragaControl();
+            Content = oiragaControl;
+            oiragaControl.Focus();
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -25,6 +23,7 @@ namespace Oiraga
             }
             else
             {
+                WindowState = WindowState.Normal;
                 WindowStyle = WindowStyle.SingleBorderWindow;
             }
         }
