@@ -22,9 +22,17 @@ namespace Oiraga
 
         public static void Attach(this IOiragaClient client, GameMessageProcessor processor, Dispatcher dispatcher)
         {
-            client.OnMessage += (s, msg) =>
-                dispatcher.BeginInvoke(new Action(() =>
-                    processor.ProcessMessage(msg)));
+            if (client.IsSynchronous)
+            {
+                client.OnMessage += (s, msg) =>
+                    processor.ProcessMessage(msg);
+            }
+            else
+            {
+                client.OnMessage += (s, msg) =>
+                    dispatcher.BeginInvoke(new Action(() =>
+                        processor.ProcessMessage(msg)));
+            }
         }
     }
 }

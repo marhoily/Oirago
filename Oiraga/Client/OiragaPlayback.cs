@@ -26,6 +26,7 @@ namespace Oiraga
                     }
                 }, Dispatcher.CurrentDispatcher));
         }
+        public bool IsSynchronous => true;
 
         public void Spawn(string name)
         {

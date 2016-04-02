@@ -63,6 +63,8 @@ namespace Oiraga
         }
 
         public event EventHandler<Message> OnMessage;
+        public bool IsSynchronous => false;
+
         public void Dispose()
         {
             _connection.Dispose();

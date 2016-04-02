@@ -10,6 +10,7 @@ namespace Oiraga
         void Split();
         void Eject();
         event EventHandler<Message> OnMessage;
+        bool IsSynchronous { get; }
         void Dispose();
     }
 }
