@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using static Oiraga.Message;
 
 namespace Oiraga
 {
@@ -13,42 +14,42 @@ namespace Oiraga
             {
                 case 16: return p.ReadTick();
                 case 17: return p.ReadSpectate();
-                case 18: return new Message.DestroyAllBalls();
-                case 20: return new Message.Nop(); // clear less stuff
-                case 21: return new Message.Unknown(packetId); // set some variables?
+                case 18: return new DestroyAllBalls();
+                case 20: return new Nop(); // clear less stuff
+                case 21: return new Unknown(packetId); // set some variables?
                 case 32: return p.ReadNewId();
-                case 49: return new Message.LeadersBoard(p.ReadLeaders().ToArray());
-                case 50: return new Message.TeamUpdate();
+                case 49: return new LeadersBoard(p.ReadLeaders().ToArray());
+                case 50: return new TeamUpdate();
                 case 64: return p.ReadWorldSize();
-                case 72: return new Message.Nop();
-                case 81: return new Message.ExperienceUpdate();
-                case 102: return new Message.ForwardMessage();
-                case 104: return new Message.LogOut();
-                case 240: return new Message.Nop();
-                case 254: return new Message.GameOver();
-                default: return new Message.Unknown(packetId);
+                case 72: return new Nop();
+                case 81: return new ExperienceUpdate();
+                case 102: return new ForwardMessage();
+                case 104: return new LogOut();
+                case 240: return new Nop();
+                case 254: return new GameOver();
+                default: return new Unknown(packetId);
             }
         }
 
-        private static Message.Tick ReadTick(this Packet p)
+        private static Tick ReadTick(this Packet p)
         {
-            return new Message.Tick(
+            return new Tick(
                 p.ReadEatings().ToArray(),
                 p.ReadUpdates().ToArray(),
                 p.ReadDisappearances().ToArray());
         }
 
-        private static IEnumerable<Message.Eating> ReadEatings(this Packet p)
+        private static IEnumerable<Eating> ReadEatings(this Packet p)
         {
             var eatersCount = p.ReadUShort();
             for (var i = 0; i < eatersCount; i++)
             {
                 var eaterId = p.ReadUInt();
                 var eatenId = p.ReadUInt();
-                yield return new Message.Eating(eaterId, eatenId);
+                yield return new Eating(eaterId, eatenId);
             }
         }
-        private static IEnumerable<Message.Updates> ReadUpdates(this Packet p)
+        private static IEnumerable<Updates> ReadUpdates(this Packet p)
         {
             while (true)
             {
@@ -65,7 +66,7 @@ namespace Oiraga
                 if ((opt & 2) != 0) p.Forward(p.ReadUInt());
                 if ((opt & 4) != 0) p.ReadAsciiString();
                 var name = p.ReadUnicodeString();
-                yield return new Message.Updates(ballId,
+                yield return new Updates(ballId,
                     coordinateX, coordinateY, size,
                     colorR, colorG, colorB, isVirus, name);
             }
@@ -77,35 +78,35 @@ namespace Oiraga
                 yield return p.ReadUInt();
         }
 
-        private static Message.Spectate ReadSpectate(this Packet p)
+        private static Spectate ReadSpectate(this Packet p)
         {
             var x = p.ReadFloat();
             var y = p.ReadFloat();
             var zoom = p.ReadFloat();
-            return new Message.Spectate(x, y, zoom);
+            return new Spectate(x, y, zoom);
         }
-        private static Message.NewId ReadNewId(this Packet p)
+        private static NewId ReadNewId(this Packet p)
         {
             var myBallId = p.ReadUInt();
-            return new Message.NewId(myBallId);
+            return new NewId(myBallId);
         }
-        private static Message.ViewPort ReadWorldSize(this Packet p)
+        private static ViewPort ReadWorldSize(this Packet p)
         {
             var minX = p.ReadDouble();
             var minY = p.ReadDouble();
             var maxX = p.ReadDouble();
             var maxY = p.ReadDouble();
-            return new Message.ViewPort(minX, minY, maxX, maxY);
+            return new ViewPort(minX, minY, maxX, maxY);
         }
 
-        private static IEnumerable<Message.Leader> ReadLeaders(this Packet p)
+        private static IEnumerable<Leader> ReadLeaders(this Packet p)
         {
             var count = p.ReadUInt();
             for (var i = 0; i < count; i++)
             {
                 var id = p.ReadUInt();
                 var name = p.ReadUnicodeString();
-                yield return new Message.Leader(id, name);
+                yield return new Leader(id, name);
             }
         }
     }
