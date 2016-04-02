@@ -27,22 +27,17 @@ namespace Oiraga
         private void Playback()
         {
             var gameClient = new OiragaPlayback();
-            var world = new World();
-            var processor = new GameMessageProcessor(_middleman, world);
-            gameClient.Attach(processor, Dispatcher);
-            var oiragaControl = new OiragaControl(gameClient, world);
+            var oiragaControl = new OiragaControl(gameClient);
             Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }
 
         private async Task Connect()
         {
-            var world = new World();
             var entryServer = new EntryServersRegistry(_middleman);
             var credentials = await entryServer.GetFfaServer();
-            var gameClient = CreateGameClient(credentials, world);
-
-            var oiragaControl = new OiragaControl(gameClient, world);
+            var gameClient = CreateGameClient(credentials);
+            var oiragaControl = new OiragaControl(gameClient);
             Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }
@@ -53,13 +48,10 @@ namespace Oiraga
             base.OnContentChanged(oldContent, newContent);
         }
 
-        private OiragaClient CreateGameClient(ServerConnection credentials, 
-            World world)
+        private OiragaClient CreateGameClient(ServerConnection credentials)
         {
             var gameClient = new OiragaClient(
                 _middleman, new GameRecorder(), credentials);
-            var processor = new GameMessageProcessor(_middleman, world);
-            gameClient.Attach(processor, Dispatcher);
             gameClient.Spawn("blah");
             return gameClient;
         }

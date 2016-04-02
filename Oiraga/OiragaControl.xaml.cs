@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,13 +8,16 @@ namespace Oiraga
     public partial class OiragaControl : IWindowAdapter
     {
         private readonly IOiragaClient _gameClient;
-        private readonly World _world;
+        private readonly World _world = new World();
         private double _zoom = 5;
 
-        public OiragaControl(IOiragaClient gameClient, World world)
+        public OiragaControl(IOiragaClient gameClient)
         {
             _gameClient = gameClient;
-            _world = world;
+            _gameClient.Attach(
+                new GameMessageProcessor(this, _world), 
+                Dispatcher);
+
             InitializeComponent();
         }
 
