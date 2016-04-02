@@ -27,10 +27,8 @@ namespace Oiraga
             return _webSocket;
         }
 
-        private void OnWebSocketOnOnError(object s, ErrorEventArgs e)
-        {
-            _windowAdapter.Error(e.Message);
-        }
+        private void OnWebSocketOnOnError(object s, ErrorEventArgs e) 
+            => _windowAdapter.Error(e.Message);
 
         private void OnWebSocketOnOnClose(object s, CloseEventArgs e)
         {

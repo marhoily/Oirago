@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Oiraga
 {
-    public sealed class GameRecorder
+    public sealed class GameRecorder : IDisposable
     {
         private readonly BinaryWriter _fileStream =
             new BinaryWriter(File.Create("rec.bin"));
@@ -12,5 +13,7 @@ namespace Oiraga
             _fileStream.Write(rawData.Length);
             _fileStream.Write(rawData);
         }
+
+        public void Dispose() => _fileStream.Dispose();
     }
 }
