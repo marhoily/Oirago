@@ -88,6 +88,7 @@
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="Utils\CircularBuffer.cs" />
     <Compile Include="Utils\TextPath.cs" />
+    <Compile Include="WindowAdapterComposer.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
     <Page Include="OiragaControl.xaml">

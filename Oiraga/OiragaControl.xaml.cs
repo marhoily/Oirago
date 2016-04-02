@@ -15,9 +15,10 @@ namespace Oiraga
         public OiragaControl()
         {
             InitializeComponent();
-
+            var middleman = new WindowAdapterComposer();
+            middleman.Listeners.Add(this);
             _gameClient = new OiragaPlayback();
-            var processor = new GameMessageProcessor(this, _world);
+            var processor = new GameMessageProcessor(middleman, _world);
             _gameClient.Attach(processor, Dispatcher);
             //Connect().ContinueWith(t =>
             //{
