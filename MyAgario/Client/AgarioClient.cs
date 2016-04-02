@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Text;
-using System.Windows.Threading;
 using WebSocketSharp;
 
-namespace MyAgario
+namespace Oiraga
 {
     public sealed class AgarioClient : IAgarioClient
     {

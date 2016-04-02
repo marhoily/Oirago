@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Linq;
-using MyAgario.Utils;
+using Oiraga.Utils;
 
-namespace MyAgario
+namespace Oiraga
 {
     class TimeMeasure
     {

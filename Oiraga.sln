@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyAgario", "MyAgario\MyAgario.csproj", "{E7192C5F-ACE1-4CCE-9F0B-FADE20AC7F15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oiraga", "MyAgario\Oiraga.csproj", "{E7192C5F-ACE1-4CCE-9F0B-FADE20AC7F15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E64BE0DC-5DF4-4C8A-87EC-837E156CA61C}"
 EndProject

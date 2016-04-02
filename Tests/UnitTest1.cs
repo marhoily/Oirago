@@ -2,8 +2,8 @@
 using System.Linq;
 using ApprovalTests;
 using ApprovalTests.Reporters;
-using MyAgario;
 using Newtonsoft.Json;
+using Oiraga;
 using Xunit;
 
 namespace Tests

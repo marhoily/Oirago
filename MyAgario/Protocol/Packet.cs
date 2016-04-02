@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace MyAgario
+namespace Oiraga
 {
     public class Packet
     {

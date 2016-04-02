@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading;
 using WebSocketSharp;
 
-namespace MyAgario
+namespace Oiraga
 {
     public class ServerConnection
     {

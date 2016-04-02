@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MyAgario
+namespace Oiraga
 {
     public sealed class AgarioRecorder
     {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace MyAgario
+namespace Oiraga
 {
     public partial class MainWindow
     {

@@ -3,11 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using static System.Windows.Controls.Canvas;
-using static System.Windows.Controls.Panel;
-using static System.Windows.Media.Color;
 
-namespace MyAgario
+namespace Oiraga
 {
     public class BallUi
     {
@@ -42,11 +39,11 @@ namespace MyAgario
                 _y = t.Y;
             }
             var color = t.IsVirus
-                ? FromArgb(128, 0, 255, 0) : FromRgb(t.R, t.G, t.B);
+                ? Color.FromArgb(128, 0, 255, 0) : Color.FromRgb(t.R, t.G, t.B);
             
             _fillBrush.Color = color;
             _strokeBrush.Color = t.IsVirus ? Colors.Red
-                : FromRgb((byte)(t.R * .5), (byte)(t.G * .5), (byte)(t.B * .5));
+                : Color.FromRgb((byte)(t.R * .5), (byte)(t.G * .5), (byte)(t.B * .5));
 
 
             var s = Math.Max(20.0, t.Size);
@@ -72,13 +69,13 @@ namespace MyAgario
             _x = (_x + t.X) / 2;
             _y = (_y + t.Y) / 2;
 
-            SetZIndex(Ellipse, zIndex);
-            SetZIndex(TextBlock, zIndex);
+            Panel.SetZIndex(Ellipse, zIndex);
+            Panel.SetZIndex(TextBlock, zIndex);
 
-            SetLeft(Ellipse, _x - Ellipse.Width / 2);
-            SetTop(Ellipse, _y - Ellipse.Height / 2);
-            SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
-            SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
+            Canvas.SetLeft(Ellipse, _x - Ellipse.Width / 2);
+            Canvas.SetTop(Ellipse, _y - Ellipse.Height / 2);
+            Canvas.SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
+            Canvas.SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
         }
     }
 }

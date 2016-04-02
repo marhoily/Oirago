@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
-namespace MyAgario
+namespace Oiraga
 {
     public static class AgarioClientExtensions
     {

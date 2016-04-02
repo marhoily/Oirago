@@ -1,11 +1,9 @@
-using System;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace MyAgario
+namespace Oiraga
 {
     public class EntryServersRegistry
     {

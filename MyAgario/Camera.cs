@@ -1,4 +1,4 @@
-namespace MyAgario
+namespace Oiraga
 {
     public sealed class Camera
     {

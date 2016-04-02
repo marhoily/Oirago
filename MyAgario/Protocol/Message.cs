@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace MyAgario
+namespace Oiraga
 {
     public abstract class Message
     {

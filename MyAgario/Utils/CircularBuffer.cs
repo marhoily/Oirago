@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MyAgario.Utils
+namespace Oiraga.Utils
 {
     public class CircularBuffer<T> : IEnumerable<T>
     {

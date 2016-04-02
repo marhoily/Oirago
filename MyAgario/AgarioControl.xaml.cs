@@ -3,9 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static MyAgario.Message;
 
-namespace MyAgario
+namespace Oiraga
 {
     public partial class AgarioControl : IWindowAdapter
     {
@@ -103,13 +102,13 @@ namespace MyAgario
                 () => ErrorLabel.Text = message));
         }
 
-        public void Leaders(LeadersBoard leadersBoard)
+        public void Leaders(Message.LeadersBoard leadersBoard)
         {
             Leadersboard.ItemsSource = leadersBoard.Leaders.Select(l => l.Name);
         }
 
         private Rect _worldBoundaries;
-        public void WorldSize(ViewPort viewPort)
+        public void WorldSize(Message.ViewPort viewPort)
         {
             var r = viewPort.ToRectangle();
             _worldBoundaries = !_worldBoundaries.IsEmpty

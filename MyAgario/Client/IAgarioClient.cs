@@ -1,6 +1,6 @@
 using System;
 
-namespace MyAgario
+namespace Oiraga
 {
     public interface IAgarioClient
     {

@@ -1,7 +1,4 @@
-using System.Windows.Shapes;
-using static MyAgario.Message;
-
-namespace MyAgario
+namespace Oiraga
 {
     public sealed class GameMessageProcessor
     {
@@ -16,31 +13,31 @@ namespace MyAgario
 
         public void ProcessMessage(Message msg)
         {
-            var tick = msg as Tick;
+            var tick = msg as Message.Tick;
             if (tick != null) Process(tick);
 
-            var newId = msg as NewId;
+            var newId = msg as Message.NewId;
             if (newId != null) Process(newId);
 
             //var spectate = msg as Spectate;
             //if (spectate != null) Spectate(spectate);
 
-            var worldSize = msg as ViewPort;
+            var worldSize = msg as Message.ViewPort;
             if (worldSize != null) ProcessSize(worldSize);
 
-            var destroyAllBalls = msg as DestroyAllBalls;
+            var destroyAllBalls = msg as Message.DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
 
-            var leadersBoard = msg as LeadersBoard;
+            var leadersBoard = msg as Message.LeadersBoard;
             if (leadersBoard != null)
                 _windowAdapter.Leaders(leadersBoard);
 
-            var unknown = msg as Unknown;
+            var unknown = msg as Message.Unknown;
             if (unknown != null) _windowAdapter.Error(
                 $"Unknown packet id {unknown.PacketId}");
         }
 
-        private void ProcessSize(ViewPort viewPort)
+        private void ProcessSize(Message.ViewPort viewPort)
         {
             _world.ViewPort = viewPort;
             _windowAdapter.WorldSize(viewPort);
@@ -59,14 +56,14 @@ namespace MyAgario
         //            _windowAdapter.Update(ball);
         //        }
         //}
-        private void Process(Tick tick)
+        private void Process(Message.Tick tick)
         {
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
             _windowAdapter.AfterTick();
         }
-        private void ProcessEating(Tick tick)
+        private void ProcessEating(Message.Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
@@ -87,7 +84,7 @@ namespace MyAgario
                 }
             }
         }
-        private void ProcessUpdating(Tick tick)
+        private void ProcessUpdating(Message.Tick tick)
         {
             foreach (var state in tick.Updates)
             {
@@ -106,7 +103,7 @@ namespace MyAgario
                 newGuy.State = state;
             }
         }
-        private void ProcessDisappearances(Tick tick)
+        private void ProcessDisappearances(Message.Tick tick)
         {
             foreach (var ballId in tick.Disappearances)
             {
@@ -119,12 +116,12 @@ namespace MyAgario
                 _windowAdapter.Remove(dying);
             }
         }
-        private void Process(NewId msg)
+        private void Process(Message.NewId msg)
         {
             var me = new Ball(true);
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
-            me.State = new Updates(
+            me.State = new Message.Updates(
                 msg.Id, 0, 0, 32, 200, 0, 100, false, "me");
             _windowAdapter.Appears(me);
         }

@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MyAgario
+namespace Oiraga
 {
     public static class RectangleExtensions
     {

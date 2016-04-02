@@ -1,6 +1,4 @@
-using static MyAgario.Message;
-
-namespace MyAgario
+namespace Oiraga
 {
     public interface IWindowAdapter
     {
@@ -9,7 +7,7 @@ namespace MyAgario
         void Remove(Ball dying);
         void AfterTick();
         void Error(string message);
-        void Leaders(LeadersBoard leadersBoard);
-        void WorldSize(ViewPort viewPort);
+        void Leaders(Message.LeadersBoard leadersBoard);
+        void WorldSize(Message.ViewPort viewPort);
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Threading;
 
-namespace MyAgario
+namespace Oiraga
 {
     public class AgarioPlayback : IAgarioClient
     {
