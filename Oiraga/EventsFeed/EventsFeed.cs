@@ -7,9 +7,9 @@ namespace Oiraga
     public sealed class EventsFeed : IEventsFeed
     {
         private readonly ILog _log;
-        private readonly GameRecorder _recorder;
+        private readonly EventsRecorder _recorder;
 
-        public EventsFeed(WebSocket ws, GameRecorder recorder, ILog log)
+        public EventsFeed(WebSocket ws, EventsRecorder recorder, ILog log)
         {
             _log = log;
             _recorder = recorder;

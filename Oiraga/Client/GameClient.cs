@@ -16,7 +16,7 @@ namespace Oiraga
         public IEventsFeed RawOutput { get; }
 
         public GameClient(ILog log,
-            GameRecorder recorder, ServerConnection connection)
+            EventsRecorder recorder, ServerConnection connection)
         {
             _log = log;
             _connection = connection;

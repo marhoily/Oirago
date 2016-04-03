@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace Oiraga
@@ -33,8 +34,9 @@ namespace Oiraga
 
         public void Leaders(IEnumerable<string> leaders)
         {
+            var arr = leaders.ToArray();
             foreach (var windowAdapter in Listeners)
-                windowAdapter.Leaders(leaders);
+                windowAdapter.Leaders(arr);
         }
 
         public void WorldSize(Rect viewPort)

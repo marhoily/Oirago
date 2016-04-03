@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Oiraga
 {
-    public sealed class GameRecorder : IDisposable
+    public sealed class EventsRecorder : IDisposable
     {
         private readonly BinaryWriter _fileStream =
             new BinaryWriter(File.Create("rec.bin"));
