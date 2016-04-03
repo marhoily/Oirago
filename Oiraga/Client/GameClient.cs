@@ -40,9 +40,16 @@ namespace Oiraga
 
         private void OnWebSocketOnOnClose(object s, CloseEventArgs e)
         {
-            Thread.Sleep(_pause);
-            _pause = new TimeSpan(_pause.Ticks * 2);
-            _webSocket.Connect();
+            Timer[] timer = {null};
+            timer[0] = new Timer(
+                _ =>
+                {
+                    _log.Error("another try at _webSocket.Connect()...");
+                    _webSocket.Connect();
+                    timer[0].Dispose();
+                },
+                timer, _pause, TimeSpan.FromMilliseconds(-1));
+            _pause = new TimeSpan(_pause.Ticks*2);
         }
 
         private void OnOpen(object sender, EventArgs e)
