@@ -38,6 +38,7 @@ namespace Oiraga
             var ballUi = _map[dying];
             MainCanvas.Children.Remove(ballUi.Ellipse);
             MainCanvas.Children.Remove(ballUi.TextBlock);
+            _map.Remove(dying);
         }
 
         public void AfterTick(IBalls balls)
