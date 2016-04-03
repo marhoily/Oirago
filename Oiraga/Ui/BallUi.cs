@@ -30,6 +30,7 @@ namespace Oiraga
         }
         Color _color;
         short _size;
+        int _zIndex;
         public void Update(IBall ball, int zIndex, short mySize)
         {
             if (double.IsNaN(_pos.X)) { _pos = (Vector)ball.Pos; }
@@ -69,12 +70,15 @@ namespace Oiraga
             }
 
             _pos = (Vector)(_pos + ball.Pos) / 2;
-
-            Panel.SetZIndex(Ellipse, zIndex);
-            Panel.SetZIndex(TextBlock, zIndex);
-
             Ellipse.CenterOnCanvas(_pos);
             TextBlock.CenterOnCanvas(_pos);
+
+            if (_zIndex != zIndex)
+            {
+                _zIndex = zIndex;
+                Panel.SetZIndex(Ellipse, zIndex);
+                Panel.SetZIndex(TextBlock, zIndex);
+            }
         }
 
         public void Hide()
