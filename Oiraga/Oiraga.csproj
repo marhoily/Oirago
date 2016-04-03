@@ -63,18 +63,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Client\GameInput.cs" />
+    <Compile Include="Client\GameRawOutput.cs" />
+    <Compile Include="Client\IGameClient.cs" />
+    <Compile Include="Client\IGameInput.cs" />
+    <Compile Include="Client\NullInput.cs" />
+    <Compile Include="Client\PlaybackRawOutput.cs" />
     <Compile Include="DryIoc\AsyncExecutionFlowScopeContext.cs" />
     <Compile Include="DryIoc\Container.cs" />
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
     <Compile Include="Client\GameClientProvider.cs" />
     <Compile Include="Client\GameClientExtensions.cs" />
+    <Compile Include="Protocol\ILog.cs" />
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Client\GamePlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
-    <Compile Include="Client\IGameClient.cs" />
+    <Compile Include="Client\IGameRawOutut.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

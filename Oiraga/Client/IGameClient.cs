@@ -1,18 +1,8 @@
-using System;
-
 namespace Oiraga
 {
-    public interface IGameRawOutut
+    public interface IGameClient 
     {
-        event EventHandler<Message> OnMessage;
-        bool IsSynchronous { get; }
-    }
-    public interface IGameInput
-    {
-        void Spawn(string name);
-        void MoveTo(double x, double y);
-        void Spectate();
-        void Split();
-        void Eject();
+        IGameInput Input { get; }
+        IGameRawOutut RawOutut { get; }
     }
 }

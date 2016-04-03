@@ -3,10 +3,6 @@ using static Oiraga.Message;
 
 namespace Oiraga
 {
-    public interface ILog
-    {
-        void Error(string message);
-    }
     public interface IGameEventsSink : ILog
     {
         void Appears(Ball newGuy);
