@@ -74,7 +74,13 @@
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
     <Compile Include="Client\GameClientProvider.cs" />
-    <Compile Include="Protocol\GameClientExtensions.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsSink\Ball.cs">
+      <DependentUpon>GameState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IGameRawOutput - IGameEventsSink\BinaryReaderExtensions.cs">
+      <DependentUpon>1. GameMessageDeserializer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IGameRawOutput - IGameEventsSink\GameClientExtensions.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
@@ -92,15 +98,15 @@
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Utils\ColorExtensions.cs" />
     <Compile Include="World\IGameEventsSink.cs" />
-    <Compile Include="Protocol\Message.cs" />
-    <Compile Include="Protocol\Protocol.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsSink\Message.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsSink\1. GameMessageDeserializer.cs" />
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="World\BallExtensions.cs" />
     <Compile Include="World\BallsExtension.cs" />
     <Compile Include="World\GameEventsSinkComposer.cs" />
-    <Compile Include="Protocol\Balls.cs" />
-    <Compile Include="Protocol\GameMessageProcessor.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsSink\GameState.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsSink\2. GameMessageDispatcher.cs" />
     <Compile Include="World\IBall.cs" />
     <Compile Include="World\IBalls.cs" />
     <Page Include="Ui\GameControl.xaml">
@@ -112,7 +118,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Protocol\Ball.cs" />
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,7 +128,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Protocol\BinaryReaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -3,17 +3,17 @@ using System.Windows.Media;
 
 namespace Oiraga
 {
-    public sealed class GameMessageProcessor
+    public sealed class GameMessageDispatcher
     {
         private readonly IGameEventsSink _gameEventsSink;
         private readonly ILog _log;
-        private readonly Balls _balls;
+        private readonly GameState _gameState;
 
-        public GameMessageProcessor(IGameEventsSink gameEventsSink, ILog log)
+        public GameMessageDispatcher(IGameEventsSink gameEventsSink, ILog log)
         {
             _gameEventsSink = gameEventsSink;
             _log = log;
-            _balls = new Balls();
+            _gameState = new GameState();
         }
 
         public void ProcessMessage(Message msg)
@@ -65,25 +65,25 @@ namespace Oiraga
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
-            _gameEventsSink.AfterTick(_balls);
+            _gameEventsSink.AfterTick(_gameState);
         }
         private void ProcessEating(Message.Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
                 Ball eater;
-                if (!_balls.All.TryGetValue(e.Eater, out eater))
+                if (!_gameState.All.TryGetValue(e.Eater, out eater))
                 {
                     eater = new Ball(false);
-                    _balls.All.Add(e.Eater, eater);
+                    _gameState.All.Add(e.Eater, eater);
                     _gameEventsSink.Appears(eater);
                 }
                 Ball eaten;
-                if (_balls.All.TryGetValue(e.Eaten, out eaten))
+                if (_gameState.All.TryGetValue(e.Eaten, out eaten))
                 {
                     _gameEventsSink.Eats(eater, eaten);
-                    _balls.All.Remove(e.Eaten);
-                    _balls.My.Remove(eaten);
+                    _gameState.All.Remove(e.Eaten);
+                    _gameState.My.Remove(eaten);
                     _gameEventsSink.Remove(eaten);
                 }
             }
@@ -93,10 +93,10 @@ namespace Oiraga
             foreach (var state in tick.Updates)
             {
                 Ball newGuy;
-                if (!_balls.All.TryGetValue(state.Id, out newGuy))
+                if (!_gameState.All.TryGetValue(state.Id, out newGuy))
                 {
                     newGuy = new Ball(false);
-                    _balls.All.Add(state.Id, newGuy);
+                    _gameState.All.Add(state.Id, newGuy);
                     _gameEventsSink.Appears(newGuy);
                 }
                 
@@ -109,29 +109,29 @@ namespace Oiraga
             foreach (var ballId in tick.Disappearances)
             {
                 Ball dying;
-                if (!_balls.All.TryGetValue(ballId, out dying))
+                if (!_gameState.All.TryGetValue(ballId, out dying))
                     continue;
-                if (dying.IsMine) _balls.My.Remove(dying);
-                _balls.All.Remove(ballId);
-                _balls.My.Remove(dying);
+                if (dying.IsMine) _gameState.My.Remove(dying);
+                _gameState.All.Remove(ballId);
+                _gameState.My.Remove(dying);
                 _gameEventsSink.Remove(dying);
             }
         }
         private void Process(Message.NewId msg)
         {
             var me = new Ball(true);
-            _balls.All.Add(msg.Id, me);
-            _balls.My.Add(me);
+            _gameState.All.Add(msg.Id, me);
+            _gameState.My.Add(me);
             me.Update(0, 0, 32, Colors.DarkOrange, false, "me");
             _gameEventsSink.Appears(me);
         }
 
         private void DestroyAll()
         {
-            foreach (var ball in _balls.All)
+            foreach (var ball in _gameState.All)
                 _gameEventsSink.Remove(ball.Value);
-            _balls.All.Clear();
-            _balls.My.Clear();
+            _gameState.All.Clear();
+            _gameState.My.Clear();
         }
 
     }

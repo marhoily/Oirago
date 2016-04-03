@@ -17,7 +17,7 @@ namespace Oiraga
         {
             _gameClient = input;
             gameRawOutput.Attach(
-                new GameMessageProcessor(this, log), 
+                new GameMessageDispatcher(this, log), 
                 Dispatcher);
 
             InitializeComponent();

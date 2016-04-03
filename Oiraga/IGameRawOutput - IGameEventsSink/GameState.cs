@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Oiraga
 {
-    public sealed class Balls : IBalls
+    public sealed class GameState : IBalls
     {
         public readonly Dictionary<uint, Ball> 
             All = new Dictionary<uint, Ball>();

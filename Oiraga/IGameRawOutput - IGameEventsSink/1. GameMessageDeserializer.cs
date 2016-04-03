@@ -6,7 +6,7 @@ using static Oiraga.Message;
 
 namespace Oiraga
 {
-    public static class Protocol
+    public static class GameMessageDeserializer
     {
         public static Message ReadMessage(this BinaryReader p)
         {

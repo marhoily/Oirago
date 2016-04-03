@@ -11,13 +11,13 @@ namespace Tests
     [UseReporter(typeof(AraxisMergeReporter))]
     public class UnitTest1
     {
-        private readonly GameMessageProcessor _gameMessageProcessor;
+        private readonly GameMessageDispatcher _gameMessageDispatcher;
         private readonly NullAdapter _gameEventsSink;
 
         public UnitTest1()
         {
             _gameEventsSink = new NullAdapter();
-            _gameMessageProcessor = new GameMessageProcessor(
+            _gameMessageDispatcher = new GameMessageDispatcher(
                 _gameEventsSink, new NullLog());
         }
 
@@ -33,7 +33,7 @@ namespace Tests
                 var parts = line.Split('|');
                 var input = parts[0].Split(',').Select(byte.Parse).ToArray();
                 var packet = new BinaryReader(new MemoryStream(input));
-                _gameMessageProcessor
+                _gameMessageDispatcher
                     .ProcessMessage(packet.ReadMessage());
             }
             Approvals.Verify(JsonConvert.SerializeObject(

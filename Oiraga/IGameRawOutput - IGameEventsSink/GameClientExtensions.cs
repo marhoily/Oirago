@@ -5,18 +5,18 @@ namespace Oiraga
 {
     public static class GameClientExtensions
     {
-        public static void Attach(this IGameRawOutput client, GameMessageProcessor processor, Dispatcher dispatcher)
+        public static void Attach(this IGameRawOutput client, GameMessageDispatcher messageDispatcher, Dispatcher dispatcher)
         {
             if (client.IsSynchronous)
             {
                 client.OnMessage += (s, msg) =>
-                    processor.ProcessMessage(msg);
+                    messageDispatcher.ProcessMessage(msg);
             }
             else
             {
                 client.OnMessage += (s, msg) =>
                     dispatcher.BeginInvoke(new Action(() =>
-                        processor.ProcessMessage(msg)));
+                        messageDispatcher.ProcessMessage(msg)));
             }
         }
     }
