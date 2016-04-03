@@ -8,14 +8,13 @@ namespace Oiraga
     public partial class GameControl : IGameEventsSink
     {
         private readonly IGameInput _gameClient;
-        private readonly World _world = new World();
         private double _zoom = 5;
 
         public GameControl(IGameRawOutut gameRawOutut, IGameInput input)
         {
             _gameClient = input;
             gameRawOutut.Attach(
-                new GameMessageProcessor(this, _world), 
+                new GameMessageProcessor(this), 
                 Dispatcher);
 
             InitializeComponent();
@@ -38,17 +37,17 @@ namespace Oiraga
             MainCanvas.Children.Remove(ballUi.TextBlock);
         }
 
-        public void AfterTick()
+        public void AfterTick(World world)
         {
-            if (_world.MyBalls.Count > 0)
+            if (world.MyBalls.Count > 0)
             {
-                var myAverage = _world.MyAverage;
-                LeadBalls(myAverage);
+                var myAverage = world.MyAverage;
+                LeadBalls(myAverage, world.Zoom04);
                 UpdateCenter(myAverage);
-                UpdateScale();
+                UpdateScale(world);
                 var zIndex = 0;
-                var balls = _world.Balls.OrderBy(b => b.Value.State.Size);
-                var mySize = _world.MyBalls.Max(b => b.State.Size);
+                var balls = world.Balls.OrderBy(b => b.Value.State.Size);
+                var mySize = world.MyBalls.Max(b => b.State.Size);
                 foreach (var ball in balls)
                 {
                     var b = ball.Value;
@@ -63,9 +62,9 @@ namespace Oiraga
             }
         }
 
-        private void UpdateScale()
+        private void UpdateScale(World world)
         {
-            var scale = _world.Zoom - Math.Log10(_zoom);
+            var scale = world.Zoom - Math.Log10(_zoom);
             ScaleTransform.ScaleX = scale;
             ScaleTransform.ScaleY = scale;
         }
@@ -99,13 +98,13 @@ namespace Oiraga
             Back.SetOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
         }
 
-        private void LeadBalls(Point me)
+        private void LeadBalls(Point me, double zoom)
         {
             var position = Mouse.GetPosition(this);
             var sdx = position.X - ActualWidth / 2;
             var sdy = position.Y - ActualHeight / 2;
             if (sdx * sdx + sdy * sdy < 64) return;
-            var z = _world.Zoom04;
+            var z = zoom;
             _gameClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 

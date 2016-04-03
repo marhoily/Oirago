@@ -12,13 +12,12 @@ namespace Tests
     public class UnitTest1
     {
         private readonly GameMessageProcessor _gameMessageProcessor;
-        private readonly World _world;
+        private readonly NullAdapter _gameEventsSink;
 
         public UnitTest1()
         {
-            _world = new World();
-            _gameMessageProcessor = new GameMessageProcessor(
-                new NullAdapter(), _world);
+            _gameEventsSink = new NullAdapter();
+            _gameMessageProcessor = new GameMessageProcessor(_gameEventsSink);
         }
 
         [Fact]
@@ -36,7 +35,8 @@ namespace Tests
                 _gameMessageProcessor
                     .ProcessMessage(packet.ReadMessage());
             }
-            Approvals.Verify(JsonConvert.SerializeObject(_world, Formatting.Indented));
+            Approvals.Verify(JsonConvert.SerializeObject(
+                _gameEventsSink.World, Formatting.Indented));
         }
     }
 }

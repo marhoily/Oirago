@@ -7,10 +7,10 @@ namespace Oiraga
         private readonly IGameEventsSink _gameEventsSink;
         private readonly World _world;
 
-        public GameMessageProcessor(IGameEventsSink gameEventsSink, World world)
+        public GameMessageProcessor(IGameEventsSink gameEventsSink)
         {
             _gameEventsSink = gameEventsSink;
-            _world = world;
+            _world = new World();
         }
 
         public void ProcessMessage(Message msg)
@@ -62,7 +62,7 @@ namespace Oiraga
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
-            _gameEventsSink.AfterTick();
+            _gameEventsSink.AfterTick(_world);
         }
         private void ProcessEating(Message.Tick tick)
         {

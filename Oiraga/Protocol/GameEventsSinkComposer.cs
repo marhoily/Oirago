@@ -30,10 +30,10 @@ namespace Oiraga
                 windowAdapter.Remove(dying);
         }
 
-        public void AfterTick()
+        public void AfterTick(World world)
         {
             foreach (var windowAdapter in Listeners)
-                windowAdapter.AfterTick();
+                windowAdapter.AfterTick(world);
         }
 
         public void Leaders(Message.LeadersBoard leadersBoard)
