@@ -23,7 +23,7 @@ namespace Oiraga
 
         private async Task LoadClient()
         {
-            var gameClientProvider = new GameClientProvider(this);
+            var gameClientProvider = new PlayServerSelector(this);
             var gameClient = await gameClientProvider.GetGameClient();
             var oiragaControl = new GameControl(gameClient.RawOutput, gameClient.Input, this);
             oiragaControl.Loaded += (s, e) => oiragaControl.Focus();

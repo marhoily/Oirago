@@ -2,11 +2,11 @@
 
 namespace Oiraga
 {
-    public sealed class GameClientProvider
+    public sealed class PlayServerSelector
     {
         private readonly ILog _log;
 
-        public GameClientProvider(ILog log)
+        public PlayServerSelector(ILog log)
         {
             _log = log;
         }

@@ -98,7 +98,7 @@
     <Compile Include="- DryIoc\Container.cs" />
     <Compile Include="- DryIoc\FactoryCompiler.cs" />
     <Compile Include="- DryIoc\ImTools.cs" />
-    <Compile Include="1. Connection\GameClientProvider.cs" />
+    <Compile Include="PlayServerSelector.cs" />
     <Compile Include="2. Events\BinaryReaderExtensions.cs">
       <DependentUpon>1. EventDeserializer.cs</DependentUpon>
     </Compile>
