@@ -81,6 +81,9 @@
       <DependentUpon>2. EventDeserializer.cs</DependentUpon>
     </Compile>
     <Compile Include="EventsFeed to IReceiver\EventsFeedExtensions.cs" />
+    <Compile Include="EventsFeed to IReceiver\ReceiverComposer.cs">
+      <DependentUpon>4. IReceiver.cs</DependentUpon>
+    </Compile>
     <Compile Include="ILog.cs" />
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
@@ -104,7 +107,6 @@
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="World\BallExtensions.cs" />
     <Compile Include="World\BallsExtension.cs" />
-    <Compile Include="World\ReceiverComposer.cs" />
     <Compile Include="EventsFeed to IReceiver\GameState.cs" />
     <Compile Include="EventsFeed to IReceiver\3. EventDispatcher.cs" />
     <Compile Include="World\IBall.cs" />

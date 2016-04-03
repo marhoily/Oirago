@@ -4,7 +4,7 @@ using Oiraga;
 
 namespace Tests
 {
-    public sealed class NullAdapter : IReceiver
+    public sealed class TestReceiver : IReceiver
     {
         public IBalls Balls { get; private set; }
         public void Appears(IBall newGuy) { }

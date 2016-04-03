@@ -12,11 +12,11 @@ namespace Tests
     public class UnitTest1
     {
         private readonly EventDispatcher _eventDispatcher;
-        private readonly NullAdapter _gameEventsSink;
+        private readonly TestReceiver _gameEventsSink;
 
         public UnitTest1()
         {
-            _gameEventsSink = new NullAdapter();
+            _gameEventsSink = new TestReceiver();
             _eventDispatcher = new EventDispatcher(
                 _gameEventsSink, new NullLog());
         }

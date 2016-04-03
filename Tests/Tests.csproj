@@ -90,7 +90,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="NullAdapter.cs" />
+    <Compile Include="TestReceiver.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
