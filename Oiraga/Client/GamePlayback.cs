@@ -4,12 +4,12 @@ using System.Windows.Threading;
 
 namespace Oiraga
 {
-    public class OiragaPlayback : IOiragaClient
+    public class GamePlayback : IGameClient
     {
         private readonly BinaryReader _stream;
         private readonly DispatcherTimer _timer;
 
-        public OiragaPlayback()
+        public GamePlayback()
         {
             _stream = new BinaryReader(File.OpenRead("rec.bin"));
             _timer = new DispatcherTimer(

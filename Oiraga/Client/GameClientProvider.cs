@@ -4,26 +4,26 @@ namespace Oiraga
 {
     public  class GameClientProvider
     {
-        private readonly WindowAdapterComposer _middleman;
+        private readonly IWindowAdapter _middleman;
 
-        public GameClientProvider(WindowAdapterComposer middleman)
+        public GameClientProvider(IWindowAdapter middleman)
         {
             _middleman = middleman;
         }
 
-        public Task<IOiragaClient> GetGameClient()
+        public Task<IGameClient> GetGameClient()
         {
             return Real();
             return Playback();
         }
-        private static Task<IOiragaClient> Playback() => 
-            Task.FromResult<IOiragaClient>(new OiragaPlayback());
+        private static Task<IGameClient> Playback() => 
+            Task.FromResult<IGameClient>(new GamePlayback());
 
-        private async Task<IOiragaClient> Real()
+        private async Task<IGameClient> Real()
         {
             var entryServer = new EntryServersRegistry(_middleman);
             var credentials = await entryServer.GetFfaServer();
-            var gameClient = new OiragaClient(
+            var gameClient = new GameClient(
                 _middleman, new GameRecorder(), credentials);
             gameClient.Spawn("blah");
             return gameClient;

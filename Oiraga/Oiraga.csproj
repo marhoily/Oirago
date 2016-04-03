@@ -68,14 +68,14 @@
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
     <Compile Include="Client\GameClientProvider.cs" />
-    <Compile Include="Client\OiragaClientExtensions.cs" />
-    <Compile Include="Ui\OiragaControl.xaml.cs">
-      <DependentUpon>OiragaControl.xaml</DependentUpon>
+    <Compile Include="Client\GameClientExtensions.cs" />
+    <Compile Include="Ui\GameControl.xaml.cs">
+      <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Camera.cs" />
-    <Compile Include="Client\OiragaPlayback.cs" />
+    <Compile Include="Client\GamePlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
-    <Compile Include="Client\IOiragaClient.cs" />
+    <Compile Include="Client\IGameClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -96,11 +96,11 @@
     <Compile Include="Ui\WindowAdapterComposer.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
-    <Page Include="Ui\OiragaControl.xaml">
+    <Page Include="Ui\GameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Client\OiragaClient.cs" />
+    <Compile Include="Client\GameClient.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>

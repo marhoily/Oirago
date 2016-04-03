@@ -5,13 +5,13 @@ using System.Windows.Input;
 
 namespace Oiraga
 {
-    public partial class OiragaControl : IWindowAdapter
+    public partial class GameControl : IWindowAdapter
     {
-        private readonly IOiragaClient _gameClient;
+        private readonly IGameClient _gameClient;
         private readonly World _world = new World();
         private double _zoom = 5;
 
-        public OiragaControl(IOiragaClient gameClient)
+        public GameControl(IGameClient gameClient)
         {
             _gameClient = gameClient;
             _gameClient.Attach(

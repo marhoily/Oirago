@@ -2,7 +2,7 @@ using System;
 
 namespace Oiraga
 {
-    public interface IOiragaClient
+    public interface IGameClient
     {
         void Spawn(string name);
         void MoveTo(double x, double y);

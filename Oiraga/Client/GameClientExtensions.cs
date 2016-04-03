@@ -4,9 +4,9 @@ using System.Windows.Threading;
 
 namespace Oiraga
 {
-    public static class OiragaClientExtensions
+    public static class GameClientExtensions
     {
-        public static Task<TMessage> GetMessageAsync<TMessage>(this IOiragaClient client)
+        public static Task<TMessage> GetMessageAsync<TMessage>(this IGameClient client)
             where TMessage : Message
         {
             var s = new TaskCompletionSource<TMessage>();
@@ -20,7 +20,7 @@ namespace Oiraga
             return s.Task;
         }
 
-        public static void Attach(this IOiragaClient client, GameMessageProcessor processor, Dispatcher dispatcher)
+        public static void Attach(this IGameClient client, GameMessageProcessor processor, Dispatcher dispatcher)
         {
             if (client.IsSynchronous)
             {

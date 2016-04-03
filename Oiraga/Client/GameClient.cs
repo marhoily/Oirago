@@ -4,14 +4,14 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class OiragaClient : IOiragaClient
+    public sealed class GameClient : IGameClient
     {
         private readonly ILog _windowAdapter;
         private readonly GameRecorder _recorder;
         private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
-        public OiragaClient(ILog windowAdapter,
+        public GameClient(ILog windowAdapter,
             GameRecorder recorder, ServerConnection connection)
         {
             _windowAdapter = windowAdapter;
