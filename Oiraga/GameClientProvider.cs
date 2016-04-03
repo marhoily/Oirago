@@ -16,10 +16,8 @@ namespace Oiraga
             return Real();
             return Playback();
         }
-        private Task<IOiragaClient> Playback()
-        {
-            return Task.FromResult<IOiragaClient>(new OiragaPlayback());
-        }
+        private static Task<IOiragaClient> Playback() => 
+            Task.FromResult<IOiragaClient>(new OiragaPlayback());
 
         private async Task<IOiragaClient> Real()
         {

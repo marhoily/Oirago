@@ -79,11 +79,11 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RectangleExtensions.cs" />
+    <Compile Include="Utils\RectangleExtensions.cs" />
     <Compile Include="SpectateWindow.xaml.cs">
       <DependentUpon>SpectateWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TimeMeasure.cs" />
+    <Compile Include="Utils\TimeMeasure.cs" />
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Utils\ColorExtensions.cs" />
     <Compile Include="Ui\IWindowAdapter.cs" />

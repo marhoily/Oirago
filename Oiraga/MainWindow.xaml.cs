@@ -12,30 +12,27 @@ namespace Oiraga
         public MainWindow()
         {
             InitializeComponent();
-            RealDeal(new GameClientProvider(_middleman));
+            LoadClient()
+                .ContinueWith(t =>
+                {
+                    if (t.IsFaulted && t.Exception != null)
+                        _middleman.Error(t.Exception.InnerExceptions[0].ToString());
+                });
         }
 
-        private void RealDeal(GameClientProvider gameClientProvider)
+        private async Task LoadClient()
         {
-            Connect(gameClientProvider).ContinueWith(t =>
-            {
-                if (t.IsFaulted && t.Exception != null)
-                    _middleman.Error(t.Exception.InnerExceptions[0].ToString());
-            });
-        }
-
-        private async Task Connect(GameClientProvider gameClientProvider)
-        {
+            var gameClientProvider = new GameClientProvider(_middleman);
             var oiragaControl = new OiragaControl(
                 await gameClientProvider.GetGameClient());
             Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }
         
-        protected override void OnContentChanged(object oldContent, object newContent)
+        protected override void OnContentChanged(object x, object y)
         {
             ((UIElement)Content).Focus();
-            base.OnContentChanged(oldContent, newContent);
+            base.OnContentChanged(x, y);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
