@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Media;
 using static Oiraga.Message;
@@ -7,9 +8,9 @@ namespace Oiraga
 {
     public static class Protocol
     {
-        public static Message ReadMessage(this Packet p)
+        public static Message ReadMessage(this BinaryReader p)
         {
-            if (p.Length == 0) return null;
+            if (p.BaseStream.Length == 0) return null;
             var packetId = p.ReadByte();
             switch (packetId)
             {
@@ -32,7 +33,7 @@ namespace Oiraga
             }
         }
 
-        private static Tick ReadTick(this Packet p)
+        private static Tick ReadTick(this BinaryReader p)
         {
             return new Tick(
                 p.ReadEatings().ToArray(),
@@ -40,56 +41,56 @@ namespace Oiraga
                 p.ReadDisappearances().ToArray());
         }
 
-        private static IEnumerable<Eating> ReadEatings(this Packet p)
+        private static IEnumerable<Eating> ReadEatings(this BinaryReader p)
         {
-            var eatersCount = p.ReadUShort();
+            var eatersCount = p.ReadUInt16();
             for (var i = 0; i < eatersCount; i++)
             {
-                var eaterId = p.ReadUInt();
-                var eatenId = p.ReadUInt();
+                var eaterId = p.ReadUInt32();
+                var eatenId = p.ReadUInt32();
                 yield return new Eating(eaterId, eatenId);
             }
         }
-        private static IEnumerable<Update> ReadUpdates(this Packet p)
+        private static IEnumerable<Update> ReadUpdates(this BinaryReader p)
         {
             while (true)
             {
-                var ballId = p.ReadUInt();
+                var ballId = p.ReadUInt32();
                 if (ballId == 0) break;
-                var coordinateX = p.ReadInt();
-                var coordinateY = p.ReadInt();
-                var size = p.ReadShort();
+                var coordinateX = p.ReadInt32();
+                var coordinateY = p.ReadInt32();
+                var size = p.ReadInt16();
                 var color = Color.FromRgb(
                     p.ReadByte(), p.ReadByte(), p.ReadByte());
                 var opt = p.ReadByte();
                 var isVirus = (opt & 1) != 0;
-                if ((opt & 2) != 0) p.Forward(p.ReadUInt());
+                if ((opt & 2) != 0) p.BaseStream.Seek(p.ReadUInt32(), SeekOrigin.Current);
                 if ((opt & 4) != 0) p.ReadAsciiString();
-                var name = p.ReadUnicodeString();
+                var name = (string) p.ReadUnicodeString();
                 yield return new Update(ballId, coordinateX, 
                     coordinateY, size, color, isVirus, name);
             }
         }
-        private static IEnumerable<uint> ReadDisappearances(this Packet p)
+        private static IEnumerable<uint> ReadDisappearances(this BinaryReader p)
         {
-            var count = p.ReadUInt();
+            var count = p.ReadUInt32();
             for (var i = 0; i < count; i++)
-                yield return p.ReadUInt();
+                yield return p.ReadUInt32();
         }
 
-        private static Spectate ReadSpectate(this Packet p)
+        private static Spectate ReadSpectate(this BinaryReader p)
         {
-            var x = p.ReadFloat();
-            var y = p.ReadFloat();
-            var zoom = p.ReadFloat();
+            var x = p.ReadSingle();
+            var y = p.ReadSingle();
+            var zoom = p.ReadSingle();
             return new Spectate(x, y, zoom);
         }
-        private static NewId ReadNewId(this Packet p)
+        private static NewId ReadNewId(this BinaryReader p)
         {
-            var myBallId = p.ReadUInt();
+            var myBallId = p.ReadUInt32();
             return new NewId(myBallId);
         }
-        private static ViewPort ReadWorldSize(this Packet p)
+        private static ViewPort ReadWorldSize(this BinaryReader p)
         {
             var minX = p.ReadDouble();
             var minY = p.ReadDouble();
@@ -98,13 +99,13 @@ namespace Oiraga
             return new ViewPort(minX, minY, maxX, maxY);
         }
 
-        private static IEnumerable<Leader> ReadLeaders(this Packet p)
+        private static IEnumerable<Leader> ReadLeaders(this BinaryReader p)
         {
-            var count = p.ReadUInt();
+            var count = p.ReadUInt32();
             for (var i = 0; i < count; i++)
             {
-                var id = p.ReadUInt();
-                var name = p.ReadUnicodeString();
+                var id = p.ReadUInt32();
+                var name = (string) p.ReadUnicodeString();
                 yield return new Leader(id, name);
             }
         }

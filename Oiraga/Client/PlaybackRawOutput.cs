@@ -16,7 +16,8 @@ namespace Oiraga
         {
             if (_stream.BaseStream.Length == _stream.BaseStream.Position) return;
             var packetLength = _stream.ReadInt32();
-            var p = new Packet(_stream.ReadBytes(packetLength));
+            var buffer = _stream.ReadBytes(packetLength);
+            var p = new BinaryReader(new MemoryStream(buffer));
             var msg = p.ReadMessage();
             if (msg == null) throw new Exception("buffer of length 0");
             OnMessage?.Invoke(this, msg);

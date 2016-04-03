@@ -32,7 +32,7 @@ namespace Tests
                 if (line == "") continue;
                 var parts = line.Split('|');
                 var input = parts[0].Split(',').Select(byte.Parse).ToArray();
-                var packet = new Packet(input);
+                var packet = new BinaryReader(new MemoryStream(input));
                 _gameMessageProcessor
                     .ProcessMessage(packet.ReadMessage());
             }

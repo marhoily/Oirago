@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using WebSocketSharp;
 
 namespace Oiraga
@@ -19,7 +20,7 @@ namespace Oiraga
         {
             var rawData = ((MessageEventArgs)e).RawData;
             _recorder.Save(rawData);
-            var p = new Packet(rawData);
+            var p = new BinaryReader(new MemoryStream(rawData));
             var msg = p.ReadMessage();
             if (msg == null) _log.Error("buffer of length 0");
             else OnMessage?.Invoke(this, msg);
