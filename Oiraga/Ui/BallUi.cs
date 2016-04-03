@@ -30,7 +30,7 @@ namespace Oiraga
             };
         }
 
-        public void Update(Ball ball, int zIndex, short mySize)
+        public void Update(IBall ball, int zIndex, short mySize)
         {
             if (double.IsNaN(_x))
             {
@@ -50,7 +50,7 @@ namespace Oiraga
             Ellipse.Width = Ellipse.Height = s * 2;
             Ellipse.StrokeThickness = Math.Max(2, s / 20);
 
-            if (!ball.IsFood && !ball.IsVirus)
+            if (!ball.IsFood() && !ball.IsVirus)
             {
                 TextBlock.Foreground = ball.Color.
                     IsDark() ? Brushes.Black : Brushes.White;

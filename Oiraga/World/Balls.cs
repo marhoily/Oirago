@@ -11,14 +11,14 @@ namespace Oiraga
             All = new Dictionary<uint, Ball>();
         public readonly HashSet<Ball> My = new HashSet<Ball>();
 
-        IEnumerable<Ball> IBalls.All => All.Values;
-        IEnumerable<Ball> IBalls.My => My;
+        IEnumerable<IBall> IBalls.All => All.Values;
+        IEnumerable<IBall> IBalls.My => My;
     }
 
     public interface IBalls
     {
-        IEnumerable<Ball> All { get; } 
-        IEnumerable<Ball> My { get; } 
+        IEnumerable<IBall> All { get; } 
+        IEnumerable<IBall> My { get; } 
     }
 
     public static class BallsExtension

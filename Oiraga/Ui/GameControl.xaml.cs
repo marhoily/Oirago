@@ -10,8 +10,8 @@ namespace Oiraga
     {
         private readonly IGameInput _gameClient;
         private double _zoom = 5;
-        private readonly Dictionary<Ball, BallUi> 
-            _map = new Dictionary<Ball, BallUi>();
+        private readonly Dictionary<IBall, BallUi> 
+            _map = new Dictionary<IBall, BallUi>();
 
         public GameControl(IGameRawOutput gameRawOutput, IGameInput input, ILog log)
         {
