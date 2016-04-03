@@ -1,6 +1,6 @@
-using System;
 using System.Linq;
 using System.Windows;
+using static System.Math;
 
 namespace Oiraga
 {
@@ -13,7 +13,7 @@ namespace Oiraga
         public static double Zoom04(this IBalls balls) => balls.Calc(.4);
 
         private static double Calc(this IBalls balls, double pow) =>
-            Math.Pow(Math.Min(64.0 / balls.My.Sum(x => x.Size), 1), pow) + .15;
+            Pow(Min(64.0 / balls.My.Sum(x => x.Size), 1), pow) + .15;
 
     }
 }

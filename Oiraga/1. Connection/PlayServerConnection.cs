@@ -13,7 +13,7 @@ namespace Oiraga
         private TimeSpan _pause = TimeSpan.FromMilliseconds(50);
 
         public ICommandsSink Input { get; }
-        public IEventsFeed RawOutput { get; }
+        public IEventsFeed Output { get; }
 
         public PlayServerConnection(ILog log,
             EventsRecorder recorder, PlayServerKey connection)
@@ -31,7 +31,7 @@ namespace Oiraga
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
             Input = new CommandsSink(_webSocket);
-            RawOutput = new EventsFeed(_webSocket, recorder, log);
+            Output = new EventsFeed(_webSocket, recorder, log);
             _webSocket.Connect();
         }
 

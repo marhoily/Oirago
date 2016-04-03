@@ -1,5 +1,5 @@
 using System.Windows;
-using System.Windows.Controls;
+using static System.Windows.Controls.Canvas;
 
 namespace Oiraga
 {
@@ -13,14 +13,14 @@ namespace Oiraga
 
         public static void CenterOnCanvas(this FrameworkElement e, Vector v)
         {
-            Canvas.SetLeft(e, v.X - e.ActualWidth/2);
-            Canvas.SetTop(e, v.Y - e.ActualHeight/2);
+            SetLeft(e, v.X - e.ActualWidth/2);
+            SetTop(e, v.Y - e.ActualHeight/2);
 
         }
         public static void PlaceOnCanvas(this FrameworkElement e, Rect r)
         {
-            Canvas.SetLeft(e, r.Left);
-            Canvas.SetTop(e, r.Top);
+            SetLeft(e, r.Left);
+            SetTop(e, r.Top);
             e.Width = r.Width;
             e.Height = r.Height;
         }

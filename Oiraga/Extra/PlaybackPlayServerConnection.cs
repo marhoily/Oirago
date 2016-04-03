@@ -34,6 +34,6 @@ namespace Oiraga
         }
 
         public ICommandsSink Input { get; }
-        public IEventsFeed RawOutput => _eventsFeed;
+        public IEventsFeed Output => _eventsFeed;
     }
 }
