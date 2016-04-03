@@ -61,8 +61,8 @@ namespace Oiraga
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
                             return new ServerConnection(
-                                key: reader.ReadLine(),
-                                server: reader.ReadLine());
+                                server: reader.ReadLine(),
+                                key: reader.ReadLine());
             }
             return null;
         }
