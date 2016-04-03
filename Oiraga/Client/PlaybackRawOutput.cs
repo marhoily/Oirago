@@ -20,9 +20,9 @@ namespace Oiraga
             var p = new BinaryReader(new MemoryStream(buffer));
             var msg = p.ReadMessage();
             if (msg == null) throw new Exception("buffer of length 0");
-            OnMessage?.Invoke(this, msg);
+            OnEvent?.Invoke(this, msg);
         }
-        public event EventHandler<Message> OnMessage;
+        public event EventHandler<Event> OnEvent;
         public bool IsSynchronous => true;
     }
 }

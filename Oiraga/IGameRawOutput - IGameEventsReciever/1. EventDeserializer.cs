@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Media;
-using static Oiraga.Message;
+using static Oiraga.Event;
 
 namespace Oiraga
 {
-    public static class GameMessageDeserializer
+    public static class EventDeserializer
     {
-        public static Message ReadMessage(this BinaryReader p)
+        public static Event ReadMessage(this BinaryReader p)
         {
             if (p.BaseStream.Length == 0) return null;
             var packetId = p.ReadByte();
@@ -25,7 +25,7 @@ namespace Oiraga
                 case 64: return p.ReadWorldSize();
                 case 72: return new Nop();
                 case 81: return new ExperienceUpdate();
-                case 102: return new ForwardMessage();
+                case 102: return new ForwardEvent();
                 case 104: return new LogOut();
                 case 240: return new Nop();
                 case 254: return new GameOver();

@@ -5,7 +5,7 @@ namespace Oiraga
 {
     public static class RectangleExtensions
     {
-        public static Rect ToRectangle(this Message.ViewPort w)
+        public static Rect ToRectangle(this Event.ViewPort w)
         {
             return new Rect(w.MaxX, w.MaxY,
                 w.MinX - w.MaxX, w.MinY - w.MaxY);

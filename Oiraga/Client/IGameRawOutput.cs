@@ -4,7 +4,7 @@ namespace Oiraga
 {
     public interface IGameRawOutput
     {
-        event EventHandler<Message> OnMessage;
+        event EventHandler<Event> OnEvent;
         bool IsSynchronous { get; }
     }
 }

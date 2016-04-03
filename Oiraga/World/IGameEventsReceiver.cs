@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Windows;
-using static Oiraga.Message;
 
 namespace Oiraga
 {
-    public interface IGameEventsSink 
+    public interface IGameEventsReceiver 
     {
         void Appears(IBall newGuy);
         void Eats(IBall eater, IBall eaten);

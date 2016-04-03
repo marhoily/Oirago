@@ -4,7 +4,7 @@ using Oiraga;
 
 namespace Tests
 {
-    public sealed class NullAdapter : IGameEventsSink
+    public sealed class NullAdapter : IGameEventsReceiver
     {
         public IBalls Balls { get; private set; }
         public void Appears(IBall newGuy) { }

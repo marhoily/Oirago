@@ -3,9 +3,9 @@ using System.Windows.Media;
 
 namespace Oiraga
 {
-    public abstract class Message
+    public abstract class Event
     {
-        public sealed class LeadersBoard : Message
+        public sealed class LeadersBoard : Event
         {
             public readonly Leader[] Leaders;
 
@@ -36,7 +36,7 @@ namespace Oiraga
                 Eaten = eaten;
             }
         }
-        public sealed class NewId : Message
+        public sealed class NewId : Event
         {
             public readonly uint Id;
 
@@ -46,7 +46,7 @@ namespace Oiraga
             }
         }
         [DebuggerDisplay("{MinX}..{MaxX}, {MinY}..{MaxY}")]
-        public sealed class ViewPort : Message
+        public sealed class ViewPort : Event
         {
             public readonly double MaxX;
             public readonly double MaxY;
@@ -62,15 +62,15 @@ namespace Oiraga
             }
         }
 
-        public sealed class TeamUpdate : Message { }
-        public sealed class Nop : Message { }
-        public sealed class GameOver : Message { }
-        public sealed class DestroyAllBalls : Message { }
-        public sealed class ExperienceUpdate : Message { }
-        public sealed class ForwardMessage : Message { }
-        public sealed class LogOut : Message { }
+        public sealed class TeamUpdate : Event { }
+        public sealed class Nop : Event { }
+        public sealed class GameOver : Event { }
+        public sealed class DestroyAllBalls : Event { }
+        public sealed class ExperienceUpdate : Event { }
+        public sealed class ForwardEvent : Event { }
+        public sealed class LogOut : Event { }
         [DebuggerDisplay("{X}, {Y}: {Zoom}")]
-        public sealed class Spectate : Message
+        public sealed class Spectate : Event
         {
             public readonly double X;
             public readonly double Y;
@@ -83,7 +83,7 @@ namespace Oiraga
                 Zoom = zoom;
             }
         }
-        public sealed class Tick : Message
+        public sealed class Tick : Event
         {
             public readonly Eating[] Eatings;
             public readonly Update[] Updates;
@@ -96,7 +96,7 @@ namespace Oiraga
                 Disappearances = disappearances;
             }
         }
-        public sealed class Unknown : Message
+        public sealed class Unknown : Event
         {
             public readonly byte PacketId;
 

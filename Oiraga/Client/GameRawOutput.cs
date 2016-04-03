@@ -23,10 +23,10 @@ namespace Oiraga
             var p = new BinaryReader(new MemoryStream(rawData));
             var msg = p.ReadMessage();
             if (msg == null) _log.Error("buffer of length 0");
-            else OnMessage?.Invoke(this, msg);
+            else OnEvent?.Invoke(this, msg);
         }
 
-        public event EventHandler<Message> OnMessage;
+        public event EventHandler<Event> OnEvent;
         public bool IsSynchronous => false;
     }
 }

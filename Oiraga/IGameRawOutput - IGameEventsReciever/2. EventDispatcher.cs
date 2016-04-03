@@ -1,48 +1,49 @@
 using System.Linq;
 using System.Windows.Media;
+using static Oiraga.Event;
 
 namespace Oiraga
 {
-    public sealed class GameMessageDispatcher
+    public sealed class EventDispatcher
     {
-        private readonly IGameEventsSink _gameEventsSink;
+        private readonly IGameEventsReceiver _gameEventsSink;
         private readonly ILog _log;
         private readonly GameState _gameState;
 
-        public GameMessageDispatcher(IGameEventsSink gameEventsSink, ILog log)
+        public EventDispatcher(IGameEventsReceiver gameEventsSink, ILog log)
         {
             _gameEventsSink = gameEventsSink;
             _log = log;
             _gameState = new GameState();
         }
 
-        public void ProcessMessage(Message msg)
+        public void Dispatch(Event msg)
         {
-            var tick = msg as Message.Tick;
-            if (tick != null) Process(tick);
+            var tick = msg as Tick;
+            if (tick != null) Dispatch(tick);
 
-            var newId = msg as Message.NewId;
-            if (newId != null) Process(newId);
+            var newId = msg as NewId;
+            if (newId != null) CreateMe(newId.Id);
 
             //var spectate = msg as Spectate;
             //if (spectate != null) Spectate(spectate);
 
-            var worldSize = msg as Message.ViewPort;
-            if (worldSize != null) ProcessSize(worldSize);
+            var worldSize = msg as ViewPort;
+            if (worldSize != null) Dispatch(worldSize);
 
-            var destroyAllBalls = msg as Message.DestroyAllBalls;
+            var destroyAllBalls = msg as DestroyAllBalls;
             if (destroyAllBalls != null) DestroyAll();
 
-            var leadersBoard = msg as Message.LeadersBoard;
+            var leadersBoard = msg as LeadersBoard;
             if (leadersBoard != null)
                 _gameEventsSink.Leaders(leadersBoard.Leaders.Select(x => x.Name));
 
-            var unknown = msg as Message.Unknown;
+            var unknown = msg as Unknown;
             if (unknown != null) _log.Error(
                 $"Unknown packet id {unknown.PacketId}");
         }
 
-        private void ProcessSize(Message.ViewPort viewPort)
+        private void Dispatch(ViewPort viewPort)
         {
             _gameEventsSink.WorldSize(viewPort.ToRectangle());
         }
@@ -60,16 +61,16 @@ namespace Oiraga
         //            _gameEventsSink.Update(ball);
         //        }
         //}
-        private void Process(Message.Tick tick)
+        private void Dispatch(Tick tick)
         {
-            ProcessEating(tick);
-            ProcessUpdating(tick);
-            ProcessDisappearances(tick);
+            Eat(tick.Eatings);
+            Update(tick.Updates);
+            Cleanup(tick.Disappearances);
             _gameEventsSink.AfterTick(_gameState);
         }
-        private void ProcessEating(Message.Tick tick)
+        private void Eat(Eating[] eatings)
         {
-            foreach (var e in tick.Eatings)
+            foreach (var e in eatings)
             {
                 Ball eater;
                 if (!_gameState.All.TryGetValue(e.Eater, out eater))
@@ -88,9 +89,9 @@ namespace Oiraga
                 }
             }
         }
-        private void ProcessUpdating(Message.Tick tick)
+        private void Update(Update[] updates)
         {
-            foreach (var state in tick.Updates)
+            foreach (var state in updates)
             {
                 Ball newGuy;
                 if (!_gameState.All.TryGetValue(state.Id, out newGuy))
@@ -104,9 +105,9 @@ namespace Oiraga
                     state.Color, state.IsVirus, state.Name);
             }
         }
-        private void ProcessDisappearances(Message.Tick tick)
+        private void Cleanup(uint[] ballIds)
         {
-            foreach (var ballId in tick.Disappearances)
+            foreach (var ballId in ballIds)
             {
                 Ball dying;
                 if (!_gameState.All.TryGetValue(ballId, out dying))
@@ -117,15 +118,14 @@ namespace Oiraga
                 _gameEventsSink.Remove(dying);
             }
         }
-        private void Process(Message.NewId msg)
+        private void CreateMe(uint key)
         {
             var me = new Ball(true);
-            _gameState.All.Add(msg.Id, me);
+            _gameState.All.Add(key, me);
             _gameState.My.Add(me);
             me.Update(0, 0, 32, Colors.DarkOrange, false, "me");
             _gameEventsSink.Appears(me);
         }
-
         private void DestroyAll()
         {
             foreach (var ball in _gameState.All)
