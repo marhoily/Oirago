@@ -7,7 +7,7 @@ namespace Oiraga
     {
         void Error(string message);
     }
-    public interface IWindowAdapter : ILog
+    public interface IGameEventsSink : ILog
     {
         void Appears(Ball newGuy);
         void Eats(Ball eater, Ball eaten);

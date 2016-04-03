@@ -6,8 +6,8 @@ namespace Oiraga
 {
     public partial class MainWindow
     {
-        private readonly WindowAdapterComposer
-            _middleman = new WindowAdapterComposer();
+        private readonly GameEventsSinkComposer
+            _middleman = new GameEventsSinkComposer();
 
         public MainWindow()
         {

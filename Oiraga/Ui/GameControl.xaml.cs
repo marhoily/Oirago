@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Oiraga
 {
-    public partial class GameControl : IWindowAdapter
+    public partial class GameControl : IGameEventsSink
     {
         private readonly IGameClient _gameClient;
         private readonly World _world = new World();

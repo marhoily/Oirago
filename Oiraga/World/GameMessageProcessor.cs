@@ -4,12 +4,12 @@ namespace Oiraga
 {
     public sealed class GameMessageProcessor
     {
-        private readonly IWindowAdapter _windowAdapter;
+        private readonly IGameEventsSink _gameEventsSink;
         private readonly World _world;
 
-        public GameMessageProcessor(IWindowAdapter windowAdapter, World world)
+        public GameMessageProcessor(IGameEventsSink gameEventsSink, World world)
         {
-            _windowAdapter = windowAdapter;
+            _gameEventsSink = gameEventsSink;
             _world = world;
         }
 
@@ -32,17 +32,16 @@ namespace Oiraga
 
             var leadersBoard = msg as Message.LeadersBoard;
             if (leadersBoard != null)
-                _windowAdapter.Leaders(leadersBoard);
+                _gameEventsSink.Leaders(leadersBoard);
 
             var unknown = msg as Message.Unknown;
-            if (unknown != null) _windowAdapter.Error(
+            if (unknown != null) _gameEventsSink.Error(
                 $"Unknown packet id {unknown.PacketId}");
         }
 
         private void ProcessSize(Message.ViewPort viewPort)
         {
-            _world.ViewPort = viewPort;
-            _windowAdapter.WorldSize(viewPort.ToRectangle());
+            _gameEventsSink.WorldSize(viewPort.ToRectangle());
         }
 
         //private void Spectate(Spectate spectate)
@@ -55,7 +54,7 @@ namespace Oiraga
         //        if (ball.IsFood || ball.State.IsVirus)
         //        {
         //            ball.Move((int)(dx * zoom), (int)(dy * zoom));
-        //            _windowAdapter.Update(ball);
+        //            _gameEventsSink.Update(ball);
         //        }
         //}
         private void Process(Message.Tick tick)
@@ -63,7 +62,7 @@ namespace Oiraga
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
-            _windowAdapter.AfterTick();
+            _gameEventsSink.AfterTick();
         }
         private void ProcessEating(Message.Tick tick)
         {
@@ -74,15 +73,15 @@ namespace Oiraga
                 {
                     eater = new Ball(false);
                     _world.Balls.Add(e.Eater, eater);
-                    _windowAdapter.Appears(eater);
+                    _gameEventsSink.Appears(eater);
                 }
                 Ball eaten;
                 if (_world.Balls.TryGetValue(e.Eaten, out eaten))
                 {
-                    _windowAdapter.Eats(eater, eaten);
+                    _gameEventsSink.Eats(eater, eaten);
                     _world.Balls.Remove(e.Eaten);
                     _world.MyBalls.Remove(eaten);
-                    _windowAdapter.Remove(eaten);
+                    _gameEventsSink.Remove(eaten);
                 }
             }
         }
@@ -95,7 +94,7 @@ namespace Oiraga
                 {
                     newGuy = new Ball(false);
                     _world.Balls.Add(state.Id, newGuy);
-                    _windowAdapter.Appears(newGuy);
+                    _gameEventsSink.Appears(newGuy);
                 }
                 else
                 {
@@ -115,7 +114,7 @@ namespace Oiraga
                 if (dying.IsMine) _world.MyBalls.Remove(dying);
                 _world.Balls.Remove(ballId);
                 _world.MyBalls.Remove(dying);
-                _windowAdapter.Remove(dying);
+                _gameEventsSink.Remove(dying);
             }
         }
         private void Process(Message.NewId msg)
@@ -125,13 +124,13 @@ namespace Oiraga
             _world.MyBalls.Add(me);
             me.State = new Message.Update(
                 msg.Id, 0, 0, 32, Colors.DarkOrange, false, "me");
-            _windowAdapter.Appears(me);
+            _gameEventsSink.Appears(me);
         }
 
         private void DestroyAll()
         {
             foreach (var ball in _world.Balls)
-                _windowAdapter.Remove(ball.Value);
+                _gameEventsSink.Remove(ball.Value);
             _world.Balls.Clear();
             _world.MyBalls.Clear();
         }

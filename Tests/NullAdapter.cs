@@ -3,7 +3,7 @@ using Oiraga;
 
 namespace Tests
 {
-    public sealed class NullAdapter : IWindowAdapter
+    public sealed class NullAdapter : IGameEventsSink
     {
         public void Appears(Ball newGuy)
         {

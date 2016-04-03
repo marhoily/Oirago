@@ -4,9 +4,9 @@ namespace Oiraga
 {
     public  class GameClientProvider
     {
-        private readonly IWindowAdapter _middleman;
+        private readonly IGameEventsSink _middleman;
 
-        public GameClientProvider(IWindowAdapter middleman)
+        public GameClientProvider(IGameEventsSink middleman)
         {
             _middleman = middleman;
         }

@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace Oiraga
 {
-    public sealed class WindowAdapterComposer : IWindowAdapter
+    public sealed class GameEventsSinkComposer : IGameEventsSink
     {
-        public List<IWindowAdapter> Listeners { get; } = new List<IWindowAdapter>();
+        public List<IGameEventsSink> Listeners { get; } = new List<IGameEventsSink>();
         public void Error(string message)
         {
             foreach (var windowAdapter in Listeners)

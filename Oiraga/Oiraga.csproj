@@ -72,7 +72,6 @@
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Camera.cs" />
     <Compile Include="Client\GamePlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
     <Compile Include="Client\IGameClient.cs" />
@@ -83,17 +82,14 @@
     <Compile Include="SpectateWindow.xaml.cs">
       <DependentUpon>SpectateWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\TimeMeasure.cs" />
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Utils\ColorExtensions.cs" />
-    <Compile Include="Ui\IWindowAdapter.cs" />
+    <Compile Include="Ui\IGameEventsSink.cs" />
     <Compile Include="Protocol\Message.cs" />
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
-    <Compile Include="Utils\CircularBuffer.cs" />
-    <Compile Include="Utils\TextPath.cs" />
-    <Compile Include="Ui\WindowAdapterComposer.cs" />
+    <Compile Include="Ui\GameEventsSinkComposer.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
     <Page Include="Ui\GameControl.xaml">
