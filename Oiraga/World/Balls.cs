@@ -5,14 +5,14 @@ using System.Windows;
 
 namespace Oiraga
 {
-    public sealed class World : IBalls
+    public sealed class Balls : IBalls
     {
         public readonly Dictionary<uint, Ball> 
-            Balls = new Dictionary<uint, Ball>();
-        public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
+            All = new Dictionary<uint, Ball>();
+        public readonly HashSet<Ball> My = new HashSet<Ball>();
 
-        public IEnumerable<Ball> All => Balls.Values;
-        public IEnumerable<Ball> My => MyBalls;
+        IEnumerable<Ball> IBalls.All => All.Values;
+        IEnumerable<Ball> IBalls.My => My;
     }
 
     public interface IBalls

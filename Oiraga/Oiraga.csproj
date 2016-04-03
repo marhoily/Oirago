@@ -97,7 +97,7 @@
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="Protocol\GameEventsSinkComposer.cs" />
-    <Compile Include="World\World.cs" />
+    <Compile Include="World\Balls.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
     <Page Include="Ui\GameControl.xaml">
       <SubType>Designer</SubType>

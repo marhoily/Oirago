@@ -6,13 +6,13 @@ namespace Oiraga
     {
         private readonly IGameEventsSink _gameEventsSink;
         private readonly ILog _log;
-        private readonly World _world;
+        private readonly Balls _balls;
 
         public GameMessageProcessor(IGameEventsSink gameEventsSink, ILog log)
         {
             _gameEventsSink = gameEventsSink;
             _log = log;
-            _world = new World();
+            _balls = new Balls();
         }
 
         public void ProcessMessage(Message msg)
@@ -64,25 +64,25 @@ namespace Oiraga
             ProcessEating(tick);
             ProcessUpdating(tick);
             ProcessDisappearances(tick);
-            _gameEventsSink.AfterTick(_world);
+            _gameEventsSink.AfterTick(_balls);
         }
         private void ProcessEating(Message.Tick tick)
         {
             foreach (var e in tick.Eatings)
             {
                 Ball eater;
-                if (!_world.Balls.TryGetValue(e.Eater, out eater))
+                if (!_balls.All.TryGetValue(e.Eater, out eater))
                 {
                     eater = new Ball(false);
-                    _world.Balls.Add(e.Eater, eater);
+                    _balls.All.Add(e.Eater, eater);
                     _gameEventsSink.Appears(eater);
                 }
                 Ball eaten;
-                if (_world.Balls.TryGetValue(e.Eaten, out eaten))
+                if (_balls.All.TryGetValue(e.Eaten, out eaten))
                 {
                     _gameEventsSink.Eats(eater, eaten);
-                    _world.Balls.Remove(e.Eaten);
-                    _world.MyBalls.Remove(eaten);
+                    _balls.All.Remove(e.Eaten);
+                    _balls.My.Remove(eaten);
                     _gameEventsSink.Remove(eaten);
                 }
             }
@@ -92,10 +92,10 @@ namespace Oiraga
             foreach (var state in tick.Updates)
             {
                 Ball newGuy;
-                if (!_world.Balls.TryGetValue(state.Id, out newGuy))
+                if (!_balls.All.TryGetValue(state.Id, out newGuy))
                 {
                     newGuy = new Ball(false);
-                    _world.Balls.Add(state.Id, newGuy);
+                    _balls.All.Add(state.Id, newGuy);
                     _gameEventsSink.Appears(newGuy);
                 }
                 
@@ -108,29 +108,29 @@ namespace Oiraga
             foreach (var ballId in tick.Disappearances)
             {
                 Ball dying;
-                if (!_world.Balls.TryGetValue(ballId, out dying))
+                if (!_balls.All.TryGetValue(ballId, out dying))
                     continue;
-                if (dying.IsMine) _world.MyBalls.Remove(dying);
-                _world.Balls.Remove(ballId);
-                _world.MyBalls.Remove(dying);
+                if (dying.IsMine) _balls.My.Remove(dying);
+                _balls.All.Remove(ballId);
+                _balls.My.Remove(dying);
                 _gameEventsSink.Remove(dying);
             }
         }
         private void Process(Message.NewId msg)
         {
             var me = new Ball(true);
-            _world.Balls.Add(msg.Id, me);
-            _world.MyBalls.Add(me);
+            _balls.All.Add(msg.Id, me);
+            _balls.My.Add(me);
             me.Update(0, 0, 32, Colors.DarkOrange, false, "me");
             _gameEventsSink.Appears(me);
         }
 
         private void DestroyAll()
         {
-            foreach (var ball in _world.Balls)
+            foreach (var ball in _balls.All)
                 _gameEventsSink.Remove(ball.Value);
-            _world.Balls.Clear();
-            _world.MyBalls.Clear();
+            _balls.All.Clear();
+            _balls.My.Clear();
         }
 
     }
