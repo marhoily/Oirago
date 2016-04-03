@@ -67,6 +67,7 @@
     <Compile Include="DryIoc\Container.cs" />
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
+    <Compile Include="GameClientProvider.cs" />
     <Compile Include="OiragaClientExtensions.cs" />
     <Compile Include="OiragaControl.xaml.cs">
       <DependentUpon>OiragaControl.xaml</DependentUpon>

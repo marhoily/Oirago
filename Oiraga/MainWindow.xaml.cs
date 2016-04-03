@@ -6,51 +6,38 @@ namespace Oiraga
 {
     public partial class MainWindow
     {
-        private readonly WindowAdapterComposer _middleman = new WindowAdapterComposer();
+        private readonly WindowAdapterComposer
+            _middleman = new WindowAdapterComposer();
 
         public MainWindow()
         {
             InitializeComponent();
-            Set(new OiragaPlayback());
-            RealDeal();
+            RealDeal(new GameClientProvider(_middleman));
         }
 
-        private void Set(IOiragaClient gameClient)
+        private void RealDeal(GameClientProvider gameClientProvider)
         {
-            var oiragaControl = new OiragaControl(gameClient);
-            Content = oiragaControl;
-            _middleman.Listeners.Add(oiragaControl);
-        }
-
-        private void RealDeal()
-        {
-            Connect().ContinueWith(t =>
+            Connect(gameClientProvider).ContinueWith(t =>
             {
                 if (t.IsFaulted && t.Exception != null)
                     _middleman.Error(t.Exception.InnerExceptions[0].ToString());
             });
         }
 
-        private async Task Connect()
+        private async Task Connect(GameClientProvider gameClientProvider)
         {
-            var entryServer = new EntryServersRegistry(_middleman);
-            var credentials = await entryServer.GetFfaServer();
-            Set(CreateGameClient(credentials));
+            var oiragaControl = new OiragaControl(
+                await gameClientProvider.GetGameClient());
+            Content = oiragaControl;
+            _middleman.Listeners.Add(oiragaControl);
         }
-
+        
         protected override void OnContentChanged(object oldContent, object newContent)
         {
             ((UIElement)Content).Focus();
             base.OnContentChanged(oldContent, newContent);
         }
 
-        private OiragaClient CreateGameClient(ServerConnection credentials)
-        {
-            var gameClient = new OiragaClient(
-                _middleman, new GameRecorder(), credentials);
-            gameClient.Spawn("blah");
-            return gameClient;
-        }
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.F11) return;
