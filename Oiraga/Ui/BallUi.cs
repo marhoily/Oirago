@@ -40,7 +40,6 @@ namespace Oiraga
                 ? Colors.Red
                 : color.Darker();
 
-
             var s = Math.Max(20.0, ball.Size);
             Ellipse.Width = Ellipse.Height = s * 2;
             Ellipse.StrokeThickness = Math.Max(2, s / 20);
@@ -67,6 +66,18 @@ namespace Oiraga
 
             Ellipse.CenterOnCanvas(_pos);
             TextBlock.CenterOnCanvas(_pos);
+        }
+
+        public void Hide()
+        {
+            Ellipse.Visibility = Visibility.Collapsed;
+            TextBlock.Visibility = Visibility.Collapsed;
+            _pos = new Vector(double.NaN, double.NaN);
+        }
+
+        public void Show()
+        {
+            Ellipse.Visibility = Visibility.Visible;
         }
     }
 }

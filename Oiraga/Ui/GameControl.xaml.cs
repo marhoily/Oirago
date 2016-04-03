@@ -12,6 +12,7 @@ namespace Oiraga
         private double _zoom = 5;
         private readonly Dictionary<IBall, BallUi> 
             _map = new Dictionary<IBall, BallUi>();
+        private readonly Stack<BallUi> _hidden = new Stack<BallUi>();
 
         public GameControl(IEventsFeed eventsFeed, ICommandsSink input, ILog log)
         {
@@ -25,10 +26,19 @@ namespace Oiraga
 
         public void Appears(IBall newGuy)
         {
-            var ballUi = new BallUi();
+            BallUi ballUi;
+            if (_hidden.Count == 0)
+            {
+                ballUi = new BallUi();
+                MainCanvas.Children.Add(ballUi.Ellipse);
+                MainCanvas.Children.Add(ballUi.TextBlock);
+            }
+            else
+            {
+                ballUi = _hidden.Pop();
+                ballUi.Show();
+            }
             _map[newGuy] = ballUi;
-            MainCanvas.Children.Add(ballUi.Ellipse);
-            MainCanvas.Children.Add(ballUi.TextBlock);
         }
 
         public void Eats(IBall eater, IBall eaten) { }
@@ -36,9 +46,9 @@ namespace Oiraga
         public void Remove(IBall dying)
         {
             var ballUi = _map[dying];
-            MainCanvas.Children.Remove(ballUi.Ellipse);
-            MainCanvas.Children.Remove(ballUi.TextBlock);
             _map.Remove(dying);
+            ballUi.Hide();
+            _hidden.Push(ballUi);
         }
 
         public void AfterTick(IBalls balls)
