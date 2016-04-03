@@ -113,7 +113,7 @@ namespace Oiraga
             public readonly short Size;
             public readonly Color Color;
             public readonly bool IsVirus;
-            public string Name;
+            public readonly string Name;
 
             public Update(uint id, int x, int y, short size, 
                 Color color, bool isVirus, string name)

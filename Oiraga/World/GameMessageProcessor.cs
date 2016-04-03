@@ -98,12 +98,9 @@ namespace Oiraga
                     _world.Balls.Add(state.Id, newGuy);
                     _gameEventsSink.Appears(newGuy);
                 }
-                else
-                {
-                    if (newGuy.State.Name != null)
-                        state.Name = newGuy.State.Name;
-                }
-                newGuy.State = state;
+                
+                newGuy.Update(state.X, state.Y, state.Size,
+                    state.Color, state.IsVirus, state.Name);
             }
         }
         private void ProcessDisappearances(Message.Tick tick)
@@ -124,8 +121,7 @@ namespace Oiraga
             var me = new Ball(true);
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
-            me.State = new Message.Update(
-                msg.Id, 0, 0, 32, Colors.DarkOrange, false, "me");
+            me.Update(0, 0, 32, Colors.DarkOrange, false, "me");
             _gameEventsSink.Appears(me);
         }
 

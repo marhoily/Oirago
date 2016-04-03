@@ -49,8 +49,8 @@ namespace Oiraga
                 UpdateCenter(myAverage);
                 UpdateScale(balls);
                 var zIndex = 0;
-                var bySize = balls.All.OrderBy(b => b.State.Size);
-                var mySize = balls.My.Max(b => b.State.Size);
+                var bySize = balls.All.OrderBy(b => b.Size);
+                var mySize = balls.My.Max(b => b.Size);
                 foreach (var ball in bySize)
                 {
                     var ui = _map[ball];
