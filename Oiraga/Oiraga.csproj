@@ -119,7 +119,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Protocol\Packet.cs" />
+    <Compile Include="Protocol\Ext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

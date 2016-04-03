@@ -8,8 +8,7 @@ namespace Oiraga
         private readonly ILog _log;
         private readonly World _world;
 
-        public GameMessageProcessor(IGameEventsSink gameEventsSink
-            ,ILog log)
+        public GameMessageProcessor(IGameEventsSink gameEventsSink, ILog log)
         {
             _gameEventsSink = gameEventsSink;
             _log = log;
