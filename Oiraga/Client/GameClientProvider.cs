@@ -2,9 +2,10 @@
 
 namespace Oiraga
 {
-    public interface IGameClient : IGameRawOutut
+    public interface IGameClient 
     {
         IGameInput Input { get; }
+        IGameRawOutut RawOutut { get; }
     }
 
     public sealed class GameClientProvider

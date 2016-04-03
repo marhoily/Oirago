@@ -38,27 +38,18 @@ namespace Oiraga
         public void Spectate() { _ws.Send(new byte[] { 1 }); }
         public void Split() { _ws.Send(new byte[] { 17 }); }
         public void Eject() { _ws.Send(new byte[] { 21 }); }
-
     }
-    public sealed class GameClient : IGameClient
+
+    public sealed class GameRawOutput : IGameRawOutut
     {
-        private readonly ILog _windowAdapter;
+        private readonly ILog _log;
         private readonly GameRecorder _recorder;
-        private readonly ServerConnection _connection;
-        private readonly WebSocket _ws;
-        public IGameInput Input { get; }
-        public GameClient(ILog windowAdapter,
-            GameRecorder recorder, ServerConnection connection)
+
+        public GameRawOutput(ILog log, GameRecorder recorder, WebSocket ws)
         {
-            _windowAdapter = windowAdapter;
+            _log = log;
             _recorder = recorder;
-            _connection = connection;
-
-            _ws = connection.ToWebSocket(_windowAdapter);
-            _ws.OnMessage += OnMessageReceived;
-            _ws.Connect();
-
-            Input = new GameInput(_ws);
+            ws.OnMessage += OnMessageReceived;
         }
 
         private void OnMessageReceived(object sender, EventArgs e)
@@ -67,12 +58,30 @@ namespace Oiraga
             _recorder.Save(rawData);
             var p = new Packet(rawData);
             var msg = p.ReadMessage();
-            if (msg == null) _windowAdapter.Error("buffer of length 0");
+            if (msg == null) _log.Error("buffer of length 0");
             else OnMessage?.Invoke(this, msg);
         }
 
         public event EventHandler<Message> OnMessage;
         public bool IsSynchronous => false;
+    }
+
+    public sealed class GameClient : IGameClient
+    {
+        private readonly ServerConnection _connection;
+        private readonly WebSocket _ws;
+        public IGameInput Input { get; }
+        public IGameRawOutut RawOutut { get; }
+
+        public GameClient(ILog log,
+            GameRecorder recorder, ServerConnection connection)
+        {
+            _connection = connection;
+            _ws = connection.ToWebSocket(log);
+            Input = new GameInput(_ws);
+            RawOutut = new GameRawOutput(log, recorder, _ws);
+            _ws.Connect();
+        }
 
         public void Dispose()
         {
