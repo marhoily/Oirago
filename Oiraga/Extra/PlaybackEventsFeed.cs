@@ -3,11 +3,11 @@ using System.IO;
 
 namespace Oiraga
 {
-    public sealed class PlaybackRawOutput : IEventsFeed
+    public sealed class PlaybackEventsFeed : IEventsFeed
     {
         private readonly BinaryReader _stream;
 
-        public PlaybackRawOutput(BinaryReader stream)
+        public PlaybackEventsFeed(BinaryReader stream)
         {
             _stream = stream;
         }

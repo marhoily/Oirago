@@ -6,10 +6,7 @@ namespace Oiraga
     {
         private readonly ILog _log;
 
-        public PlayServerSelector(ILog log)
-        {
-            _log = log;
-        }
+        public PlayServerSelector(ILog log) { _log = log; }
 
         public Task<IPlayServerConnection> GetGameClient()
         {
@@ -17,7 +14,8 @@ namespace Oiraga
             //return Playback();
         }
         private static Task<IPlayServerConnection> Playback() => 
-            Task.FromResult<IPlayServerConnection>(new GamePlayback());
+            Task.FromResult<IPlayServerConnection>(
+                new PlaybackPlayServerConnection());
 
         private async Task<IPlayServerConnection> Real()
         {

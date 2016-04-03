@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="- Utils\PointExtensions.cs" />
     <Compile Include="1. Connection\CommandsSink.cs">
       <DependentUpon>3. ICommandsSink.cs</DependentUpon>
     </Compile>
@@ -70,6 +71,9 @@
       <DependentUpon>3. IEventsFeed.cs</DependentUpon>
     </Compile>
     <Compile Include="1. Connection\3. ICommandsSink.cs" />
+    <Compile Include="1. Connection\NullCommandsSink.cs">
+      <DependentUpon>3. ICommandsSink.cs</DependentUpon>
+    </Compile>
     <Compile Include="1. Connection\PlayServerConnection.cs">
       <DependentUpon>2. IPlayServerConnection.cs</DependentUpon>
     </Compile>
@@ -92,8 +96,7 @@
     <Compile Include="2. Events\IBalls.cs">
       <DependentUpon>3. IReceiver.cs</DependentUpon>
     </Compile>
-    <Compile Include="Extra\NullInput.cs" />
-    <Compile Include="Extra\PlaybackRawOutput.cs" />
+    <Compile Include="Extra\PlaybackEventsFeed.cs" />
     <Compile Include="- DryIoc\AsyncExecutionFlowScopeContext.cs" />
     <Compile Include="- DryIoc\Container.cs" />
     <Compile Include="- DryIoc\FactoryCompiler.cs" />
@@ -110,7 +113,7 @@
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extra\GamePlayback.cs" />
+    <Compile Include="Extra\PlaybackPlayServerConnection.cs" />
     <Compile Include="Extra\EventsRecorder.cs" />
     <Compile Include="1. Connection\3. IEventsFeed.cs" />
     <Compile Include="MainWindow.xaml.cs">
