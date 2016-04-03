@@ -4,23 +4,13 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class GameClient : IGameClient
+    public sealed class GameInput : IGameInput
     {
-        private readonly ILog _windowAdapter;
-        private readonly GameRecorder _recorder;
-        private readonly ServerConnection _connection;
         private readonly WebSocket _ws;
 
-        public GameClient(ILog windowAdapter,
-            GameRecorder recorder, ServerConnection connection)
+        public GameInput(WebSocket ws)
         {
-            _windowAdapter = windowAdapter;
-            _recorder = recorder;
-            _connection = connection;
-
-            _ws = connection.ToWebSocket(_windowAdapter);
-            _ws.OnMessage += OnMessageReceived;
-            _ws.Connect();
+            _ws = ws;
         }
 
         public void Spawn(string name)
@@ -35,7 +25,6 @@ namespace Oiraga
             }
             _ws.Send(buf);
         }
-
         public void MoveTo(double x, double y)
         {
             var buf = new byte[13];
@@ -46,11 +35,31 @@ namespace Oiraga
             //writer.Write(0);
             _ws.Send(buf);
         }
-
         public void Spectate() { _ws.Send(new byte[] { 1 }); }
         public void Split() { _ws.Send(new byte[] { 17 }); }
         public void Eject() { _ws.Send(new byte[] { 21 }); }
 
+    }
+    public sealed class GameClient : IGameClient
+    {
+        private readonly ILog _windowAdapter;
+        private readonly GameRecorder _recorder;
+        private readonly ServerConnection _connection;
+        private readonly WebSocket _ws;
+        public IGameInput Input { get; }
+        public GameClient(ILog windowAdapter,
+            GameRecorder recorder, ServerConnection connection)
+        {
+            _windowAdapter = windowAdapter;
+            _recorder = recorder;
+            _connection = connection;
+
+            _ws = connection.ToWebSocket(_windowAdapter);
+            _ws.OnMessage += OnMessageReceived;
+            _ws.Connect();
+
+            Input = new GameInput(_ws);
+        }
 
         private void OnMessageReceived(object sender, EventArgs e)
         {

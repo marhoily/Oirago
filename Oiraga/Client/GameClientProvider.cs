@@ -2,7 +2,11 @@
 
 namespace Oiraga
 {
-    public interface IGameClient : IGameInput, IGameRawOutut {}
+    public interface IGameClient : IGameRawOutut
+    {
+        IGameInput Input { get; }
+    }
+
     public sealed class GameClientProvider
     {
         private readonly IGameEventsSink _middleman;
@@ -26,7 +30,7 @@ namespace Oiraga
             var credentials = await entryServer.GetFfaServer();
             var gameClient = new GameClient(
                 _middleman, new GameRecorder(), credentials);
-            gameClient.Spawn("blah");
+            gameClient.Input.Spawn("blah");
             return gameClient;
         }
     }

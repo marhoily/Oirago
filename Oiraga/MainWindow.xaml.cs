@@ -24,7 +24,7 @@ namespace Oiraga
         {
             var gameClientProvider = new GameClientProvider(_middleman);
             var gameClient = await gameClientProvider.GetGameClient();
-            var oiragaControl = new GameControl(gameClient, gameClient);
+            var oiragaControl = new GameControl(gameClient, gameClient.Input);
             Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }

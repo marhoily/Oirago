@@ -16,6 +16,7 @@ namespace Oiraga
                 TimeSpan.FromMilliseconds(10),
                 DispatcherPriority.Normal,
                 Tick, Dispatcher.CurrentDispatcher);
+            Input = new NullInput();
         }
 
         private void Tick(object s, EventArgs e)
@@ -33,16 +34,23 @@ namespace Oiraga
 
         public bool IsSynchronous => true;
 
-        public void Spawn(string name) { }
-        public void MoveTo(double x, double y) { }
-        public void Spectate() { }
-        public void Split() { }
-        public void Eject() { }
+
         public event EventHandler<Message> OnMessage;
         public void Dispose()
         {
             _timer.IsEnabled = false;
             _stream.Dispose();
         }
+
+        public IGameInput Input { get; }
+    }
+
+    public class NullInput : IGameInput
+    {
+        public void Spawn(string name) { }
+        public void MoveTo(double x, double y) { }
+        public void Spectate() { }
+        public void Split() { }
+        public void Eject() { }
     }
 }
