@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ namespace Oiraga
     {
         private readonly IGameInput _gameClient;
         private double _zoom = 5;
+        private readonly Dictionary<Ball, BallUi> 
+            _map = new Dictionary<Ball, BallUi>();
 
         public GameControl(IGameRawOutput gameRawOutput, IGameInput input, ILog log)
         {
@@ -23,7 +26,7 @@ namespace Oiraga
         public void Appears(Ball newGuy)
         {
             var ballUi = new BallUi();
-            newGuy.Tag = ballUi;
+            _map[newGuy] = ballUi;
             MainCanvas.Children.Add(ballUi.Ellipse);
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
@@ -32,7 +35,7 @@ namespace Oiraga
 
         public void Remove(Ball dying)
         {
-            var ballUi = (BallUi)dying.Tag;
+            var ballUi = _map[dying];
             MainCanvas.Children.Remove(ballUi.Ellipse);
             MainCanvas.Children.Remove(ballUi.TextBlock);
         }
@@ -50,7 +53,7 @@ namespace Oiraga
                 var mySize = balls.My.Max(b => b.State.Size);
                 foreach (var ball in bySize)
                 {
-                    var ui = (BallUi)ball.Tag;
+                    var ui = _map[ball];
                     ui.Update(ball, ++zIndex, mySize);
                 }
             }
