@@ -50,7 +50,7 @@ namespace Oiraga
                 yield return new Eating(eaterId, eatenId);
             }
         }
-        private static IEnumerable<Updates> ReadUpdates(this Packet p)
+        private static IEnumerable<Update> ReadUpdates(this Packet p)
         {
             while (true)
             {
@@ -66,7 +66,7 @@ namespace Oiraga
                 if ((opt & 2) != 0) p.Forward(p.ReadUInt());
                 if ((opt & 4) != 0) p.ReadAsciiString();
                 var name = p.ReadUnicodeString();
-                yield return new Updates(ballId, coordinateX, 
+                yield return new Update(ballId, coordinateX, 
                     coordinateY, size, color, isVirus, name);
             }
         }

@@ -1,3 +1,4 @@
+using System.Windows;
 using static Oiraga.Message;
 
 namespace Oiraga
@@ -13,6 +14,6 @@ namespace Oiraga
         void Remove(Ball dying);
         void AfterTick();
         void Leaders(LeadersBoard leadersBoard);
-        void WorldSize(ViewPort viewPort);
+        void WorldSize(Rect viewPort);
     }
 }

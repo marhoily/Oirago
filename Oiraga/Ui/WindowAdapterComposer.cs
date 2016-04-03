@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Oiraga
 {
@@ -41,7 +42,7 @@ namespace Oiraga
                 windowAdapter.Leaders(leadersBoard);
         }
 
-        public void WorldSize(Message.ViewPort viewPort)
+        public void WorldSize(Rect viewPort)
         {
             foreach (var windowAdapter in Listeners)
                 windowAdapter.WorldSize(viewPort);

@@ -90,12 +90,11 @@ namespace Oiraga
         }
 
         private Rect _worldBoundaries;
-        public void WorldSize(Message.ViewPort viewPort)
+        public void WorldSize(Rect viewPort)
         {
-            var r = viewPort.ToRectangle();
             _worldBoundaries = !_worldBoundaries.IsEmpty
-                ? Rect.Union(_worldBoundaries, r) : r;
-            ViewPort.SetOnCanvas(r);
+                ? Rect.Union(_worldBoundaries, viewPort) : viewPort;
+            ViewPort.SetOnCanvas(viewPort);
             WorldBoundaries.SetOnCanvas(_worldBoundaries);
             Back.SetOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
         }

@@ -67,12 +67,12 @@
     <Compile Include="DryIoc\Container.cs" />
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
-    <Compile Include="GameClientProvider.cs" />
-    <Compile Include="OiragaClientExtensions.cs" />
-    <Compile Include="OiragaControl.xaml.cs">
+    <Compile Include="Client\GameClientProvider.cs" />
+    <Compile Include="Client\OiragaClientExtensions.cs" />
+    <Compile Include="Ui\OiragaControl.xaml.cs">
       <DependentUpon>OiragaControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Camera.cs" />
+    <Compile Include="Utils\Camera.cs" />
     <Compile Include="Client\OiragaPlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
     <Compile Include="Client\IOiragaClient.cs" />
@@ -93,10 +93,10 @@
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="Utils\CircularBuffer.cs" />
     <Compile Include="Utils\TextPath.cs" />
-    <Compile Include="WindowAdapterComposer.cs" />
+    <Compile Include="Ui\WindowAdapterComposer.cs" />
     <Compile Include="World\World.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
-    <Page Include="OiragaControl.xaml">
+    <Page Include="Ui\OiragaControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -42,7 +42,7 @@ namespace Oiraga
         private void ProcessSize(Message.ViewPort viewPort)
         {
             _world.ViewPort = viewPort;
-            _windowAdapter.WorldSize(viewPort);
+            _windowAdapter.WorldSize(viewPort.ToRectangle());
         }
 
         //private void Spectate(Spectate spectate)
@@ -123,7 +123,7 @@ namespace Oiraga
             var me = new Ball(true);
             _world.Balls.Add(msg.Id, me);
             _world.MyBalls.Add(me);
-            me.State = new Message.Updates(
+            me.State = new Message.Update(
                 msg.Id, 0, 0, 32, Colors.DarkOrange, false, "me");
             _windowAdapter.Appears(me);
         }

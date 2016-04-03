@@ -1,4 +1,5 @@
-﻿using Oiraga;
+﻿using System.Windows;
+using Oiraga;
 
 namespace Tests
 {
@@ -35,7 +36,7 @@ namespace Tests
 
         }
 
-        public void WorldSize(Message.ViewPort viewPort)
+        public void WorldSize(Rect viewPort)
         {
             
         }

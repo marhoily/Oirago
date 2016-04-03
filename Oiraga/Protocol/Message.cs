@@ -86,10 +86,10 @@ namespace Oiraga
         public sealed class Tick : Message
         {
             public readonly Eating[] Eatings;
-            public readonly Updates[] Updates;
+            public readonly Update[] Updates;
             public readonly uint[] Disappearances;
 
-            public Tick(Eating[] eatings, Updates[] updates, uint[] disappearances)
+            public Tick(Eating[] eatings, Update[] updates, uint[] disappearances)
             {
                 Eatings = eatings;
                 Updates = updates;
@@ -106,7 +106,7 @@ namespace Oiraga
             }
         }
 
-        public sealed class Updates
+        public sealed class Update
         {
             public readonly uint Id;
             public readonly int X, Y;
@@ -115,7 +115,7 @@ namespace Oiraga
             public readonly bool IsVirus;
             public string Name;
 
-            public Updates(uint id, int x, int y, short size, 
+            public Update(uint id, int x, int y, short size, 
                 Color color, bool isVirus, string name)
             {
                 Id = id;
