@@ -4,12 +4,12 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class GameRawOutput : IGameRawOutput
+    public sealed class EventsFeed : IEventsFeed
     {
         private readonly ILog _log;
         private readonly GameRecorder _recorder;
 
-        public GameRawOutput(ILog log, GameRecorder recorder, WebSocket ws)
+        public EventsFeed(ILog log, GameRecorder recorder, WebSocket ws)
         {
             _log = log;
             _recorder = recorder;

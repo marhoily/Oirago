@@ -25,7 +25,7 @@ namespace Oiraga
                 case 64: return p.ReadWorldSize();
                 case 72: return new Nop();
                 case 81: return new ExperienceUpdate();
-                case 102: return new ForwardEvent();
+                case 102: return new Forward();
                 case 104: return new LogOut();
                 case 240: return new Nop();
                 case 254: return new GameOver();

@@ -64,7 +64,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Client\GameInput.cs" />
-    <Compile Include="Client\GameRawOutput.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsReciever\1. EventsFeed.cs" />
     <Compile Include="Client\IGameClient.cs" />
     <Compile Include="Client\IGameInput.cs" />
     <Compile Include="Client\NullInput.cs" />
@@ -78,7 +78,7 @@
       <DependentUpon>GameState.cs</DependentUpon>
     </Compile>
     <Compile Include="IGameRawOutput - IGameEventsReciever\BinaryReaderExtensions.cs">
-      <DependentUpon>1. EventDeserializer.cs</DependentUpon>
+      <DependentUpon>2. EventDeserializer.cs</DependentUpon>
     </Compile>
     <Compile Include="IGameRawOutput - IGameEventsReciever\GameClientExtensions.cs" />
     <Compile Include="ILog.cs" />
@@ -87,7 +87,7 @@
     </Compile>
     <Compile Include="Client\GamePlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
-    <Compile Include="Client\IGameRawOutput.cs" />
+    <Compile Include="Client\IEventsFeed.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -99,14 +99,14 @@
     <Compile Include="Utils\ColorExtensions.cs" />
     <Compile Include="World\IGameEventsReceiver.cs" />
     <Compile Include="IGameRawOutput - IGameEventsReciever\Event.cs" />
-    <Compile Include="IGameRawOutput - IGameEventsReciever\1. EventDeserializer.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsReciever\2. EventDeserializer.cs" />
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
     <Compile Include="World\BallExtensions.cs" />
     <Compile Include="World\BallsExtension.cs" />
     <Compile Include="World\GameEventsSinkComposer.cs" />
     <Compile Include="IGameRawOutput - IGameEventsReciever\GameState.cs" />
-    <Compile Include="IGameRawOutput - IGameEventsReciever\2. EventDispatcher.cs" />
+    <Compile Include="IGameRawOutput - IGameEventsReciever\3. EventDispatcher.cs" />
     <Compile Include="World\IBall.cs" />
     <Compile Include="World\IBalls.cs" />
     <Page Include="Ui\GameControl.xaml">

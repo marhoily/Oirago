@@ -2,7 +2,7 @@ using System;
 
 namespace Oiraga
 {
-    public interface IGameRawOutput
+    public interface IEventsFeed
     {
         event EventHandler<Event> OnEvent;
         bool IsSynchronous { get; }

@@ -67,7 +67,7 @@ namespace Oiraga
         public sealed class GameOver : Event { }
         public sealed class DestroyAllBalls : Event { }
         public sealed class ExperienceUpdate : Event { }
-        public sealed class ForwardEvent : Event { }
+        public sealed class Forward : Event { }
         public sealed class LogOut : Event { }
         [DebuggerDisplay("{X}, {Y}: {Zoom}")]
         public sealed class Spectate : Event

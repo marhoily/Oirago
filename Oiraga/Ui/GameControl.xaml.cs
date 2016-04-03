@@ -13,10 +13,10 @@ namespace Oiraga
         private readonly Dictionary<IBall, BallUi> 
             _map = new Dictionary<IBall, BallUi>();
 
-        public GameControl(IGameRawOutput gameRawOutput, IGameInput input, ILog log)
+        public GameControl(IEventsFeed eventsFeed, IGameInput input, ILog log)
         {
             _gameClient = input;
-            gameRawOutput.Attach(
+            eventsFeed.Attach(
                 new EventDispatcher(this, log), 
                 Dispatcher);
 
