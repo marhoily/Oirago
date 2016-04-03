@@ -23,7 +23,7 @@ namespace Oiraga
             InitializeComponent();
         }
 
-        public void Appears(Ball newGuy)
+        public void Appears(IBall newGuy)
         {
             var ballUi = new BallUi();
             _map[newGuy] = ballUi;
@@ -31,9 +31,9 @@ namespace Oiraga
             MainCanvas.Children.Add(ballUi.TextBlock);
         }
 
-        public void Eats(Ball eater, Ball eaten) { }
+        public void Eats(IBall eater, IBall eaten) { }
 
-        public void Remove(Ball dying)
+        public void Remove(IBall dying)
         {
             var ballUi = _map[dying];
             MainCanvas.Children.Remove(ballUi.Ellipse);
@@ -80,9 +80,9 @@ namespace Oiraga
         }
 
 
-        public void Leaders(Message.LeadersBoard leadersBoard)
+        public void Leaders(IEnumerable<string> leaders)
         {
-            Leadersboard.ItemsSource = leadersBoard.Leaders.Select(l => l.Name);
+            Leadersboard.ItemsSource = leaders;
         }
 
         private Rect _worldBoundaries;

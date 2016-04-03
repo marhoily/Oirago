@@ -7,19 +7,19 @@ namespace Oiraga
     {
         public List<IGameEventsSink> Listeners { get; } = new List<IGameEventsSink>();
 
-        public void Appears(Ball newGuy)
+        public void Appears(IBall newGuy)
         {
             foreach (var windowAdapter in Listeners)
                 windowAdapter.Appears(newGuy);
         }
 
-        public void Eats(Ball eater, Ball eaten)
+        public void Eats(IBall eater, IBall eaten)
         {
             foreach (var windowAdapter in Listeners)
                 windowAdapter.Eats(eater, eaten);
         }
 
-        public void Remove(Ball dying)
+        public void Remove(IBall dying)
         {
             foreach (var windowAdapter in Listeners)
                 windowAdapter.Remove(dying);
@@ -31,10 +31,10 @@ namespace Oiraga
                 windowAdapter.AfterTick(balls);
         }
 
-        public void Leaders(Message.LeadersBoard leadersBoard)
+        public void Leaders(IEnumerable<string> leaders)
         {
             foreach (var windowAdapter in Listeners)
-                windowAdapter.Leaders(leadersBoard);
+                windowAdapter.Leaders(leaders);
         }
 
         public void WorldSize(Rect viewPort)

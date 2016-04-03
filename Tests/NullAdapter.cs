@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using Oiraga;
 
 namespace Tests
@@ -6,11 +7,11 @@ namespace Tests
     public sealed class NullAdapter : IGameEventsSink
     {
         public IBalls Balls { get; private set; }
-        public void Appears(Ball newGuy) { }
-        public void Eats(Ball eater, Ball eaten) { } 
-        public void Remove(Ball dying) { }
+        public void Appears(IBall newGuy) { }
+        public void Eats(IBall eater, IBall eaten) { } 
+        public void Remove(IBall dying) { }
         public void AfterTick(IBalls balls) => Balls = balls;
-        public void Leaders(Message.LeadersBoard leadersBoard) { }
+        public void Leaders(IEnumerable<string> leaders) { }
         public void WorldSize(Rect viewPort) {  }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows.Media;
 
 namespace Oiraga
@@ -34,7 +35,7 @@ namespace Oiraga
 
             var leadersBoard = msg as Message.LeadersBoard;
             if (leadersBoard != null)
-                _gameEventsSink.Leaders(leadersBoard);
+                _gameEventsSink.Leaders(leadersBoard.Leaders.Select(x => x.Name));
 
             var unknown = msg as Message.Unknown;
             if (unknown != null) _log.Error(
