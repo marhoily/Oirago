@@ -6,4 +6,11 @@
         KeyUp="OnKeyDown"
         mc:Ignorable="d" 
         Title="MainWindow" Width="815" Height="637">
+    <Grid>
+        <ContentControl x:Name="GameControlPlace"/>
+        <TextBlock x:Name="ErrorLabel" Foreground="DarkOrange"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   FontWeight="Bold"/>
+
+    </Grid>
 </Window>

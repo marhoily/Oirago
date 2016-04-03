@@ -4,11 +4,11 @@ namespace Oiraga
 {
     public sealed class GameClientProvider
     {
-        private readonly IGameEventsSink _middleman;
+        private readonly ILog _log;
 
-        public GameClientProvider(IGameEventsSink middleman)
+        public GameClientProvider(ILog log)
         {
-            _middleman = middleman;
+            _log = log;
         }
 
         public Task<IGameClient> GetGameClient()
@@ -21,10 +21,10 @@ namespace Oiraga
 
         private async Task<IGameClient> Real()
         {
-            var entryServer = new EntryServersRegistry(_middleman);
+            var entryServer = new EntryServersRegistry(_log);
             var credentials = await entryServer.GetFfaServer();
             var gameClient = new GameClient(
-                _middleman, new GameRecorder(), credentials);
+                _log, new GameRecorder(), credentials);
             gameClient.Input.Spawn("blah");
             return gameClient;
         }

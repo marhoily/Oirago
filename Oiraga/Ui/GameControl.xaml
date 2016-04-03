@@ -17,11 +17,6 @@
             <Rectangle x:Name="WorldBoundaries" Fill="MidnightBlue"/>
             <Rectangle x:Name="ViewPort" Fill="Black"/>
         </Canvas>
-        <TextBlock x:Name="PrintLabel" VerticalAlignment="Top" 
-                   HorizontalAlignment="Left"/>
-        <TextBlock x:Name="ErrorLabel" Foreground="DarkOrange"
-                   VerticalAlignment="Top" HorizontalAlignment="Center" 
-                   FontWeight="Bold"/>
         <ItemsControl x:Name="Leadersboard" VerticalAlignment="Top"
                       HorizontalAlignment="Right" Margin="10"
                       Foreground="White"/>

@@ -10,11 +10,11 @@ namespace Oiraga
         private readonly IGameInput _gameClient;
         private double _zoom = 5;
 
-        public GameControl(IGameRawOutut gameRawOutut, IGameInput input)
+        public GameControl(IGameRawOutut gameRawOutut, IGameInput input, ILog log)
         {
             _gameClient = input;
             gameRawOutut.Attach(
-                new GameMessageProcessor(this), 
+                new GameMessageProcessor(this, log), 
                 Dispatcher);
 
             InitializeComponent();
@@ -77,11 +77,6 @@ namespace Oiraga
             TranslateTransform.Y = (TranslateTransform.Y + y) / 2;
         }
 
-        public void Error(string message)
-        {
-            Dispatcher.BeginInvoke(new Action(
-                () => ErrorLabel.Text = message));
-        }
 
         public void Leaders(Message.LeadersBoard leadersBoard)
         {

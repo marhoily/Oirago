@@ -17,7 +17,8 @@ namespace Tests
         public UnitTest1()
         {
             _gameEventsSink = new NullAdapter();
-            _gameMessageProcessor = new GameMessageProcessor(_gameEventsSink);
+            _gameMessageProcessor = new GameMessageProcessor(
+                _gameEventsSink, new NullLog());
         }
 
         [Fact]
@@ -38,5 +39,10 @@ namespace Tests
             Approvals.Verify(JsonConvert.SerializeObject(
                 _gameEventsSink.World, Formatting.Indented));
         }
+    }
+
+    public class NullLog : ILog
+    {
+        public void Error(string message) {  }
     }
 }

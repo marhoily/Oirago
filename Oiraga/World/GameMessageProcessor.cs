@@ -5,11 +5,14 @@ namespace Oiraga
     public sealed class GameMessageProcessor
     {
         private readonly IGameEventsSink _gameEventsSink;
+        private readonly ILog _log;
         private readonly World _world;
 
-        public GameMessageProcessor(IGameEventsSink gameEventsSink)
+        public GameMessageProcessor(IGameEventsSink gameEventsSink
+            ,ILog log)
         {
             _gameEventsSink = gameEventsSink;
+            _log = log;
             _world = new World();
         }
 
@@ -35,7 +38,7 @@ namespace Oiraga
                 _gameEventsSink.Leaders(leadersBoard);
 
             var unknown = msg as Message.Unknown;
-            if (unknown != null) _gameEventsSink.Error(
+            if (unknown != null) _log.Error(
                 $"Unknown packet id {unknown.PacketId}");
         }
 

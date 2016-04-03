@@ -3,7 +3,7 @@ using static Oiraga.Message;
 
 namespace Oiraga
 {
-    public interface IGameEventsSink : ILog
+    public interface IGameEventsSink 
     {
         void Appears(Ball newGuy);
         void Eats(Ball eater, Ball eaten);

@@ -6,11 +6,6 @@ namespace Oiraga
     public sealed class GameEventsSinkComposer : IGameEventsSink
     {
         public List<IGameEventsSink> Listeners { get; } = new List<IGameEventsSink>();
-        public void Error(string message)
-        {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.Error(message);
-        }
 
         public void Appears(Ball newGuy)
         {

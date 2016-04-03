@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace Oiraga
 {
-    public partial class MainWindow
+    public partial class MainWindow : ILog
     {
         private readonly GameEventsSinkComposer
             _middleman = new GameEventsSinkComposer();
@@ -16,24 +17,25 @@ namespace Oiraga
                 .ContinueWith(t =>
                 {
                     if (t.IsFaulted && t.Exception != null)
-                        _middleman.Error(t.Exception.InnerExceptions[0].ToString());
+                        Error(t.Exception.InnerExceptions[0].ToString());
                 });
         }
 
         private async Task LoadClient()
         {
-            var gameClientProvider = new GameClientProvider(_middleman);
+            var gameClientProvider = new GameClientProvider(this);
             var gameClient = await gameClientProvider.GetGameClient();
-            var oiragaControl = new GameControl(gameClient.RawOutut, gameClient.Input);
-            Content = oiragaControl;
+            var oiragaControl = new GameControl(gameClient.RawOutut, gameClient.Input, this);
+            oiragaControl.Loaded += (s, e) => oiragaControl.Focus();
+            GameControlPlace.Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }
-        
-        protected override void OnContentChanged(object x, object y)
+        public void Error(string message)
         {
-            ((UIElement)Content).Focus();
-            base.OnContentChanged(x, y);
+            Dispatcher.BeginInvoke(new Action(
+                () => ErrorLabel.Text = message));
         }
+
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
