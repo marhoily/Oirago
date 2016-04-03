@@ -29,6 +29,7 @@ namespace Oiraga
             };
         }
         Color _color;
+        short _size;
         public void Update(IBall ball, int zIndex, short mySize)
         {
             if (double.IsNaN(_pos.X)) { _pos = (Vector)ball.Pos; }
@@ -47,20 +48,24 @@ namespace Oiraga
                 TextBlock.Foreground = ball.Color.
                     IsDark() ? Brushes.Black : Brushes.White;
             }
-            var s = Math.Max(20.0, ball.Size);
-            Ellipse.Width = Ellipse.Height = s * 2;
-            Ellipse.StrokeThickness = Math.Max(2, s / 20);
-
-            if (!ball.IsFood() && !ball.IsVirus)
+            if (_size != ball.Size)
             {
-                var st = ball.Size.ToString();
-                if (mySize * .9 > s) st += "*";
-                if (mySize * .7 * .9 > s) st += "*";
-                if (mySize < s * .9) st = "*" + st;
-                if (mySize < s * .7 * .9) st = "*" + st;
-                TextBlock.Text = ball.Name == null ? st : $"{ball.Name}\r\n{st}";
-                TextBlock.FontSize = s / 2;
-                TextBlock.Visibility = Visibility.Visible;
+                _size = ball.Size;
+                var s = Math.Max(20.0, ball.Size);
+                Ellipse.Width = Ellipse.Height = s * 2;
+                Ellipse.StrokeThickness = Math.Max(2, s / 20);
+
+                if (!ball.IsFood() && !ball.IsVirus)
+                {
+                    var st = ball.Size.ToString();
+                    if (mySize * .9 > s) st += "*";
+                    if (mySize * .7 * .9 > s) st += "*";
+                    if (mySize < s * .9) st = "*" + st;
+                    if (mySize < s * .7 * .9) st = "*" + st;
+                    TextBlock.Text = ball.Name == null ? st : $"{ball.Name}\r\n{st}";
+                    TextBlock.FontSize = s / 2;
+                    TextBlock.Visibility = Visibility.Visible;
+                }
             }
 
             _pos = (Vector)(_pos + ball.Pos) / 2;
