@@ -12,8 +12,8 @@ namespace Oiraga
         private readonly SolidColorBrush _strokeBrush = new SolidColorBrush();
         public readonly Ellipse Ellipse;
         public readonly TextBlock TextBlock;
-        private double _x = double.NaN;
-        private double _y = double.NaN;
+        private double _prevX = double.NaN;
+        private double _prevY = double.NaN;
 
         public BallUi()
         {
@@ -32,10 +32,10 @@ namespace Oiraga
 
         public void Update(IBall ball, int zIndex, short mySize)
         {
-            if (double.IsNaN(_x))
+            if (double.IsNaN(_prevX))
             {
-                _x = ball.X;
-                _y = ball.Y;
+                _prevX = ball.X;
+                _prevY = ball.Y;
             }
             var color = ball.IsVirus
                 ? Color.FromArgb(128, 0, 255, 0) : ball.Color;
@@ -65,16 +65,16 @@ namespace Oiraga
                 TextBlock.Visibility = Visibility.Visible;
             }
 
-            _x = (_x + ball.X) / 2;
-            _y = (_y + ball.Y) / 2;
+            _prevX = (_prevX + ball.X) / 2;
+            _prevY = (_prevY + ball.Y) / 2;
 
             Panel.SetZIndex(Ellipse, zIndex);
             Panel.SetZIndex(TextBlock, zIndex);
 
-            Canvas.SetLeft(Ellipse, _x - Ellipse.Width / 2);
-            Canvas.SetTop(Ellipse, _y - Ellipse.Height / 2);
-            Canvas.SetLeft(TextBlock, _x - TextBlock.ActualWidth / 2);
-            Canvas.SetTop(TextBlock, _y - TextBlock.ActualHeight / 2);
+            Canvas.SetLeft(Ellipse, _prevX - Ellipse.Width / 2);
+            Canvas.SetTop(Ellipse, _prevY - Ellipse.Height / 2);
+            Canvas.SetLeft(TextBlock, _prevX - TextBlock.ActualWidth / 2);
+            Canvas.SetTop(TextBlock, _prevY - TextBlock.ActualHeight / 2);
         }
     }
 }
