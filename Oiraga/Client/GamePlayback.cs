@@ -34,6 +34,6 @@ namespace Oiraga
         }
 
         public IGameInput Input { get; }
-        public IGameRawOutut RawOutut => _rawOutput;
+        public IGameRawOutput RawOutput => _rawOutput;
     }
 }

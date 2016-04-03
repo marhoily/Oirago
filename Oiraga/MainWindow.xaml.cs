@@ -25,7 +25,7 @@ namespace Oiraga
         {
             var gameClientProvider = new GameClientProvider(this);
             var gameClient = await gameClientProvider.GetGameClient();
-            var oiragaControl = new GameControl(gameClient.RawOutut, gameClient.Input, this);
+            var oiragaControl = new GameControl(gameClient.RawOutput, gameClient.Input, this);
             oiragaControl.Loaded += (s, e) => oiragaControl.Focus();
             GameControlPlace.Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);

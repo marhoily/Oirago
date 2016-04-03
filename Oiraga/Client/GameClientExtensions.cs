@@ -6,7 +6,7 @@ namespace Oiraga
 {
     public static class GameClientExtensions
     {
-        public static void Attach(this IGameRawOutut client, GameMessageProcessor processor, Dispatcher dispatcher)
+        public static void Attach(this IGameRawOutput client, GameMessageProcessor processor, Dispatcher dispatcher)
         {
             if (client.IsSynchronous)
             {

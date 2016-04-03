@@ -4,7 +4,7 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class GameRawOutput : IGameRawOutut
+    public sealed class GameRawOutput : IGameRawOutput
     {
         private readonly ILog _log;
         private readonly GameRecorder _recorder;

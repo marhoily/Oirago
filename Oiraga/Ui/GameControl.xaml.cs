@@ -10,10 +10,10 @@ namespace Oiraga
         private readonly IGameInput _gameClient;
         private double _zoom = 5;
 
-        public GameControl(IGameRawOutut gameRawOutut, IGameInput input, ILog log)
+        public GameControl(IGameRawOutput gameRawOutput, IGameInput input, ILog log)
         {
             _gameClient = input;
-            gameRawOutut.Attach(
+            gameRawOutput.Attach(
                 new GameMessageProcessor(this, log), 
                 Dispatcher);
 

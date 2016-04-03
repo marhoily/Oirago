@@ -13,7 +13,7 @@ namespace Oiraga
         private TimeSpan _pause = TimeSpan.FromMilliseconds(50);
 
         public IGameInput Input { get; }
-        public IGameRawOutut RawOutut { get; }
+        public IGameRawOutput RawOutput { get; }
 
         public GameClient(ILog log,
             GameRecorder recorder, ServerConnection connection)
@@ -31,7 +31,7 @@ namespace Oiraga
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
             Input = new GameInput(_webSocket);
-            RawOutut = new GameRawOutput(log, recorder, _webSocket);
+            RawOutput = new GameRawOutput(log, recorder, _webSocket);
             _webSocket.Connect();
         }
 

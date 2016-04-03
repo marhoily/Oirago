@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Oiraga
 {
-    public sealed class PlaybackRawOutput : IGameRawOutut
+    public sealed class PlaybackRawOutput : IGameRawOutput
     {
         private readonly BinaryReader _stream;
 

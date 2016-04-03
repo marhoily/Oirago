@@ -81,7 +81,7 @@
     </Compile>
     <Compile Include="Client\GamePlayback.cs" />
     <Compile Include="Client\GameRecorder.cs" />
-    <Compile Include="Client\IGameRawOutut.cs" />
+    <Compile Include="Client\IGameRawOutput.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
