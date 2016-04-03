@@ -27,7 +27,7 @@ namespace Oiraga
         {
             return Do(region + ":teams\n" + InitKey);
         }
-        
+
         private async Task<ServerConnection> Do(string postData)
         {
             var result = await DoInner(postData);
@@ -60,11 +60,9 @@ namespace Oiraga
                 using (var dataStream = response.GetResponseStream())
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
-                            return new ServerConnection
-                            {
-                                Server = reader.ReadLine(),
-                                Key = reader.ReadLine()
-                            };
+                            return new ServerConnection(
+                                key: reader.ReadLine(),
+                                server: reader.ReadLine());
             }
             return null;
         }
