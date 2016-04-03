@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Oiraga
 {
-    public interface IGameEventsReceiver 
+    public interface IReceiver 
     {
         void Appears(IBall newGuy);
         void Eats(IBall eater, IBall eaten);

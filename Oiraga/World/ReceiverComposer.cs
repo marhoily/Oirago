@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace Oiraga
 {
-    public sealed class GameEventsSinkComposer : IGameEventsReceiver
+    public sealed class ReceiverComposer : IReceiver
     {
-        public List<IGameEventsReceiver> Listeners { get; } = new List<IGameEventsReceiver>();
+        public List<IReceiver> Listeners { get; } = new List<IReceiver>();
 
         public void Appears(IBall newGuy)
         {

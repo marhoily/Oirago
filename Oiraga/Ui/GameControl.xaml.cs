@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Oiraga
 {
-    public partial class GameControl : IGameEventsReceiver
+    public partial class GameControl : IReceiver
     {
         private readonly IGameInput _gameClient;
         private double _zoom = 5;

@@ -31,7 +31,7 @@ namespace Oiraga
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
             Input = new GameInput(_webSocket);
-            RawOutput = new EventsFeed(log, recorder, _webSocket);
+            RawOutput = new EventsFeed(_webSocket, recorder, log);
             _webSocket.Connect();
         }
 

@@ -7,8 +7,8 @@ namespace Oiraga
 {
     public partial class MainWindow : ILog
     {
-        private readonly GameEventsSinkComposer
-            _middleman = new GameEventsSinkComposer();
+        private readonly ReceiverComposer
+            _middleman = new ReceiverComposer();
 
         public MainWindow()
         {

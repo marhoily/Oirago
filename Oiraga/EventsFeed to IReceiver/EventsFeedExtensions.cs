@@ -3,7 +3,7 @@ using System.Windows.Threading;
 
 namespace Oiraga
 {
-    public static class GameClientExtensions
+    public static class EventsFeedExtensions
     {
         public static void Attach(this IEventsFeed client, EventDispatcher eventDispatcher, Dispatcher wpfDispatcher)
         {

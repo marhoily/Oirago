@@ -9,7 +9,7 @@ namespace Oiraga
         private readonly ILog _log;
         private readonly GameRecorder _recorder;
 
-        public EventsFeed(ILog log, GameRecorder recorder, WebSocket ws)
+        public EventsFeed(WebSocket ws, GameRecorder recorder, ILog log)
         {
             _log = log;
             _recorder = recorder;
