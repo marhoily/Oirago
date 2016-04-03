@@ -74,8 +74,8 @@
     <Compile Include="DryIoc\FactoryCompiler.cs" />
     <Compile Include="DryIoc\ImTools.cs" />
     <Compile Include="Client\GameClientProvider.cs" />
-    <Compile Include="Client\GameClientExtensions.cs" />
-    <Compile Include="Protocol\ILog.cs" />
+    <Compile Include="Protocol\GameClientExtensions.cs" />
+    <Compile Include="ILog.cs" />
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
@@ -91,7 +91,7 @@
     </Compile>
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="Utils\ColorExtensions.cs" />
-    <Compile Include="Protocol\IGameEventsSink.cs" />
+    <Compile Include="World\IGameEventsSink.cs" />
     <Compile Include="Protocol\Message.cs" />
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerConnection.cs" />
@@ -99,8 +99,8 @@
     <Compile Include="World\BallExtensions.cs" />
     <Compile Include="World\BallsExtension.cs" />
     <Compile Include="World\GameEventsSinkComposer.cs" />
-    <Compile Include="World\Balls.cs" />
-    <Compile Include="World\GameMessageProcessor.cs" />
+    <Compile Include="Protocol\Balls.cs" />
+    <Compile Include="Protocol\GameMessageProcessor.cs" />
     <Compile Include="World\IBall.cs" />
     <Compile Include="World\IBalls.cs" />
     <Page Include="Ui\GameControl.xaml">
@@ -112,7 +112,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="World\Ball.cs" />
+    <Compile Include="Protocol\Ball.cs" />
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
