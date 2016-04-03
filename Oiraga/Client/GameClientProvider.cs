@@ -14,7 +14,7 @@ namespace Oiraga
         public Task<IGameClient> GetGameClient()
         {
             return Real();
-            return Playback();
+            //return Playback();
         }
         private static Task<IGameClient> Playback() => 
             Task.FromResult<IGameClient>(new GamePlayback());
