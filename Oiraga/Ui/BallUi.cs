@@ -12,7 +12,12 @@ namespace Oiraga
         private readonly SolidColorBrush _strokeBrush = new SolidColorBrush();
         public readonly Ellipse Ellipse;
         public readonly TextBlock TextBlock;
-        private Vector _pos = new Vector(double.NaN, double.NaN);
+        private Vector _elasticPos = new Vector(double.NaN, double.NaN);
+        Color _prevColor;
+        short _prevSize;
+        int _prevZIndex;
+        private Point _prevPos;
+
 
         public BallUi()
         {
@@ -28,16 +33,12 @@ namespace Oiraga
                 TextAlignment = TextAlignment.Center
             };
         }
-        Color _color;
-        short _size;
-        int _zIndex;
-        private Point _prevPos;
         public void Update(IBall ball, int zIndex, short mySize)
         {
-            if (double.IsNaN(_pos.X)) { _pos = (Vector)ball.Pos; }
-            if (_color != ball.Color)
+            
+            if (_prevColor != ball.Color)
             {
-                _color = ball.Color;
+                _prevColor = ball.Color;
                 var color = ball.IsVirus
                     ? Color.FromArgb(128, 0, 255, 0)
                     : ball.Color;
@@ -50,9 +51,9 @@ namespace Oiraga
                 TextBlock.Foreground = ball.Color.
                     IsDark() ? Brushes.Black : Brushes.White;
             }
-            if (_size != ball.Size)
+            if (_prevSize != ball.Size)
             {
-                _size = ball.Size;
+                _prevSize = ball.Size;
                 var s = Math.Max(20.0, ball.Size);
                 Ellipse.Width = Ellipse.Height = s * 2;
                 Ellipse.StrokeThickness = Math.Max(2, s / 20);
@@ -72,14 +73,21 @@ namespace Oiraga
             if (_prevPos != ball.Pos)
             {
                 _prevPos = ball.Pos;
-                _pos = (Vector)(_pos + ball.Pos) / 2;
-                Ellipse.CenterOnCanvas(_pos);
-                TextBlock.CenterOnCanvas(_pos);
+                if (double.IsNaN(_elasticPos.X))
+                {
+                    _elasticPos = (Vector)ball.Pos;
+                }
+                else
+                {
+                    _elasticPos = (Vector)(_elasticPos + ball.Pos) / 2;
+                }
+                Ellipse.CenterOnCanvas(_elasticPos);
+                TextBlock.CenterOnCanvas(_elasticPos);                
             }
 
-            if (_zIndex != zIndex)
+            if (_prevZIndex != zIndex)
             {
-                _zIndex = zIndex;
+                _prevZIndex = zIndex;
                 Panel.SetZIndex(Ellipse, zIndex);
                 Panel.SetZIndex(TextBlock, zIndex);
             }
@@ -89,7 +97,7 @@ namespace Oiraga
         {
             Ellipse.Visibility = Visibility.Collapsed;
             TextBlock.Visibility = Visibility.Collapsed;
-            _pos = new Vector(double.NaN, double.NaN);
+            _elasticPos = new Vector(double.NaN, double.NaN);
         }
 
         public void Show()
