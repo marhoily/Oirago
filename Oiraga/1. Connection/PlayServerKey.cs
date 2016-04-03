@@ -1,11 +1,11 @@
 namespace Oiraga
 {
-    public class ServerConnection
+    public class PlayServerKey
     {
         public readonly string Key;
         public readonly string Server;
 
-        public ServerConnection(string key, string server)
+        public PlayServerKey(string key, string server)
         {
             Key = key;
             Server = server;

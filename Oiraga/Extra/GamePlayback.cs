@@ -4,7 +4,7 @@ using System.Windows.Threading;
 
 namespace Oiraga
 {
-    public class GamePlayback : IGameClient
+    public class GamePlayback : IPlayServerConnection
     {
         private readonly BinaryReader _stream;
         private readonly DispatcherTimer _timer;
@@ -33,7 +33,7 @@ namespace Oiraga
             _stream.Dispose();
         }
 
-        public IGameInput Input { get; }
+        public ICommandsSink Input { get; }
         public IEventsFeed RawOutput => _rawOutput;
     }
 }

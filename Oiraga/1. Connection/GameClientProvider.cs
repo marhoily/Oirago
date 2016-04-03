@@ -11,19 +11,19 @@ namespace Oiraga
             _log = log;
         }
 
-        public Task<IGameClient> GetGameClient()
+        public Task<IPlayServerConnection> GetGameClient()
         {
             return Real();
             //return Playback();
         }
-        private static Task<IGameClient> Playback() => 
-            Task.FromResult<IGameClient>(new GamePlayback());
+        private static Task<IPlayServerConnection> Playback() => 
+            Task.FromResult<IPlayServerConnection>(new GamePlayback());
 
-        private async Task<IGameClient> Real()
+        private async Task<IPlayServerConnection> Real()
         {
-            var entryServer = new EntryServersRegistry(_log);
+            var entryServer = new CentralServer(_log);
             var credentials = await entryServer.GetFfaServer();
-            var gameClient = new GameClient(
+            var gameClient = new PlayServerConnection(
                 _log, new EventsRecorder(), credentials);
             gameClient.Input.Spawn("blah");
             return gameClient;

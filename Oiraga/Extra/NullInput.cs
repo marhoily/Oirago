@@ -1,6 +1,6 @@
 namespace Oiraga
 {
-    public sealed class NullInput : IGameInput
+    public sealed class NullInput : ICommandsSink
     {
         public void Spawn(string name) { }
         public void MoveTo(double x, double y) { }

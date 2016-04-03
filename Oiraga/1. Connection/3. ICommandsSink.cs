@@ -1,6 +1,6 @@
 namespace Oiraga
 {
-    public interface IGameInput
+    public interface ICommandsSink
     {
         void Spawn(string name);
         void MoveTo(double x, double y);

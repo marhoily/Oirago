@@ -5,18 +5,18 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class GameClient : IGameClient
+    public sealed class PlayServerConnection : IPlayServerConnection
     {
         private readonly ILog _log;
-        private readonly ServerConnection _connection;
+        private readonly PlayServerKey _connection;
         private readonly WebSocket _webSocket;
         private TimeSpan _pause = TimeSpan.FromMilliseconds(50);
 
-        public IGameInput Input { get; }
+        public ICommandsSink Input { get; }
         public IEventsFeed RawOutput { get; }
 
-        public GameClient(ILog log,
-            EventsRecorder recorder, ServerConnection connection)
+        public PlayServerConnection(ILog log,
+            EventsRecorder recorder, PlayServerKey connection)
         {
             _log = log;
             _connection = connection;
@@ -30,7 +30,7 @@ namespace Oiraga
             _webSocket.OnError += OnWebSocketOnOnError;
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
-            Input = new GameInput(_webSocket);
+            Input = new CommandsSink(_webSocket);
             RawOutput = new EventsFeed(_webSocket, recorder, log);
             _webSocket.Connect();
         }

@@ -3,11 +3,11 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class GameInput : IGameInput
+    public sealed class CommandsSink : ICommandsSink
     {
         private readonly WebSocket _ws;
 
-        public GameInput(WebSocket ws)
+        public CommandsSink(WebSocket ws)
         {
             _ws = ws;
         }

@@ -5,30 +5,30 @@ using System.Threading.Tasks;
 
 namespace Oiraga
 {
-    public class EntryServersRegistry
+    public class CentralServer
     {
         private readonly ILog _windowAdapter;
         private const string InitKey = "154669603";
 
-        public EntryServersRegistry(ILog windowAdapter)
+        public CentralServer(ILog windowAdapter)
         {
             _windowAdapter = windowAdapter;
         }
 
-        public Task<ServerConnection> GetFfaServer(string region = "EU-London")
+        public Task<PlayServerKey> GetFfaServer(string region = "EU-London")
         {
             return Do(region + "\n" + InitKey);
         }
-        public Task<ServerConnection> GetExperimentalServer(string region = "EU-London")
+        public Task<PlayServerKey> GetExperimentalServer(string region = "EU-London")
         {
             return Do(region + ":experimental\n" + InitKey);
         }
-        public Task<ServerConnection> GetTeamsServer(string region = "EU-London")
+        public Task<PlayServerKey> GetTeamsServer(string region = "EU-London")
         {
             return Do(region + ":teams\n" + InitKey);
         }
 
-        private async Task<ServerConnection> Do(string postData)
+        private async Task<PlayServerKey> Do(string postData)
         {
             var result = await DoInner(postData);
             while (result == null)
@@ -39,7 +39,7 @@ namespace Oiraga
             if (!File.Exists("cache.json")) return await DoButCache(postData);
             var deserializeObject = JsonConvert.DeserializeObject(File.ReadAllText("cache.json"));
         */
-        private async Task<ServerConnection> DoInner(string postData)
+        private async Task<PlayServerKey> DoInner(string postData)
         {
             var request = (HttpWebRequest)
                 WebRequest.Create("http://m.agar.io/");
@@ -60,7 +60,7 @@ namespace Oiraga
                 using (var dataStream = response.GetResponseStream())
                     if (dataStream != null)
                         using (var reader = new StreamReader(dataStream))
-                            return new ServerConnection(
+                            return new PlayServerKey(
                                 server: reader.ReadLine(),
                                 key: reader.ReadLine());
             }

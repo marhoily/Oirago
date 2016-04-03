@@ -8,12 +8,12 @@ namespace Oiraga
 {
     public partial class GameControl : IReceiver
     {
-        private readonly IGameInput _gameClient;
+        private readonly ICommandsSink _gameClient;
         private double _zoom = 5;
         private readonly Dictionary<IBall, BallUi> 
             _map = new Dictionary<IBall, BallUi>();
 
-        public GameControl(IEventsFeed eventsFeed, IGameInput input, ILog log)
+        public GameControl(IEventsFeed eventsFeed, ICommandsSink input, ILog log)
         {
             _gameClient = input;
             eventsFeed.Attach(
