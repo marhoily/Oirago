@@ -23,8 +23,8 @@ namespace Oiraga
         private async Task LoadClient()
         {
             var gameClientProvider = new GameClientProvider(_middleman);
-            var oiragaControl = new GameControl(
-                await gameClientProvider.GetGameClient());
+            var gameClient = await gameClientProvider.GetGameClient();
+            var oiragaControl = new GameControl(gameClient, gameClient);
             Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }

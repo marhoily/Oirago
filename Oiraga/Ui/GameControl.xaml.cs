@@ -7,14 +7,14 @@ namespace Oiraga
 {
     public partial class GameControl : IGameEventsSink
     {
-        private readonly IGameClient _gameClient;
+        private readonly IGameInput _gameClient;
         private readonly World _world = new World();
         private double _zoom = 5;
 
-        public GameControl(IGameClient gameClient)
+        public GameControl(IGameRawOutut gameRawOutut, IGameInput input)
         {
-            _gameClient = gameClient;
-            _gameClient.Attach(
+            _gameClient = input;
+            gameRawOutut.Attach(
                 new GameMessageProcessor(this, _world), 
                 Dispatcher);
 

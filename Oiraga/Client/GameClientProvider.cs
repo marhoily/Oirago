@@ -2,7 +2,8 @@
 
 namespace Oiraga
 {
-    public  class GameClientProvider
+    public interface IGameClient : IGameInput, IGameRawOutut {}
+    public sealed class GameClientProvider
     {
         private readonly IGameEventsSink _middleman;
 
