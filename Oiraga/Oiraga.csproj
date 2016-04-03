@@ -96,9 +96,13 @@
     <Compile Include="Protocol\Protocol.cs" />
     <Compile Include="Client\ServerConnection.cs" />
     <Compile Include="Client\EntryServersRegistry.cs" />
-    <Compile Include="Protocol\GameEventsSinkComposer.cs" />
+    <Compile Include="World\BallExtensions.cs" />
+    <Compile Include="World\BallsExtension.cs" />
+    <Compile Include="World\GameEventsSinkComposer.cs" />
     <Compile Include="World\Balls.cs" />
     <Compile Include="World\GameMessageProcessor.cs" />
+    <Compile Include="World\IBall.cs" />
+    <Compile Include="World\IBalls.cs" />
     <Page Include="Ui\GameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
