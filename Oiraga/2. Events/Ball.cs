@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Media;
 
 namespace Oiraga
@@ -5,8 +6,7 @@ namespace Oiraga
     public sealed class Ball : IBall
     {
         public bool IsMine { get; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public Point Pos { get; private set; }
         public short Size { get; private set; }
         public Color Color { get; private set; }
         public bool IsVirus { get; private set; }
@@ -14,11 +14,10 @@ namespace Oiraga
 
         public Ball(bool isMine) { IsMine = isMine; }
 
-        public void Update(int x, int y, short size,
+        public void Update(Point pos, short size,
                 Color color, bool isVirus, string name)
         {
-            X = x;
-            Y = y;
+            Pos = pos;
             Size = size;
             Color = color;
             IsVirus = isVirus;

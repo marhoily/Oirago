@@ -90,9 +90,9 @@ namespace Oiraga
         {
             _worldBoundaries = !_worldBoundaries.IsEmpty
                 ? Rect.Union(_worldBoundaries, viewPort) : viewPort;
-            ViewPort.SetOnCanvas(viewPort);
-            WorldBoundaries.SetOnCanvas(_worldBoundaries);
-            Back.SetOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
+            ViewPort.PlaceOnCanvas(viewPort);
+            WorldBoundaries.PlaceOnCanvas(_worldBoundaries);
+            Back.PlaceOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
         }
 
         private void LeadBalls(Point me, double zoom)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using static Oiraga.Event;
 
@@ -57,8 +58,7 @@ namespace Oiraga
             {
                 var ballId = p.ReadUInt32();
                 if (ballId == 0) break;
-                var coordinateX = p.ReadInt32();
-                var coordinateY = p.ReadInt32();
+                var pos = new Point(p.ReadInt32(), p.ReadInt32());
                 var size = p.ReadInt16();
                 var color = Color.FromRgb(
                     p.ReadByte(), p.ReadByte(), p.ReadByte());
@@ -66,9 +66,8 @@ namespace Oiraga
                 var isVirus = (opt & 1) != 0;
                 if ((opt & 2) != 0) p.BaseStream.Seek(p.ReadUInt32(), SeekOrigin.Current);
                 if ((opt & 4) != 0) p.ReadAsciiString();
-                var name = (string) p.ReadUnicodeString();
-                yield return new Update(ballId, coordinateX, 
-                    coordinateY, size, color, isVirus, name);
+                var name = p.ReadUnicodeString();
+                yield return new Update(ballId, pos, size, color, isVirus, name);
             }
         }
         private static IEnumerable<uint> ReadDisappearances(this BinaryReader p)

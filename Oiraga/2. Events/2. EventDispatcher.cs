@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using static Oiraga.Event;
 
@@ -101,7 +102,7 @@ namespace Oiraga
                     _sink.Appears(newGuy);
                 }
                 
-                newGuy.Update(state.X, state.Y, state.Size,
+                newGuy.Update(state.Pos, state.Size,
                     state.Color, state.IsVirus, state.Name);
             }
         }
@@ -123,7 +124,7 @@ namespace Oiraga
             var me = new Ball(true);
             _gameState.All.Add(key, me);
             _gameState.My.Add(me);
-            me.Update(0, 0, 32, Colors.DarkOrange, false, "me");
+            me.Update(new Point(), 32, Colors.DarkOrange, false, "me");
             _sink.Appears(me);
         }
         private void DestroyAll()

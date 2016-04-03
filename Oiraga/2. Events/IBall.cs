@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Media;
 
 namespace Oiraga
@@ -5,8 +6,7 @@ namespace Oiraga
     public interface IBall
     {
         bool IsMine { get; }
-        int X { get; }
-        int Y { get; }
+        Point Pos { get; }
         short Size { get; }
         Color Color { get; }
         bool IsVirus { get; }
