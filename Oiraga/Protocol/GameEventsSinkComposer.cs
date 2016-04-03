@@ -25,10 +25,10 @@ namespace Oiraga
                 windowAdapter.Remove(dying);
         }
 
-        public void AfterTick(World world)
+        public void AfterTick(IBalls balls)
         {
             foreach (var windowAdapter in Listeners)
-                windowAdapter.AfterTick(world);
+                windowAdapter.AfterTick(balls);
         }
 
         public void Leaders(Message.LeadersBoard leadersBoard)

@@ -37,7 +37,7 @@ namespace Tests
                     .ProcessMessage(packet.ReadMessage());
             }
             Approvals.Verify(JsonConvert.SerializeObject(
-                _gameEventsSink.World, Formatting.Indented));
+                _gameEventsSink.Balls, Formatting.Indented));
         }
     }
 

@@ -37,22 +37,21 @@ namespace Oiraga
             MainCanvas.Children.Remove(ballUi.TextBlock);
         }
 
-        public void AfterTick(World world)
+        public void AfterTick(IBalls balls)
         {
-            if (world.MyBalls.Count > 0)
+            if (balls.My.Any())
             {
-                var myAverage = world.MyAverage;
-                LeadBalls(myAverage, world.Zoom04);
+                var myAverage = balls.MyAverage();
+                LeadBalls(myAverage, balls.Zoom04());
                 UpdateCenter(myAverage);
-                UpdateScale(world);
+                UpdateScale(balls);
                 var zIndex = 0;
-                var balls = world.Balls.OrderBy(b => b.Value.State.Size);
-                var mySize = world.MyBalls.Max(b => b.State.Size);
-                foreach (var ball in balls)
+                var bySize = balls.All.OrderBy(b => b.State.Size);
+                var mySize = balls.My.Max(b => b.State.Size);
+                foreach (var ball in bySize)
                 {
-                    var b = ball.Value;
-                    var ui = (BallUi)b.Tag;
-                    ui.Update(b, ++zIndex, mySize);
+                    var ui = (BallUi)ball.Tag;
+                    ui.Update(ball, ++zIndex, mySize);
                 }
             }
             else
@@ -62,9 +61,9 @@ namespace Oiraga
             }
         }
 
-        private void UpdateScale(World world)
+        private void UpdateScale(IBalls balls)
         {
-            var scale = world.Zoom - Math.Log10(_zoom);
+            var scale = balls.Zoom() - Math.Log10(_zoom);
             ScaleTransform.ScaleX = scale;
             ScaleTransform.ScaleY = scale;
         }
