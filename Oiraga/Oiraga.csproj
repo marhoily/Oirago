@@ -119,7 +119,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Protocol\Ext.cs" />
+    <Compile Include="Protocol\BinaryReaderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
