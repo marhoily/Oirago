@@ -1,10 +1,10 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Oiraga
 {
     public interface IEventsFeed
     {
-        event EventHandler<Event> OnEvent;
-        bool IsSynchronous { get; }
+        Task<Event> NextEvent();
     }
 }

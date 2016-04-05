@@ -1,5 +1,7 @@
+using Nito.AsyncEx;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using WebSocketSharp;
 
 namespace Oiraga
@@ -8,6 +10,8 @@ namespace Oiraga
     {
         private readonly ILog _log;
         private readonly EventsRecorder _recorder;
+        private readonly AsyncCollection<Event>
+            _events = new AsyncCollection<Event>();
 
         public EventsFeed(WebSocket ws, EventsRecorder recorder, ILog log)
         {
@@ -23,10 +27,9 @@ namespace Oiraga
             var p = new BinaryReader(new MemoryStream(rawData));
             var msg = p.ReadMessage();
             if (msg == null) _log.Error("buffer of length 0");
-            else OnEvent?.Invoke(this, msg);
+            else _events.Add(msg);
         }
 
-        public event EventHandler<Event> OnEvent;
-        public bool IsSynchronous => false;
+        public Task<Event> NextEvent() => _events.TakeAsync();
     }
 }

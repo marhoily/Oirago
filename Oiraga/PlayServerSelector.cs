@@ -10,8 +10,8 @@ namespace Oiraga
 
         public Task<IPlayServerConnection> GetGameClient()
         {
-            //return Real();
-            return Playback();
+            return Real();
+            //return Playback();
         }
         private static Task<IPlayServerConnection> Playback() => 
             Task.FromResult<IPlayServerConnection>(

@@ -1,22 +1,18 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace Oiraga
 {
     public static class EventsFeedExtensions
     {
-        public static void Attach(this IEventsFeed client, EventDispatcher eventDispatcher, Dispatcher wpfDispatcher)
+        public static async Task Attach(this IEventsFeed client, EventDispatcher eventDispatcher, Dispatcher wpfDispatcher)
         {
-            if (client.IsSynchronous)
+            while (true)
             {
-                client.OnEvent += (s, msg) =>
-                    eventDispatcher.Dispatch(msg);
-            }
-            else
-            {
-                client.OnEvent += (s, msg) =>
-                    wpfDispatcher.BeginInvoke(new Action(() =>
-                        eventDispatcher.Dispatch(msg)));
+                await Task.Delay(TimeSpan.FromMilliseconds(1));
+                for (int i = 0; i < 10; i++)
+                    eventDispatcher.Dispatch(await client.NextEvent());
             }
         }
     }
