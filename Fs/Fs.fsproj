@@ -51,26 +51,15 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
-    <Compile Include="Behavior\ConverterBase.fs" />
-    <Compile Include="Behavior\EventToCommand.fs" />
-    <Compile Include="Behavior\StringExistsToVisibilityConverter.fs" />
-    <Compile Include="Model\Expense.fs" />
-    <Compile Include="Model\ExpenseReport.fs" />
-    <Compile Include="Repository\ExpenseReportRepository.fs" />
-    <Compile Include="ViewModel\RelayCommand.fs" />
-    <Compile Include="ViewModel\ViewModelBase.fs" />
-    <Compile Include="ViewModel\MainWindowViewModel.fs" />
+    <Compile Include="Connection\CentralServer.fs" />
+    <Compile Include="Events\EventDeserializer.fs" />
+    <Compile Include="Ui\ExpenseReportRepository.fs" />
     <Compile Include="ViewModel\ExpenseItHomeViewModel.fs" />
     <Compile Include="App.fs" />
-    <Resource Include="ApplicationResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Resource>
     <Resource Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>
-    <Resource Include="watermark.png" />
     <Resource Include="ExpenseItHome.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
