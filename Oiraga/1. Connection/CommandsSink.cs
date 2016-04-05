@@ -1,4 +1,6 @@
 using System.IO;
+using System.Linq;
+using System.Text;
 using WebSocketSharp;
 
 namespace Oiraga
@@ -7,23 +9,13 @@ namespace Oiraga
     {
         private readonly WebSocket _ws;
 
-        public CommandsSink(WebSocket ws)
-        {
-            _ws = ws;
-        }
+        public CommandsSink(WebSocket ws) { _ws = ws; }
 
-        public void Spawn(string name)
-        {
-            var buf = new byte[1 + 2 * name.Length];
-            buf[0] = 0;
+        public void Spawn(string name) =>
+            _ws.Send(new byte[] { 0 }
+                .Concat(Encoding.Unicode.GetBytes(name))
+                .ToArray());
 
-            for (var i = 0; i < name.Length; i++)
-            {
-                buf[2 * i + 1] = (byte)name[i];
-                buf[2 * i + 2] = 0;
-            }
-            _ws.Send(buf);
-        }
         public void MoveTo(double x, double y)
         {
             var buf = new byte[13];
@@ -31,11 +23,10 @@ namespace Oiraga
             writer.Write((byte)16);
             writer.Write((int)x);
             writer.Write((int)y);
-            //writer.Write(0);
             _ws.Send(buf);
         }
-        public void Spectate() { _ws.Send(new byte[] { 1 }); }
-        public void Split() { _ws.Send(new byte[] { 17 }); }
-        public void Eject() { _ws.Send(new byte[] { 21 }); }
+        public void Spectate() => _ws.Send(new byte[] { 1 });
+        public void Split() => _ws.Send(new byte[] { 17 });
+        public void Eject() => _ws.Send(new byte[] { 21 });
     }
 }
