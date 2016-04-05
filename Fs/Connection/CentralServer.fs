@@ -114,7 +114,7 @@ type GameEvent =
     | Leaders of (uint32 * string) []
     | NewId
     | TeamUpdate
-    | WorldSize
+    | UpdateViewPort of Rect
     | NoIdea
     | ExperienceUpdate
     | Forward
@@ -125,30 +125,32 @@ type GameEvent =
 let EventsFeed (webSocket: WebSocket) record log =
 
     let readMessage (p : BinaryReader) =
-        let readLeaders() = [| 
-            for i in 0..int(p.ReadUInt32()) do
-                let id = p.ReadUInt32()
-                let name = p.ReadUnicodeString()
-                yield (id, name) |]
-        
-        let packetId = p.ReadByte();
-        match packetId with
+        match p.ReadByte() with
         | 16uy -> Tick
         | 17uy -> Spectate
         | 18uy -> DestroyAllBalls
         | 20uy -> DestroyLessStuff
         | 21uy -> SetSomeVariables
-        | 49uy -> Leaders(readLeaders())
+        | 49uy -> 
+            Leaders([| for i in 0..int (p.ReadUInt32()) do
+                           let id = p.ReadUInt32()
+                           let name = p.ReadUnicodeString()
+                           yield (id, name) |])
         | 32uy -> NewId
         | 50uy -> TeamUpdate
-        | 64uy -> WorldSize
+        | 64uy -> 
+            let minX = p.ReadDouble()
+            let minY = p.ReadDouble()
+            let maxX = p.ReadDouble()
+            let maxY = p.ReadDouble()
+            UpdateViewPort(new Rect(maxX, maxY, minX - maxX, minY - maxY))
         | 72uy -> NoIdea
         | 81uy -> ExperienceUpdate
         | 102uy -> Forward
         | 104uy -> LogOut
         | 240uy -> NoIdea
         | 254uy -> GameOver
-        | _ -> Unknown packetId
+        | id -> Unknown id
 
     let events = new AsyncCollection<GameEvent>()
     webSocket.OnMessage.Add(fun e -> 
