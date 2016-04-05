@@ -89,7 +89,7 @@ let CommandsSink (webSocket: WebSocket) =
             yield! (BitConverter.GetBytes(int(x)));
             yield! (BitConverter.GetBytes(int(y)))|]
 
-type BinaryReader with
+type private BinaryReader with
     member x.ReadUnicodeString() = 
         let sb = new StringBuilder();
         let mutable ch = x.ReadUInt16()
@@ -119,22 +119,17 @@ type BallUpdate = {
 type GameEvent = 
     | UpdateBalls of Eating[] * BallUpdate[] * BallId[]
     | UpdateCamera of float32 * float32 * float32
-    | DestroyAllBalls
-    | DestroyLessStuff
-    | SetSomeVariables
-    | Leaders of (uint32 * string) []
     | NewId of BallId
-    | TeamUpdate
     | UpdateViewPort of Rect
-    | NoIdea
-    | ExperienceUpdate
-    | Forward
-    | LogOut
-    | GameOver
+    | Leaders of (uint32 * string) []
     | Unknown of byte
+    // these I don't understand yet
+    | DestroyAllBalls | DestroyLessStuff
+    | SetSomeVariables | TeamUpdate
+    | NoIdea | ExperienceUpdate | Forward
+    | LogOut | GameOver
 
 let EventsFeed (webSocket: WebSocket) record log =
-
     let readMessage (p : BinaryReader) =
         match p.ReadByte() with
         | 16uy -> 
@@ -177,10 +172,7 @@ let EventsFeed (webSocket: WebSocket) record log =
         | 32uy -> NewId(p.ReadUInt32())
         | 50uy -> TeamUpdate
         | 64uy -> 
-            let minX = p.ReadDouble()
-            let minY = p.ReadDouble()
-            let maxX = p.ReadDouble()
-            let maxY = p.ReadDouble()
+            let (minX, minY, maxX, maxY) = (p.ReadDouble(), p.ReadDouble(), p.ReadDouble(), p.ReadDouble())
             UpdateViewPort(new Rect(maxX, maxY, minX - maxX, minY - maxY))
         | 72uy -> NoIdea
         | 81uy -> ExperienceUpdate
