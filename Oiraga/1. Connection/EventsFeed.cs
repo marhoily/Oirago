@@ -25,8 +25,7 @@ namespace Oiraga
             _recorder.Save(e.RawData);
             var p = new BinaryReader(new MemoryStream(e.RawData));
             var msg = p.ReadMessage();
-            if (msg == null) _log.Error("buffer of length 0");
-            else _events.Add(msg);
+            _events.Add(msg);
         }
 
         public Task<Event> NextEvent() => _events.TakeAsync();

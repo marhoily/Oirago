@@ -113,7 +113,6 @@ let EventsFeed (webSocket: WebSocket) record log =
 (*
         public static Event ReadMessage(this BinaryReader p)
         {
-            if (p.BaseStream.Length == 0) return null;
             var packetId = p.ReadByte();
             switch (packetId)
             {
@@ -148,16 +147,14 @@ let EventsFeed (webSocket: WebSocket) record log =
         
         let packetId = p.ReadByte();
         match packetId with
-        | 49uy -> Some(Leaders(readLeaders()))
-        | _ -> None
+        | 49uy -> Leaders(readLeaders())
+        | _ -> failwith "buffer of length 0"
 
     let events = new AsyncCollection<GameEvent>()
     webSocket.OnMessage.Add(fun e -> 
         record e.RawData
         let reader = new BinaryReader(new MemoryStream(e.RawData))
-        match readMessage reader with
-        | None -> log "buffer of length 0"
-        | Some(message) -> events.Add message)
+        events.Add(readMessage reader))
     let result : unit -> Async<GameEvent> =
         events.TakeAsync >> Async.AwaitTask
     result

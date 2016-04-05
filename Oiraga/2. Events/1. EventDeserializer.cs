@@ -11,7 +11,6 @@ namespace Oiraga
     {
         public static Event ReadMessage(this BinaryReader p)
         {
-            if (p.BaseStream.Length == 0) return null;
             var packetId = p.ReadByte();
             switch (packetId)
             {
