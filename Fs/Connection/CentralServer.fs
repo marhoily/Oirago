@@ -9,6 +9,7 @@ open System.IO
 open WebSocketSharp
 open System.Threading.Tasks
 open Nito.AsyncEx
+open System.Windows.Media
 
 let private InitKey = "154669603";
 let private Do (postData : string) log =
@@ -105,14 +106,24 @@ type BinaryReader with
             ch <- x.ReadByte()
         sb.ToString()
 
+type BallId = uint32
+type Eating = { Eater:BallId; Eaten:BallId }
+type BallUpdate = {
+    Id      : BallId;
+    Pos     : Point;
+    Size    : int16;
+    Clr     : Color;
+    IsVirus : bool;
+    Name    : string;
+}
 type GameEvent = 
-    | Tick
-    | Spectate
+    | UpdateBalls of Eating[] * BallUpdate[] * BallId[]
+    | UpdateCamera of float32 * float32 * float32
     | DestroyAllBalls
     | DestroyLessStuff
     | SetSomeVariables
     | Leaders of (uint32 * string) []
-    | NewId
+    | NewId of BallId
     | TeamUpdate
     | UpdateViewPort of Rect
     | NoIdea
@@ -126,8 +137,35 @@ let EventsFeed (webSocket: WebSocket) record log =
 
     let readMessage (p : BinaryReader) =
         match p.ReadByte() with
-        | 16uy -> Tick
-        | 17uy -> Spectate
+        | 16uy -> 
+            UpdateBalls(
+                [| for i in 0..int(p.ReadUInt16()) ->
+                       {Eater = p.ReadUInt32(); 
+                        Eaten = p.ReadUInt32()} |],
+
+                [| let readOpt() = 
+                       let opt = p.ReadByte()
+                       if (opt &&& 2uy) <> 0uy then p.BaseStream.Seek(int64(p.ReadUInt32()), SeekOrigin.Current) |> ignore
+                       if (opt &&& 4uy) <> 0uy then p.ReadAsciiString() |> ignore
+                       (opt &&& 1uy) <> 0uy;
+
+                   let mutable ballId = p.ReadUInt32()
+                   while ballId <> 0u do
+                       yield { Id      = ballId;
+                               Pos     = new Point(float(p.ReadInt32()), float(p.ReadInt32()));
+                               Size    = p.ReadInt16();
+                               Clr     = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());
+                               IsVirus = readOpt();
+                               Name    = p.ReadUnicodeString() }
+                       ballId <- p.ReadUInt32() |],
+
+                [| for i in 0..int(p.ReadUInt32()) -> p.ReadUInt32() |])
+        | 17uy -> 
+            let x = p.ReadSingle()
+            let y = p.ReadSingle()
+            let zoom = p.ReadSingle()
+            UpdateCamera(x, y, zoom)
+
         | 18uy -> DestroyAllBalls
         | 20uy -> DestroyLessStuff
         | 21uy -> SetSomeVariables
@@ -136,7 +174,7 @@ let EventsFeed (webSocket: WebSocket) record log =
                            let id = p.ReadUInt32()
                            let name = p.ReadUnicodeString()
                            yield (id, name) |])
-        | 32uy -> NewId
+        | 32uy -> NewId(p.ReadUInt32())
         | 50uy -> TeamUpdate
         | 64uy -> 
             let minX = p.ReadDouble()
