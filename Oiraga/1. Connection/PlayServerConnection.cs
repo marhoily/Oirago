@@ -15,8 +15,8 @@ namespace Oiraga
         public ICommandsSink Input { get; }
         public IEventsFeed Output { get; }
 
-        public PlayServerConnection(ILog log,
-            EventsRecorder recorder, PlayServerKey connection)
+        public PlayServerConnection(PlayServerKey connection,
+            EventsRecorder recorder, ILog log)
         {
             _log = log;
             _connection = connection;
