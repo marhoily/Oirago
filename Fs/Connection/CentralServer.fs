@@ -8,6 +8,7 @@ open System.Text
 open System.IO
 open WebSocketSharp
 open System.Threading.Tasks
+open Nito.AsyncEx
 
 let private InitKey = "154669603";
 let private Do (postData : string) log =
@@ -86,3 +87,19 @@ let CommandsSink (webSocket: WebSocket) =
             yield 16uy; 
             yield! (BitConverter.GetBytes(int(x)));
             yield! (BitConverter.GetBytes(int(y)))|]
+
+type GameEvent =
+    | NoMessage
+
+let EventsFeed (webSocket: WebSocket) record log =
+    let events = new AsyncCollection<GameEvent>()
+    webSocket.OnMessage.Add(fun e -> 
+        record e.RawData
+        let p = new BinaryReader(new MemoryStream(e.RawData))
+        //let msg = p.ReadMessage()
+        //if (msg == null) _log.Error("buffer of length 0");
+        //else _events.Add(msg);
+        events.Add NoMessage)
+    let result : unit -> Async<GameEvent> =
+        events.TakeAsync >> Async.AwaitTask
+    result

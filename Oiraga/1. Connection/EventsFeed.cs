@@ -20,11 +20,10 @@ namespace Oiraga
             ws.OnMessage += OnMessageReceived;
         }
 
-        private void OnMessageReceived(object sender, EventArgs e)
+        private void OnMessageReceived(object sender, MessageEventArgs e)
         {
-            var rawData = ((MessageEventArgs)e).RawData;
-            _recorder.Save(rawData);
-            var p = new BinaryReader(new MemoryStream(rawData));
+            _recorder.Save(e.RawData);
+            var p = new BinaryReader(new MemoryStream(e.RawData));
             var msg = p.ReadMessage();
             if (msg == null) _log.Error("buffer of length 0");
             else _events.Add(msg);
