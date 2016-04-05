@@ -105,39 +105,25 @@ type BinaryReader with
             ch <- x.ReadByte()
         sb.ToString()
 
-type GameEvent =
-    | Leaders of (uint32*string) []
-    | NoMessage
+type GameEvent = 
+    | Tick
+    | Spectate
+    | DestroyAllBalls
+    | DestroyLessStuff
+    | SetSomeVariables
+    | Leaders of (uint32 * string) []
+    | NewId
+    | TeamUpdate
+    | WorldSize
+    | NoIdea
+    | ExperienceUpdate
+    | Forward
+    | LogOut
+    | GameOver
+    | Unknown of byte
 
 let EventsFeed (webSocket: WebSocket) record log =
-(*
-        public static Event ReadMessage(this BinaryReader p)
-        {
-            var packetId = p.ReadByte();
-            switch (packetId)
-            {
-                case 16: return p.ReadTick();
-                case 17: return p.ReadSpectate();
-                case 18: return new DestroyAllBalls();
-                case 20: return new Nop(); // clear less stuff
-                case 21: return new Unknown(packetId); // set some variables?
-                case 32: return p.ReadNewId();
-                case 49: return new LeadersBoard(p.ReadLeaders().ToArray());
-                case 50: return new TeamUpdate();
-                case 64: return p.ReadWorldSize();
-                case 72: return new Nop();
-                case 81: return new ExperienceUpdate();
-                case 102: return new Forward();
-                case 104: return new LogOut();
-                case 240: return new Nop();
-                case 254: return new GameOver();
-                default: return new Unknown(packetId);
-            }
-        }
-        
 
-
-        *)
     let readMessage (p : BinaryReader) =
         let readLeaders() = [| 
             for i in 0..int(p.ReadUInt32()) do
@@ -147,8 +133,22 @@ let EventsFeed (webSocket: WebSocket) record log =
         
         let packetId = p.ReadByte();
         match packetId with
+        | 16uy -> Tick
+        | 17uy -> Spectate
+        | 18uy -> DestroyAllBalls
+        | 20uy -> DestroyLessStuff
+        | 21uy -> SetSomeVariables
         | 49uy -> Leaders(readLeaders())
-        | _ -> failwith "buffer of length 0"
+        | 32uy -> NewId
+        | 50uy -> TeamUpdate
+        | 64uy -> WorldSize
+        | 72uy -> NoIdea
+        | 81uy -> ExperienceUpdate
+        | 102uy -> Forward
+        | 104uy -> LogOut
+        | 240uy -> NoIdea
+        | 254uy -> GameOver
+        | _ -> Unknown packetId
 
     let events = new AsyncCollection<GameEvent>()
     webSocket.OnMessage.Add(fun e -> 
