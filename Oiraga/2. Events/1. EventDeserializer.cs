@@ -104,7 +104,7 @@ namespace Oiraga
             for (var i = 0; i < count; i++)
             {
                 var id = p.ReadUInt32();
-                var name = (string) p.ReadUnicodeString();
+                var name = p.ReadUnicodeString();
                 yield return new Leader(id, name);
             }
         }

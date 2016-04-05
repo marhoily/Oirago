@@ -88,18 +88,76 @@ let CommandsSink (webSocket: WebSocket) =
             yield! (BitConverter.GetBytes(int(x)));
             yield! (BitConverter.GetBytes(int(y)))|]
 
+type BinaryReader with
+    member x.ReadUnicodeString() = 
+        let sb = new StringBuilder();
+        let mutable ch = x.ReadUInt16()
+        while ch <> 0us do
+            sb.Append(char(ch)) |> ignore
+            ch <- x.ReadUInt16()
+        sb.ToString()
+
+    member x.ReadAsciiString() = 
+        let sb = new StringBuilder();
+        let mutable ch = x.ReadByte()
+        while ch <> 0uy do
+            sb.Append(char(ch)) |> ignore
+            ch <- x.ReadByte()
+        sb.ToString()
+
 type GameEvent =
+    | Leaders of (uint32*string) []
     | NoMessage
 
 let EventsFeed (webSocket: WebSocket) record log =
+(*
+        public static Event ReadMessage(this BinaryReader p)
+        {
+            if (p.BaseStream.Length == 0) return null;
+            var packetId = p.ReadByte();
+            switch (packetId)
+            {
+                case 16: return p.ReadTick();
+                case 17: return p.ReadSpectate();
+                case 18: return new DestroyAllBalls();
+                case 20: return new Nop(); // clear less stuff
+                case 21: return new Unknown(packetId); // set some variables?
+                case 32: return p.ReadNewId();
+                case 49: return new LeadersBoard(p.ReadLeaders().ToArray());
+                case 50: return new TeamUpdate();
+                case 64: return p.ReadWorldSize();
+                case 72: return new Nop();
+                case 81: return new ExperienceUpdate();
+                case 102: return new Forward();
+                case 104: return new LogOut();
+                case 240: return new Nop();
+                case 254: return new GameOver();
+                default: return new Unknown(packetId);
+            }
+        }
+        
+
+
+        *)
+    let readMessage (p : BinaryReader) =
+        let readLeaders() = [| 
+            for i in 0..int(p.ReadUInt32()) do
+                let id = p.ReadUInt32()
+                let name = p.ReadUnicodeString()
+                yield (id, name) |]
+        
+        let packetId = p.ReadByte();
+        match packetId with
+        | 49uy -> Some(Leaders(readLeaders()))
+        | _ -> None
+
     let events = new AsyncCollection<GameEvent>()
     webSocket.OnMessage.Add(fun e -> 
         record e.RawData
-        let p = new BinaryReader(new MemoryStream(e.RawData))
-        //let msg = p.ReadMessage()
-        //if (msg == null) _log.Error("buffer of length 0");
-        //else _events.Add(msg);
-        events.Add NoMessage)
+        let reader = new BinaryReader(new MemoryStream(e.RawData))
+        match readMessage reader with
+        | None -> log "buffer of length 0"
+        | Some(message) -> events.Add message)
     let result : unit -> Async<GameEvent> =
         events.TakeAsync >> Async.AwaitTask
     result
