@@ -45,6 +45,9 @@ type GameEvent =
     | Appears of IBall
     | Eats of IBall*IBall
     | Removes of IBall
+    | ViewPort of Rect
+    | Leaders of string[]
+    | Error of string
 
 open CentralServer
 
@@ -114,4 +117,16 @@ let dispatch (gameState: GameState) =
     function
     | UpdateBalls(e, u, d) -> gameState.Update(e, u, d)
     | NewId(ballId) -> gameState.CreateMe(ballId)
+    | DestroyAllBalls -> gameState.DestroyAll()
+    | UpdateViewPort r -> seq { yield ViewPort r }
+    | UpdateLeaders l -> 
+        seq { yield Leaders (l |> Array.map snd) }
+    | Unknown id -> 
+        seq { yield Error (sprintf "Unknown packet id %d" id) }
+    // not now
+    | UpdateCamera (x,y,zoom)-> Seq.empty
+    // just ignore
+    | DestroyAllBalls | DestroyLessStuff | TeamUpdate
+    | SetSomeVariables | NoIdea | ExperienceUpdate 
+    | Forward | LogOut | GameOver -> Seq.empty
     

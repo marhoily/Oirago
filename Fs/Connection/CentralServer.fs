@@ -121,7 +121,7 @@ type ServerEvent =
     | UpdateCamera of float32 * float32 * float32
     | NewId of BallId
     | UpdateViewPort of Rect
-    | Leaders of (uint32 * string) []
+    | UpdateLeaders of (uint32 * string) []
     | Unknown of byte
     // these I don't understand yet
     | DestroyAllBalls | DestroyLessStuff
@@ -165,7 +165,7 @@ let EventsFeed (webSocket: WebSocket) record log =
         | 20uy -> DestroyLessStuff
         | 21uy -> SetSomeVariables
         | 49uy -> 
-            Leaders([| for i in 0..int (p.ReadUInt32()) do
+            UpdateLeaders([| for i in 0..int (p.ReadUInt32()) do
                            let id = p.ReadUInt32()
                            let name = p.ReadUnicodeString()
                            yield (id, name) |])
