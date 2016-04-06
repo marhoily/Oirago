@@ -41,6 +41,11 @@ type Ball(isMine : bool) =
         member x.IsVirus = x.IsVirus
         member x.Name    = x.Name   
 
+type GameEvent =
+    | Appears of IBall
+    | Eats of IBall*IBall
+    | Removes of IBall
+
 open CentralServer
 
 type GameState() =
@@ -48,30 +53,29 @@ type GameState() =
     member val My = new HashSet<Ball>();
     
     member x.Update(eatings : Eating[], updates: BallUpdate[], deletes: BallId[]) =
-        let appears = new List<IBall>()
-        let eats = new List<IBall*IBall>()
-        let removes = new List<IBall>()
+        let gameEvents = new List<GameEvent>()
+
         for e in eatings do
             let (ok, eaterFound) = x.All.TryGetValue(e.Eater)
             let eater = if ok then eaterFound else
                             let created = new Ball(false)
                             x.All.Add(e.Eater, created)
-                            appears.Add(created)
+                            gameEvents.Add(Appears created)
                             created
 
             let (ok, eaten) = x.All.TryGetValue(e.Eaten)
             if ok then 
-                eats.Add((eater :> IBall, eaten :> IBall))
+                gameEvents.Add(Eats (eater, eaten))
                 x.All.Remove(e.Eaten) |> ignore
                 if eaten.IsMine then x.My.Remove(eaten) |> ignore
-                removes.Add(eaten) |> ignore
+                gameEvents.Add(Removes eaten) |> ignore
 
         for u in updates do
             let (ok, newGuyFound) = x.All.TryGetValue(u.Id)
             let newGuy = if ok then newGuyFound else
                             let created = new Ball(false)
                             x.All.Add(u.Id, created)
-                            appears.Add(created)
+                            gameEvents.Add(Appears created)
                             created
     
             newGuy.Pos <- u.Pos;
@@ -86,28 +90,29 @@ type GameState() =
             if ok then
                 x.All.Remove(r) |> ignore
                 if dying.IsMine then x.My.Remove(dying) |> ignore
-                removes.Add(dying)
+                gameEvents.Add(Removes dying) |> ignore
 
-        (appears, eats, removes)
+        gameEvents :> seq<_>
 
     member x.CreateMe(id: BallId) =
         let me = new Ball(true);
         x.All.Add(id, me) |> ignore
         x.My.Add(me) |> ignore
-        me
+        seq { yield (Appears me) }
 
     member x.DestroyAll() =
-        let result = x.All.Values |> Seq.toArray
+        let result = x.All.Values |> Seq.map (fun ball -> Removes ball)
         x.All.Clear |> ignore
         x.My.Clear |> ignore
+        result
 
     interface IBalls with
         member x.All = x.All.Values |> Seq.cast
         member x.My = x.My |> Seq.cast
 
-let dispatch (gameState: GameState) (gameEvent: ServerEvent) =
-    match gameEvent with
+let dispatch (gameState: GameState) =
+    function
     | UpdateBalls(eatings, updates, deletes) -> 
         gameState.Update(eatings, updates, deletes)
-    //| NewId(ballId) -> gameState.CreateMe(ballId)
+    | NewId(ballId) -> gameState.CreateMe(ballId)
     
