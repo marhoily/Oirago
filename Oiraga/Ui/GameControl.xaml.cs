@@ -18,8 +18,11 @@ namespace Oiraga
         {
             _gameClient = input;
             eventsFeed.Attach(
-                new EventDispatcher(this, log), 
-                Dispatcher);
+                new EventDispatcher(this, log),
+                Dispatcher).ContinueWith(t => {
+                    if (t.IsFaulted) log.Error(
+                        t.Exception.InnerException.Message);
+                });
 
             InitializeComponent();
         }

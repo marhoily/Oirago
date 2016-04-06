@@ -54,13 +54,9 @@
     <Compile Include="Connection\CentralServer.fs" />
     <Compile Include="Events\GameModel.fs" />
     <Compile Include="Ui\BallUi.fs" />
-    <Compile Include="ViewModel\ExpenseItHomeViewModel.fs" />
+    <None Include="Ui\GameControl.xaml" />
     <Compile Include="App.fs" />
     <Resource Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Resource>
-    <Resource Include="ExpenseItHome.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>
