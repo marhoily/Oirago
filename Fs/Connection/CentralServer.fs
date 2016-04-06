@@ -112,7 +112,7 @@ type BallUpdate = {
     Id      : BallId;
     Pos     : Point;
     Size    : int16;
-    Clr     : Color;
+    Color   : Color;
     IsVirus : bool;
     Name    : string;
 }
@@ -149,7 +149,7 @@ let EventsFeed (webSocket: WebSocket) record log =
                        yield { Id      = ballId;
                                Pos     = new Point(float(p.ReadInt32()), float(p.ReadInt32()));
                                Size    = p.ReadInt16();
-                               Clr     = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());
+                               Color     = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());
                                IsVirus = readOpt();
                                Name    = p.ReadUnicodeString() }
                        ballId <- p.ReadUInt32() |],

@@ -7,7 +7,5 @@ open System.Windows.Data
 open System.Windows.Input
 open System.ComponentModel
 open System.Collections.ObjectModel
-open FSharpWpfMvvmTemplate.Model
-open FSharpWpfMvvmTemplate.Repository
 open System.Reflection
 
