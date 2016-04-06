@@ -147,7 +147,7 @@ let EventsFeed (webSocket: WebSocket) record log =
 
                    let mutable ballId = p.ReadUInt32()
                    while ballId <> 0u do
-                       yield (ballId, { 
+                       yield ({Id      = ballId;
                                Pos     = new Point(float(p.ReadInt32()), float(p.ReadInt32()));
                                Size    = p.ReadInt16();
                                Color   = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());

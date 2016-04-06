@@ -38,6 +38,7 @@ type GameEvent =
     | Appears of Ball
     | Eats of Ball*Ball
     | Removes of Ball
+    | AfterTick of IBalls
     | ViewPort of Rect
     | Leaders of string[]
     | Error of string
