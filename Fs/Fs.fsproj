@@ -70,6 +70,14 @@
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="FsXaml.Wpf">
+      <HintPath>..\packages\FsXaml.Wpf.0.9.9\lib\net45\FsXaml.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FsXaml.Wpf.TypeProvider">
+      <HintPath>..\packages\FsXaml.Wpf.0.9.9\lib\net45\FsXaml.Wpf.TypeProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Nito.AsyncEx">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
@@ -91,6 +99,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="UIAutomationProvider" />
