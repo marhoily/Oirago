@@ -101,9 +101,12 @@ namespace Oiraga
                     _gameState.All.Add(state.Id, newGuy);
                     _sink.Appears(newGuy);
                 }
-                
-                newGuy.Update(state.Pos, state.Size,
-                    state.Color, state.IsVirus, state.Name);
+                newGuy.Pos = state.Pos;
+                newGuy.Size = state.Size;
+                newGuy.Color = state.Color;
+                newGuy.IsVirus = state.IsVirus;
+                if (!string.IsNullOrEmpty(state.Name))
+                    newGuy.Name = state.Name;
             }
         }
         private void Cleanup(uint[] ballIds)
@@ -124,7 +127,6 @@ namespace Oiraga
             var me = new Ball(true);
             _gameState.All.Add(key, me);
             _gameState.My.Add(me);
-            me.Update(new Point(), 32, Colors.DarkOrange, false, "me");
             _sink.Appears(me);
         }
         private void DestroyAll()
