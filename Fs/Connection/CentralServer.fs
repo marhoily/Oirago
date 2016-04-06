@@ -116,7 +116,7 @@ type BallUpdate = {
     IsVirus : bool;
     Name    : string;
 }
-type GameEvent = 
+type ServerEvent = 
     | UpdateBalls of Eating[] * BallUpdate[] * BallId[]
     | UpdateCamera of float32 * float32 * float32
     | NewId of BallId
@@ -182,11 +182,11 @@ let EventsFeed (webSocket: WebSocket) record log =
         | 254uy -> GameOver
         | id -> Unknown id
 
-    let events = new AsyncCollection<GameEvent>()
+    let events = new AsyncCollection<ServerEvent>()
     webSocket.OnMessage.Add(fun e -> 
         record e.RawData
         let reader = new BinaryReader(new MemoryStream(e.RawData))
         events.Add(readMessage reader))
-    let result : unit -> Async<GameEvent> =
+    let result : unit -> Async<ServerEvent> =
         events.TakeAsync >> Async.AwaitTask
     result
