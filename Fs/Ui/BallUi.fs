@@ -30,20 +30,22 @@ type private FrameworkElement with
         e.Width <- r.Width
         e.Height <- r.Height
 
-type BuildUi() =
+type BallUi() =
     let _fillBrush =  new SolidColorBrush()
     let _strokeBrush = new SolidColorBrush()
-    let Ellipse = new Ellipse(Fill = _fillBrush, 
-                              Stroke = _strokeBrush)
-    let TextBlock = new TextBlock(FontSize = 40.0,
-                                  Visibility = Visibility.Collapsed,
-                                  TextAlignment = TextAlignment.Center)
-
     let mutable _elasticPos = new Vector(Double.NaN, Double.NaN)
     let mutable _prevColor = new Color()
     let mutable _prevSize = new int16()
     let mutable _prevZIndex = new int()
     let mutable _prevPos = new Point()
+
+    member x.Ellipse = 
+        new Ellipse(Fill = _fillBrush, Stroke = _strokeBrush)
+    member x.TextBlock = 
+        new TextBlock(
+            FontSize = 40.0,
+            Visibility = Visibility.Collapsed,
+            TextAlignment = TextAlignment.Center)
 
     member x.Update(ball : Ball, zIndex: int, mySize: float) =
         if _prevColor <> ball.Color then
@@ -55,16 +57,16 @@ type BuildUi() =
             _strokeBrush.Color <- 
                 if ball.IsVirus then Colors.Red
                 else color.GetDarker()
-            TextBlock.Foreground <- 
+            x.TextBlock.Foreground <- 
                 if ball.Color.IsDark() then Brushes.Black 
                 else Brushes.White
 
         if _prevSize <> ball.Size then
             _prevSize <- ball.Size
             let s = Math.Max(20.0, float(ball.Size))
-            Ellipse.Width  <- s * 2.0
-            Ellipse.Height <- s * 2.0
-            Ellipse.StrokeThickness <- Math.Max(2.0, s / 20.0)
+            x.Ellipse.Width  <- s * 2.0
+            x.Ellipse.Height <- s * 2.0
+            x.Ellipse.StrokeThickness <- Math.Max(2.0, s / 20.0)
             if not ball.IsFood && not ball.IsVirus then
                 let sb = new StringBuilder()
                 if ball.Name <> null then sb.AppendLine(ball.Name) |> ignore
@@ -73,9 +75,9 @@ type BuildUi() =
                 sb.Append(ball.Size) |> ignore
                 if mySize * 0.9 > s then sb.Append('*') |> ignore
                 if mySize * 0.7 * 0.9 > s then sb.Append('*') |> ignore
-                TextBlock.Text <- sb.ToString()
-                TextBlock.FontSize <- s / 2.0;
-                TextBlock.Visibility <- Visibility.Visible;
+                x.TextBlock.Text <- sb.ToString()
+                x.TextBlock.FontSize <- s / 2.0;
+                x.TextBlock.Visibility <- Visibility.Visible;
 
         if _prevPos <> ball.Pos then
             _prevPos <- ball.Pos
@@ -84,18 +86,18 @@ type BuildUi() =
                 if Double.IsNaN(_elasticPos.X) then pos
                 else (_elasticPos + pos)/ 2.0
 
-            Ellipse.CenterOnCanvas(_elasticPos)
-            TextBlock.CenterOnCanvas(_elasticPos)               
+            x.Ellipse.CenterOnCanvas(_elasticPos)
+            x.TextBlock.CenterOnCanvas(_elasticPos)               
 
         if _prevZIndex <> zIndex then
             _prevZIndex <- zIndex
-            Panel.SetZIndex(Ellipse, zIndex)
-            Panel.SetZIndex(TextBlock, zIndex)
+            Panel.SetZIndex(x.Ellipse, zIndex)
+            Panel.SetZIndex(x.TextBlock, zIndex)
 
     member x.Hide() =
-        Ellipse.Visibility <- Visibility.Collapsed
-        TextBlock.Visibility <- Visibility.Collapsed
+        x.Ellipse.Visibility <- Visibility.Collapsed
+        x.TextBlock.Visibility <- Visibility.Collapsed
         _elasticPos <- new Vector(Double.NaN, Double.NaN)
 
     member x.Show() =
-        Ellipse.Visibility <- Visibility.Visible
+        x.Ellipse.Visibility <- Visibility.Visible

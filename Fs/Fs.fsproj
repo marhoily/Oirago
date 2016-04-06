@@ -55,6 +55,7 @@
     <Compile Include="Events\GameModel.fs" />
     <Compile Include="Ui\BallUi.fs" />
     <None Include="Ui\GameControl.xaml" />
+    <Compile Include="Ui\GameControl.fs" />
     <Compile Include="App.fs" />
     <Resource Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

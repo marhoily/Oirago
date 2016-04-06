@@ -19,11 +19,12 @@ type Ball = {
     Data : BallData;
     Name : string; 
 } with
+    member ball.Id      = ball.Data.Id
     member ball.Pos     = ball.Data.Pos
     member ball.Size    = ball.Data.Size
     member ball.Color   = ball.Data.Color
     member ball.IsVirus = ball.Data.IsVirus
-    member ball.IsFood = ball.Data.Size < 30s
+    member ball.IsFood  = ball.Data.Size < 30s
 
 type MetaBall =
     | Real of Ball
@@ -63,7 +64,8 @@ type GameState() =
                 gameEvents.Add(Removes eaten) |> ignore
             | _ -> ()
 
-        for (id, ballData, ballName) in updates do
+        for (ballData, ballName) in updates do
+            let id = ballData.Id
             let (ok, newGuyFound) = x.All.TryGetValue(id)
             let newGuy = if ok then newGuyFound else
                             let created = Header false

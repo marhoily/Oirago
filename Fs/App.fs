@@ -7,7 +7,6 @@ open System.Windows.Markup
 open System.Windows.Input
 
 type MainWindow = FsXaml.XAML<"MainWindow.xaml", true>
-type GameControl = FsXaml.XAML<"Ui/GameControl.xaml", true>
 let window = new MainWindow()
 window.Root.KeyDown.Add(fun e -> 
     if e.Key = Key.F11 then

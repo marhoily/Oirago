@@ -109,12 +109,13 @@ type private BinaryReader with
 type BallId = uint32
 type Eating = { Eater:BallId; Eaten:BallId }
 type BallData = {
+    Id      : BallId;
     Pos     : Point;
     Size    : int16;
     Color   : Color;
     IsVirus : bool;
 }
-type BallUpdate = BallId * BallData * string
+type BallUpdate = BallData * string
 
 type ServerEvent = 
     | UpdateBalls of Eating[] * BallUpdate[] * BallId[]
