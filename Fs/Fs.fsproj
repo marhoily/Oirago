@@ -53,7 +53,7 @@
   <ItemGroup>
     <Compile Include="Connection\CentralServer.fs" />
     <Compile Include="Events\GameModel.fs" />
-    <Compile Include="Ui\ExpenseReportRepository.fs" />
+    <Compile Include="Ui\BallUi.fs" />
     <Compile Include="ViewModel\ExpenseItHomeViewModel.fs" />
     <Compile Include="App.fs" />
     <Resource Include="MainWindow.xaml">

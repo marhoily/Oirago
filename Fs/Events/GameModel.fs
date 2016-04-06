@@ -8,18 +8,19 @@ open System.Text
 open System.IO
 open System.Linq
 open System.Collections.Generic
-open WebSocketSharp
 open System.Threading.Tasks
-open Nito.AsyncEx
 open System.Windows.Media
+open WebSocketSharp
+open Nito.AsyncEx
 
 type IBall =
-    abstract member IsMine  : bool   with get
-    abstract member Pos     : Point  with get
-    abstract member Size    : int16  with get
-    abstract member Color   : Color  with get
-    abstract member IsVirus : bool   with get
-    abstract member Name    : string with get
+    abstract member IsMine  : bool  
+    abstract member Pos     : Point 
+    abstract member Size    : int16 
+    abstract member Color   : Color 
+    abstract member IsVirus : bool  
+    abstract member Name    : string
+    //member ball.IsFood = ball.Size < 30s;
 
 type IBalls =
     abstract member All : seq<IBall> with get
