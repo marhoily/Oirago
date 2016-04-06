@@ -112,7 +112,6 @@ type GameState() =
 
 let dispatch (gameState: GameState) =
     function
-    | UpdateBalls(eatings, updates, deletes) -> 
-        gameState.Update(eatings, updates, deletes)
+    | UpdateBalls(e, u, d) -> gameState.Update(e, u, d)
     | NewId(ballId) -> gameState.CreateMe(ballId)
     
