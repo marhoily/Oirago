@@ -105,3 +105,9 @@ type GameState() =
         member x.All = x.All.Values |> Seq.cast
         member x.My = x.My |> Seq.cast
 
+let dispatch (gameState: GameState) (gameEvent: GameEvent) =
+    match gameEvent with
+    | UpdateBalls(eatings, updates, deletes) -> 
+        gameState.Update(eatings, updates, deletes)
+    //| NewId(ballId) -> gameState.CreateMe(ballId)
+    
