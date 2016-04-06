@@ -19,6 +19,17 @@ type private Color with
     member c.GetDarker() = Color.FromRgb(byte(c.R/2uy), byte(c.G/2uy), byte(c.B/2uy))
     member t.IsDark() = float(t.R)*0.2126 + float(t.G)*0.7152 + float(t.B)*0.0722 < float(128*3);
 
+type private FrameworkElement with
+    member e.CenterOnCanvas(v : Vector) =
+        Canvas.SetLeft(e, v.X - e.ActualWidth/2.0)
+        Canvas.SetTop(e, v.Y - e.ActualHeight/2.0)
+
+    member e.PlaceOnCanvas(r : Rect) =
+        Canvas.SetLeft(e, r.Left)
+        Canvas.SetTop(e, r.Top)
+        e.Width <- r.Width
+        e.Height <- r.Height
+
 type BuildUi() =
     let _fillBrush =  new SolidColorBrush()
     let _strokeBrush = new SolidColorBrush()
@@ -34,7 +45,7 @@ type BuildUi() =
     let mutable _prevZIndex = new int()
     let mutable _prevPos = new Point()
 
-    member x.Update(ball : Ball, zIndex: int, mySize: int16) =
+    member x.Update(ball : Ball, zIndex: int, mySize: float) =
         if _prevColor <> ball.Color then
             _prevColor <- ball.Color
             let color = 
@@ -47,57 +58,44 @@ type BuildUi() =
             TextBlock.Foreground <- 
                 if ball.Color.IsDark() then Brushes.Black 
                 else Brushes.White
+
         if _prevSize <> ball.Size then
             _prevSize <- ball.Size
             let s = Math.Max(20.0, float(ball.Size))
             Ellipse.Width  <- s * 2.0
             Ellipse.Height <- s * 2.0
             Ellipse.StrokeThickness <- Math.Max(2.0, s / 20.0)
-            //if not (ball.IsFood()) && not ball.IsVirus then
-            //    let mutable st = ball.Size.ToString()
-            //    if mySize * 0.9 > s then st <- st + "*"
-            //    if mySize * 0.7 * 0.9 > s then st <- st +  "*"
-            //    if mySize < s * 0.9 then st <- "*" + st
-            //    if mySize < s * 0.7 * 0.9 then st <- "*" + st
-            //    TextBlock.Text <- 
-            //        if ball.Name = null then st 
-            //        else sprintf "%s\r\n%s" ball.Name st
-            //    TextBlock.FontSize <- s / 2.0;
-//                TextBlock.Visibility = Visibility.Visible;
-//            }
-//        }
-//        if (_prevPos != ball.Pos)
-//        {
-//            _prevPos = ball.Pos;
-//            if (double.IsNaN(_elasticPos.X))
-//            {
-//                _elasticPos = (Vector)ball.Pos;
-//            }
-//            else
-//            {
-//                _elasticPos = (Vector)(_elasticPos + ball.Pos) / 2;
-//            }
-//            Ellipse.CenterOnCanvas(_elasticPos);
-//            TextBlock.CenterOnCanvas(_elasticPos);                
-//        }
-//
-//        if (_prevZIndex != zIndex)
-//        {
-//            _prevZIndex = zIndex;
-//            Panel.SetZIndex(Ellipse, zIndex);
-//            Panel.SetZIndex(TextBlock, zIndex);
-//        }
-//        
-//
-//        public void Hide()
-//        {
-//            Ellipse.Visibility = Visibility.Collapsed;
-//            TextBlock.Visibility = Visibility.Collapsed;
-//            _elasticPos = new Vector(double.NaN, double.NaN);
-//        }
-//
-//        public void Show()
-//        {
-//            Ellipse.Visibility = Visibility.Visible;
-//        }
-//    }
+            if not ball.IsFood && not ball.IsVirus then
+                let sb = new StringBuilder()
+                if ball.Name <> null then sb.AppendLine(ball.Name) |> ignore
+                if mySize < s * 0.9 then sb.Append('*') |> ignore
+                if mySize < s * 0.7 * 0.9 then sb.Append('*') |> ignore
+                sb.Append(ball.Size) |> ignore
+                if mySize * 0.9 > s then sb.Append('*') |> ignore
+                if mySize * 0.7 * 0.9 > s then sb.Append('*') |> ignore
+                TextBlock.Text <- sb.ToString()
+                TextBlock.FontSize <- s / 2.0;
+                TextBlock.Visibility <- Visibility.Visible;
+
+        if _prevPos <> ball.Pos then
+            _prevPos <- ball.Pos
+            let pos : Vector = ball.Pos |> Point.op_Explicit
+            _elasticPos <- 
+                if Double.IsNaN(_elasticPos.X) then pos
+                else (_elasticPos + pos)/ 2.0
+
+            Ellipse.CenterOnCanvas(_elasticPos)
+            TextBlock.CenterOnCanvas(_elasticPos)               
+
+        if _prevZIndex <> zIndex then
+            _prevZIndex <- zIndex
+            Panel.SetZIndex(Ellipse, zIndex)
+            Panel.SetZIndex(TextBlock, zIndex)
+
+    member x.Hide() =
+        Ellipse.Visibility <- Visibility.Collapsed
+        TextBlock.Visibility <- Visibility.Collapsed
+        _elasticPos <- new Vector(Double.NaN, Double.NaN)
+
+    member x.Show() =
+        Ellipse.Visibility <- Visibility.Visible
