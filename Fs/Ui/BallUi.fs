@@ -34,7 +34,7 @@ type BuildUi() =
     let mutable _prevZIndex = new int()
     let mutable _prevPos = new Point()
 
-    member x.Update(ball : IBall, zIndex: int, mySize: int16) =
+    member x.Update(ball : Ball, zIndex: int, mySize: int16) =
         if _prevColor <> ball.Color then
             _prevColor <- ball.Color
             let color = 

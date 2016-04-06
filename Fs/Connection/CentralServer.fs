@@ -108,14 +108,14 @@ type private BinaryReader with
 
 type BallId = uint32
 type Eating = { Eater:BallId; Eaten:BallId }
-type BallUpdate = {
-    Id      : BallId;
+type BallData = {
     Pos     : Point;
     Size    : int16;
     Color   : Color;
     IsVirus : bool;
-    Name    : string;
 }
+type BallUpdate = BallId * BallData * string
+
 type ServerEvent = 
     | UpdateBalls of Eating[] * BallUpdate[] * BallId[]
     | UpdateCamera of float32 * float32 * float32
@@ -146,12 +146,12 @@ let EventsFeed (webSocket: WebSocket) record log =
 
                    let mutable ballId = p.ReadUInt32()
                    while ballId <> 0u do
-                       yield { Id      = ballId;
+                       yield (ballId, { 
                                Pos     = new Point(float(p.ReadInt32()), float(p.ReadInt32()));
                                Size    = p.ReadInt16();
-                               Color     = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());
-                               IsVirus = readOpt();
-                               Name    = p.ReadUnicodeString() }
+                               Color   = Color.FromRgb(p.ReadByte(), p.ReadByte(), p.ReadByte());
+                               IsVirus = readOpt() }, 
+                               p.ReadUnicodeString())
                        ballId <- p.ReadUInt32() |],
 
                 [| for i in 0..int(p.ReadUInt32()) -> p.ReadUInt32() |])
@@ -165,10 +165,11 @@ let EventsFeed (webSocket: WebSocket) record log =
         | 20uy -> DestroyLessStuff
         | 21uy -> SetSomeVariables
         | 49uy -> 
-            UpdateLeaders([| for i in 0..int (p.ReadUInt32()) do
-                           let id = p.ReadUInt32()
-                           let name = p.ReadUnicodeString()
-                           yield (id, name) |])
+            UpdateLeaders(
+                [| for i in 0..int (p.ReadUInt32()) do
+                       let id = p.ReadUInt32()
+                       let name = p.ReadUnicodeString()
+                       yield (id, name) |])
         | 32uy -> NewId(p.ReadUInt32())
         | 50uy -> TeamUpdate
         | 64uy -> 
