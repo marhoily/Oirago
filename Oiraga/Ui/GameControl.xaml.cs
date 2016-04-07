@@ -118,10 +118,8 @@ namespace Oiraga
             _gameClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            _zoom -= Math.Sign(e.Delta) * .1;
-        }
+        protected override void OnMouseWheel(MouseWheelEventArgs e) 
+            => _zoom -= Math.Sign(e.Delta) * .1;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
