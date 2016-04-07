@@ -28,6 +28,11 @@ namespace Oiraga
 
             InitializeComponent();
 
+            AddGrid();
+        }
+
+        private void AddGrid()
+        {
             const int k = 1000;
             const int th = 30;
             const int m = 15;
@@ -37,10 +42,10 @@ namespace Oiraga
                 LinesGrid.Children.Add(
                     new Line
                     {
-                        X1 = -m * k,
-                        X2 = m * k,
-                        Y1 = i * k,
-                        Y2 = i * k,
+                        X1 = -m*k,
+                        X2 = m*k,
+                        Y1 = i*k,
+                        Y2 = i*k,
                         Stroke = brush,
                         StrokeThickness = th,
                         UseLayoutRounding = true
@@ -48,10 +53,10 @@ namespace Oiraga
                 LinesGrid.Children.Add(
                     new Line
                     {
-                        Y1 = -m * k,
-                        Y2 = m * k,
-                        X1 = i * k,
-                        X2 = i * k,
+                        Y1 = -m*k,
+                        Y2 = m*k,
+                        X1 = i*k,
+                        X2 = i*k,
                         Stroke = brush,
                         StrokeThickness = th,
                         UseLayoutRounding = true
@@ -98,10 +103,7 @@ namespace Oiraga
                 var bySize = balls.All.OrderBy(b => b.Size);
                 var mySize = balls.My.Max(b => b.Size);
                 foreach (var ball in bySize)
-                {
-                    var ui = _map[ball];
-                    ui.Update(ball, ++zIndex, mySize);
-                }
+                    _map[ball].Update(ball, ++zIndex, mySize);
             }
             else
             {
@@ -127,9 +129,7 @@ namespace Oiraga
 
 
         public void Leaders(IEnumerable<string> leaders)
-        {
-            Leadersboard.ItemsSource = leaders;
-        }
+            => Leadersboard.ItemsSource = leaders;
 
         private Rect _worldBoundaries;
         public void WorldSize(Rect viewPort)
