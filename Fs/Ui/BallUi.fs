@@ -2,13 +2,7 @@
 
 open System;
 open System.Windows
-open System.Windows.Data
-open System.Net
 open System.Text
-open System.IO
-open System.Linq
-open System.Collections.Generic
-open System.Threading.Tasks
 open System.Windows.Media
 open System.Windows.Shapes
 open System.Windows.Controls;
@@ -39,9 +33,9 @@ type BallUi() =
     let mutable _prevZIndex = new int()
     let mutable _prevPos = new Point()
 
-    member x.Ellipse = 
+    member __.Ellipse = 
         new Ellipse(Fill = _fillBrush, Stroke = _strokeBrush)
-    member x.TextBlock = 
+    member __.TextBlock = 
         new TextBlock(
             FontSize = 40.0,
             Visibility = Visibility.Collapsed,
