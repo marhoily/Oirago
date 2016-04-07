@@ -16,17 +16,11 @@ namespace Oiraga
         }
 
         public Task<PlayServerKey> GetFfaServer(string region = "EU-London")
-        {
-            return Do(region + "\n" + InitKey);
-        }
+            => Do(region + "\n" + InitKey);
         public Task<PlayServerKey> GetExperimentalServer(string region = "EU-London")
-        {
-            return Do(region + ":experimental\n" + InitKey);
-        }
+            => Do(region + ":experimental\n" + InitKey);
         public Task<PlayServerKey> GetTeamsServer(string region = "EU-London")
-        {
-            return Do(region + ":teams\n" + InitKey);
-        }
+            => Do(region + ":teams\n" + InitKey);
 
         private async Task<PlayServerKey> Do(string postData)
         {
