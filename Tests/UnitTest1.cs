@@ -24,7 +24,7 @@ namespace Tests
                 _gameEventsSink, new NullLog());
         }
 
-        [Fact]
+        //[Fact]
         public void TestMethod1()
         {
             var lines = File.ReadAllLines(@"c:\users\ilya\game.log")
@@ -47,26 +47,25 @@ namespace Tests
         {
             var s = new CentralServer(new NullLog());
             var list = new List<PlayServerKey>();
-            for (int i = 0; i < 100; i++)
-            {
+            for (var i = 0; i < 100; i++)
                 list.Add(await s.GetFfaServer());
-            }
             File.WriteAllText(@"c:\srcroot\Oirago\servers.json",
                 JsonConvert.SerializeObject(list));
         }
         [Fact]
-        public async Task TestMethod3()
+        public void TestMethod3()
         {
             var list = JsonConvert.DeserializeObject<List<PlayServerKey>>(
                 File.ReadAllText(@"c:\srcroot\Oirago\servers.json"));
-            var g1 = list
+            var g = list
                 .GroupBy(x => x.Server)
                 .Select(x => new
                 {
                     Server = x.Key,
                     Keys = x.Select(y => y.Key)
                 });
-            Console.WriteLine(JsonConvert.SerializeObject(g1, Formatting.Indented));
+            Console.WriteLine(JsonConvert.
+                SerializeObject(g, Formatting.Indented));
         }
 
     }
