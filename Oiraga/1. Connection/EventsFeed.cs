@@ -1,4 +1,3 @@
-using System;
 using Nito.AsyncEx;
 using System.IO;
 using System.Threading.Tasks;
@@ -6,7 +5,7 @@ using WebSocketSharp;
 
 namespace Oiraga
 {
-    public sealed class EventsFeed : IEventsFeed, IDisposable
+    public sealed class EventsFeed : IEventsFeed
     {
         private readonly EventsRecorder _recorder;
         private readonly AsyncCollection<Event>

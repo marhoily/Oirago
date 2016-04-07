@@ -1,18 +1,21 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WebSocketSharp;
 
 namespace Oiraga
 {
     public sealed class CommandsSink : ICommandsSink
     {
-        private readonly WebSocket _ws;
+        private readonly Action<byte[]> _send;
 
-        public CommandsSink(WebSocket ws) { _ws = ws; }
+        public CommandsSink(Action<byte[]> send)
+        {
+            _send = send;
+        }
 
         public void Spawn(string name) =>
-            _ws.Send(new byte[] { 0 }
+            _send(new byte[] { 0 }
                 .Concat(Encoding.Unicode.GetBytes(name))
                 .ToArray());
 
@@ -23,10 +26,10 @@ namespace Oiraga
             writer.Write((byte)16);
             writer.Write((int)x);
             writer.Write((int)y);
-            _ws.Send(buf);
+            _send(buf);
         }
-        public void Spectate() => _ws.Send(new byte[] { 1 });
-        public void Split() => _ws.Send(new byte[] { 17 });
-        public void Eject() => _ws.Send(new byte[] { 21 });
+        public void Spectate() => _send(new byte[] { 1 });
+        public void Split() => _send(new byte[] { 17 });
+        public void Eject() => _send(new byte[] { 21 });
     }
 }

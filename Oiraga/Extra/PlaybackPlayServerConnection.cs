@@ -4,16 +4,15 @@ namespace Oiraga
 {
     public class PlaybackPlayServerConnection : IPlayServerConnection
     {
-        private readonly BinaryReader _stream;
         private readonly PlaybackEventsFeed _eventsFeed;
 
         public PlaybackPlayServerConnection()
         {
-            _stream = new BinaryReader(File.OpenRead("rec.bin"));
-            _eventsFeed = new PlaybackEventsFeed(_stream);
+            _eventsFeed = new PlaybackEventsFeed(
+                new BinaryReader(File.OpenRead("rec.bin")));
         }
 
-        public void Dispose() => _stream.Dispose();
+        public void Dispose() => _eventsFeed.Dispose();
         public ICommandsSink Input { get; } = new NullCommandsSink();
         public IEventsFeed Output => _eventsFeed;
     }

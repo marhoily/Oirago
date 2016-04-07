@@ -21,5 +21,7 @@ namespace Oiraga
             _stream.BaseStream.Seek(endPoint, SeekOrigin.Begin);
             return Task.FromResult(msg);
         }
+
+        public void Dispose() => _stream.Dispose();
     }
 }

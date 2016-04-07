@@ -30,7 +30,7 @@ namespace Oiraga
             _webSocket.OnError += OnWebSocketOnOnError;
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
-            Input = new CommandsSink(_webSocket);
+            Input = new CommandsSink(_webSocket.Send);
             Output = new EventsFeed(_webSocket, recorder);
             _webSocket.Connect();
         }
