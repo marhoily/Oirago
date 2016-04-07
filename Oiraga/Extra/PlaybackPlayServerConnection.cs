@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Oiraga
 {
-    public class PlaybackPlayServerConnection : IPlayServerConnection
+    public class PlaybackPlayServerConnection : IPlayServerConnection, IDisposable
     {
         private readonly BinaryReader _stream;
         private readonly PlaybackEventsFeed _eventsFeed;
@@ -10,13 +11,11 @@ namespace Oiraga
         public PlaybackPlayServerConnection()
         {
             _stream = new BinaryReader(File.OpenRead("rec.bin"));
-            Input = new NullCommandsSink();
             _eventsFeed = new PlaybackEventsFeed(_stream);
         }
 
         public void Dispose() => _stream.Dispose();
-
-        public ICommandsSink Input { get; }
+        public ICommandsSink Input { get; } = new NullCommandsSink();
         public IEventsFeed Output => _eventsFeed;
     }
 }

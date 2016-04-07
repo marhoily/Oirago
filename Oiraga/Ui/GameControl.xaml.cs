@@ -18,8 +18,7 @@ namespace Oiraga
         {
             _gameClient = input;
             eventsFeed.Attach(
-                new EventDispatcher(this, log),
-                Dispatcher).ContinueWith(t => {
+                new EventDispatcher(this, log)).ContinueWith(t => {
                     if (t.IsFaulted) log.Error(
                         t.Exception.InnerException.Message);
                 });

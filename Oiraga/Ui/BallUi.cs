@@ -13,11 +13,10 @@ namespace Oiraga
         public readonly Ellipse Ellipse;
         public readonly TextBlock TextBlock;
         private Vector _elasticPos = new Vector(double.NaN, double.NaN);
-        Color _prevColor;
-        short _prevSize;
-        int _prevZIndex;
+        private Color _prevColor;
+        private short _prevSize;
+        private int _prevZIndex;
         private Point _prevPos;
-
 
         public BallUi()
         {
@@ -35,7 +34,6 @@ namespace Oiraga
         }
         public void Update(IBall ball, int zIndex, short mySize)
         {
-            
             if (_prevColor != ball.Color)
             {
                 _prevColor = ball.Color;
@@ -100,9 +98,6 @@ namespace Oiraga
             _elasticPos = new Vector(double.NaN, double.NaN);
         }
 
-        public void Show()
-        {
-            Ellipse.Visibility = Visibility.Visible;
-        }
+        public void Show() => Ellipse.Visibility = Visibility.Visible;
     }
 }

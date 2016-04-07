@@ -14,17 +14,17 @@ namespace Oiraga
             var packetId = p.ReadByte();
             switch (packetId)
             {
-                case 16: return p.ReadTick();
-                case 17: return p.ReadSpectate();
-                case 18: return new DestroyAllBalls();
-                case 20: return new Nop(); // clear less stuff
-                case 21: return new Unknown(packetId); // set some variables?
-                case 32: return p.ReadNewId();
-                case 49: return new LeadersBoard(p.ReadLeaders().ToArray());
-                case 50: return new TeamUpdate();
-                case 64: return p.ReadWorldSize();
-                case 72: return new Nop();
-                case 81: return new ExperienceUpdate();
+                case 016: return p.ReadTick();
+                case 017: return p.ReadSpectate();
+                case 018: return new DestroyAllBalls();
+                case 020: return new Nop(); // clear less stuff
+                case 021: return new Unknown(packetId); // set some variables?
+                case 032: return p.ReadNewId();
+                case 049: return new LeadersBoard(p.ReadLeaders().ToArray());
+                case 050: return new TeamUpdate();
+                case 064: return p.ReadWorldSize();
+                case 072: return new Nop();
+                case 081: return new ExperienceUpdate();
                 case 102: return new Forward();
                 case 104: return new LogOut();
                 case 240: return new Nop();
