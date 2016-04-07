@@ -7,6 +7,7 @@ using Oiraga;
 using Xunit;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
 
 namespace Tests
 {
@@ -50,7 +51,7 @@ namespace Tests
             {
                 list.Add(await s.GetFfaServer());
             }
-            File.WriteAllText(@"c:\srcroot\Oirago\servers.json", 
+            File.WriteAllText(@"c:\srcroot\Oirago\servers.json",
                 JsonConvert.SerializeObject(list));
         }
         [Fact]
@@ -58,12 +59,19 @@ namespace Tests
         {
             var list = JsonConvert.DeserializeObject<List<PlayServerKey>>(
                 File.ReadAllText(@"c:\srcroot\Oirago\servers.json"));
-                                
+            var g1 = list
+                .GroupBy(x => x.Server)
+                .Select(x => new
+                {
+                    Server = x.Key,
+                    Keys = x.Select(y => y.Key)
+                });
+            Console.WriteLine(JsonConvert.SerializeObject(g1, Formatting.Indented));
         }
 
     }
 
-        public class NullLog : ILog
+    public class NullLog : ILog
     {
         public void Error(string message) { }
     }
