@@ -16,6 +16,7 @@
             <Rectangle x:Name="Back" Fill="Purple"/>
             <Rectangle x:Name="WorldBoundaries" Fill="MidnightBlue"/>
             <Rectangle x:Name="ViewPort" Fill="Black"/>
+            <Canvas x:Name="LinesGrid"/>
         </Canvas>
         <ItemsControl x:Name="Leadersboard" VerticalAlignment="Top"
                       HorizontalAlignment="Right" Margin="10"

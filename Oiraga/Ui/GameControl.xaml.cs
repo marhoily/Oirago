@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Oiraga
 {
@@ -18,12 +20,43 @@ namespace Oiraga
         {
             _gameClient = input;
             eventsFeed.Attach(
-                new EventDispatcher(this, log)).ContinueWith(t => {
+                new EventDispatcher(this, log)).ContinueWith(t =>
+                {
                     if (t.Exception != null)
                         log.Error(t.Exception.InnerException.Message);
                 });
 
             InitializeComponent();
+
+            const int k = 1000;
+            const int th = 30;
+            const int m = 15;
+            var brush = new SolidColorBrush(Color.FromRgb(20, 20, 20));
+            for (var i = -m; i <= m; i++)
+            {
+                LinesGrid.Children.Add(
+                    new Line
+                    {
+                        X1 = -m * k,
+                        X2 = m * k,
+                        Y1 = i * k,
+                        Y2 = i * k,
+                        Stroke = brush,
+                        StrokeThickness = th,
+                        UseLayoutRounding = true
+                    });
+                LinesGrid.Children.Add(
+                    new Line
+                    {
+                        Y1 = -m * k,
+                        Y2 = m * k,
+                        X1 = i * k,
+                        X2 = i * k,
+                        Stroke = brush,
+                        StrokeThickness = th,
+                        UseLayoutRounding = true
+                    });
+            }
         }
 
         public void Appears(IBall newGuy)
@@ -118,7 +151,7 @@ namespace Oiraga
             _gameClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
         }
 
-        protected override void OnMouseWheel(MouseWheelEventArgs e) 
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
             => _zoom -= Math.Sign(e.Delta) * .1;
 
         protected override void OnKeyDown(KeyEventArgs e)

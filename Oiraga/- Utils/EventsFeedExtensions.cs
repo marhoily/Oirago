@@ -9,8 +9,8 @@ namespace Oiraga
         {
             while (true)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(1));
-                for (var i = 0; i < 10; i++)
+                //await Task.Delay(TimeSpan.FromMilliseconds(40));
+               // for (var i = 0; i < 10; i++)
                     eventDispatcher.Dispatch(await client.NextEvent());
             }
             // ReSharper disable once FunctionNeverReturns
