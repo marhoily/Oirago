@@ -10,7 +10,7 @@ namespace Oiraga
     {
         private readonly ICommandsSink _gameClient;
         private double _zoom = 5;
-        private readonly Dictionary<IBall, BallUi> 
+        private readonly Dictionary<IBall, BallUi>
             _map = new Dictionary<IBall, BallUi>();
         private readonly Stack<BallUi> _hidden = new Stack<BallUi>();
 
@@ -19,8 +19,8 @@ namespace Oiraga
             _gameClient = input;
             eventsFeed.Attach(
                 new EventDispatcher(this, log)).ContinueWith(t => {
-                    if (t.IsFaulted) log.Error(
-                        t.Exception.InnerException.Message);
+                    if (t.Exception != null)
+                        log.Error(t.Exception.InnerException.Message);
                 });
 
             InitializeComponent();

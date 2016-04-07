@@ -13,6 +13,7 @@ namespace Oiraga
                 for (var i = 0; i < 10; i++)
                     eventDispatcher.Dispatch(await client.NextEvent());
             }
+            // ReSharper disable once FunctionNeverReturns
         }
     }
 }

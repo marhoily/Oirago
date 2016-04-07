@@ -132,9 +132,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="- Utils\RectangleExtensions.cs" />
-    <Compile Include="SpectateWindow.xaml.cs">
-      <DependentUpon>SpectateWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Ui\BallUi.cs" />
     <Compile Include="- Utils\ColorExtensions.cs" />
     <Compile Include="2. Events\3. IReceiver.cs" />
@@ -152,10 +149,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SpectateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

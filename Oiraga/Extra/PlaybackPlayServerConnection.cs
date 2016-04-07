@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Oiraga
 {
-    public class PlaybackPlayServerConnection : IPlayServerConnection, IDisposable
+    public class PlaybackPlayServerConnection : IPlayServerConnection
     {
         private readonly BinaryReader _stream;
         private readonly PlaybackEventsFeed _eventsFeed;
