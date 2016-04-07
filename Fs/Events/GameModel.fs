@@ -1,8 +1,8 @@
 ﻿module GameModel
 
-open CentralServer
 open System.Collections.Generic
 open System.Windows
+open Events
 
 type Ball = 
     { IsMine : bool

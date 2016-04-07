@@ -22,6 +22,8 @@ val GetExperimentalServer :
 val GetTeamsServer : ((string -> unit) -> Async<(string * string) option>)
 val Connect :
   server:string * key:string -> log:(string -> unit) -> WebSocketSharp.WebSocket
+
+module Commands
 type Command =
   | Spawn of string
   | Spectate
@@ -29,40 +31,18 @@ type Command =
   | Eject
   | MoveTo of double * double
 val CommandsSink : webSocket:WebSocketSharp.WebSocket -> _arg1:Command -> unit
-type BinaryReader with
-  member ReadUnicodeString : unit -> string
-type BinaryReader with
-  member ReadAsciiString : unit -> string
-val private seek : reader:System.IO.BinaryReader -> pos:uint32 -> unit
+
+module Events
 type BallId = uint32
 type Eating =
   {Eater: BallId;
    Eaten: BallId;}
-val private readEatings : reader:System.IO.BinaryReader -> Eating []
-val private readOptions : reader:System.IO.BinaryReader -> bool
-val private readPoint : reader:System.IO.BinaryReader -> System.Windows.Point
-val private readColor :
-  reader:System.IO.BinaryReader -> System.Windows.Media.Color
 type BallData =
   {Id: BallId;
    Pos: System.Windows.Point;
    Size: int16;
    Color: System.Windows.Media.Color;
    IsVirus: bool;}
-val private ballData :
-  reader:System.IO.BinaryReader -> ballId:BallId -> BallData
-val private ballUpdate :
-  reader:System.IO.BinaryReader -> ballId:BallId -> BallData * string
-val private readUpdates :
-  reader:System.IO.BinaryReader -> (BallData * string) []
-val private readDisappearances : reader:System.IO.BinaryReader -> uint32 []
-val private readTick :
-  reader:System.IO.BinaryReader ->
-    Eating [] * (BallData * string) [] * uint32 []
-val private readCamera :
-  reader:System.IO.BinaryReader -> float32 * float32 * float32
-val private readLeaders : reader:System.IO.BinaryReader -> (uint32 * string) []
-val private readViewPort : reader:System.IO.BinaryReader -> System.Windows.Rect
 type BallUpdate = BallData * string
 type ServerEvent =
   | UpdateBalls of Eating [] * BallUpdate [] * BallId []
@@ -80,6 +60,30 @@ type ServerEvent =
   | Forward
   | LogOut
   | GameOver
+type BinaryReader with
+  member ReadUnicodeString : unit -> string
+type BinaryReader with
+  member ReadAsciiString : unit -> string
+val private seek : reader:System.IO.BinaryReader -> pos:uint32 -> unit
+val private readEatings : reader:System.IO.BinaryReader -> Eating []
+val private readOptions : reader:System.IO.BinaryReader -> bool
+val private readPoint : reader:System.IO.BinaryReader -> System.Windows.Point
+val private readColor :
+  reader:System.IO.BinaryReader -> System.Windows.Media.Color
+val private ballData :
+  reader:System.IO.BinaryReader -> ballId:BallId -> BallData
+val private ballUpdate :
+  reader:System.IO.BinaryReader -> ballId:BallId -> BallData * string
+val private readUpdates :
+  reader:System.IO.BinaryReader -> (BallData * string) []
+val private readDisappearances : reader:System.IO.BinaryReader -> uint32 []
+val private readTick :
+  reader:System.IO.BinaryReader ->
+    Eating [] * (BallData * string) [] * uint32 []
+val private readCamera :
+  reader:System.IO.BinaryReader -> float32 * float32 * float32
+val private readLeaders : reader:System.IO.BinaryReader -> (uint32 * string) []
+val private readViewPort : reader:System.IO.BinaryReader -> System.Windows.Rect
 val private readMessage : reader:System.IO.BinaryReader -> ServerEvent
 val private readMessageFromBuffer : buffer:byte [] -> ServerEvent
 val EventsFeed :
@@ -89,11 +93,11 @@ val EventsFeed :
 module GameModel
 type Ball =
   {IsMine: bool;
-   Data: CentralServer.BallData;
+   Data: Events.BallData;
    Name: string;}
   with
     member Color : System.Windows.Media.Color
-    member Id : CentralServer.BallId
+    member Id : Events.BallId
     member IsFood : bool
     member IsVirus : bool
     member Pos : System.Windows.Point
@@ -119,16 +123,14 @@ type GameState =
   class
     interface IBalls
     new : unit -> GameState
-    member CreateMe : id:CentralServer.BallId -> unit
+    member CreateMe : id:Events.BallId -> unit
     member DestroyAll : unit -> seq<GameEvent>
     member
-      Update : eatings:CentralServer.Eating [] *
-               updates:CentralServer.BallUpdate [] *
-               deletes:CentralServer.BallId [] -> seq<GameEvent>
+      Update : eatings:Events.Eating [] * updates:Events.BallUpdate [] *
+               deletes:Events.BallId [] -> seq<GameEvent>
     member All : System.Collections.Generic.Dictionary<uint32,MetaBall>
   end
-val dispatch :
-  gameState:GameState -> _arg1:CentralServer.ServerEvent -> seq<GameEvent>
+val dispatch : gameState:GameState -> _arg1:Events.ServerEvent -> seq<GameEvent>
 
 module Ui
 type Color with
@@ -760,7 +762,7 @@ type IBalls with
   member Zoom04 : unit -> float
 val create :
   nextEvent:(unit -> Async<GameModel.GameEvent>) ->
-    sendCommand:(CentralServer.Command -> unit) -> log:'a -> Async<unit>
+    sendCommand:(Commands.Command -> unit) -> log:'a -> Async<unit>
 
 module MainApp
 type MainWindow =

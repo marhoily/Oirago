@@ -1,12 +1,13 @@
 ﻿module GameControl
 
 open System.Collections.Generic
-open CentralServer
 open GameModel
 open Ui
 open System.Windows
 open System.Windows.Input
 open System.Windows.Media
+open Events
+open Commands
 
 type Control = FsXaml.XAML<"Ui/GameControl.xaml", true>
 type private IBalls with

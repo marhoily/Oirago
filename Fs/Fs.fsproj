@@ -53,6 +53,8 @@
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
     <Compile Include="Connection\CentralServer.fs" />
+    <Compile Include="Connection\Commands.fs" />
+    <Compile Include="Connection\Events.fs" />
     <Compile Include="Events\GameModel.fs" />
     <Compile Include="Ui\BallUi.fs" />
     <None Include="Ui\GameControl.xaml" />
