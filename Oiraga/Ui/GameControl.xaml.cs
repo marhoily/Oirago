@@ -12,6 +12,7 @@ namespace Oiraga
     {
         private readonly ICommandsSink _gameClient;
         private double _zoom = 5;
+        private double _elasticZoom = 1;
         private readonly Dictionary<IBall, BallUi>
             _map = new Dictionary<IBall, BallUi>();
         private readonly Stack<BallUi> _hidden = new Stack<BallUi>();
@@ -115,8 +116,9 @@ namespace Oiraga
         private void UpdateScale(IBalls balls)
         {
             var scale = balls.Zoom() - Math.Log10(_zoom);
-            ScaleTransform.ScaleX = scale;
-            ScaleTransform.ScaleY = scale;
+            _elasticZoom = (_elasticZoom*9 + scale)/10;
+            ScaleTransform.ScaleX = _elasticZoom;
+            ScaleTransform.ScaleY = _elasticZoom;
         }
 
         private void UpdateCenter(Point myAverage)
