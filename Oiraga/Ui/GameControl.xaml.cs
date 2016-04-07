@@ -43,10 +43,10 @@ namespace Oiraga
                 LinesGrid.Children.Add(
                     new Line
                     {
-                        X1 = -m*k,
-                        X2 = m*k,
-                        Y1 = i*k,
-                        Y2 = i*k,
+                        X1 = -m * k,
+                        X2 = m * k,
+                        Y1 = i * k,
+                        Y2 = i * k,
                         Stroke = brush,
                         StrokeThickness = th,
                         UseLayoutRounding = true
@@ -54,10 +54,10 @@ namespace Oiraga
                 LinesGrid.Children.Add(
                     new Line
                     {
-                        Y1 = -m*k,
-                        Y2 = m*k,
-                        X1 = i*k,
-                        X2 = i*k,
+                        Y1 = -m * k,
+                        Y2 = m * k,
+                        X1 = i * k,
+                        X2 = i * k,
                         Stroke = brush,
                         StrokeThickness = th,
                         UseLayoutRounding = true
@@ -115,8 +115,9 @@ namespace Oiraga
 
         private void UpdateScale(IBalls balls)
         {
-            var scale = balls.Zoom() - Math.Log10(_zoom);
-            _elasticZoom = (_elasticZoom*9 + scale)/10;
+            var scale = _betterZoom.GetValueOrDefault(balls.Zoom() - Math.Log10(_zoom));
+            _zoomElasticity = (_zoomElasticityTarget + _zoomElasticity) / 2;
+            _elasticZoom = (_elasticZoom * (_zoomElasticity - 1) + scale) / _zoomElasticity;
             ScaleTransform.ScaleX = _elasticZoom;
             ScaleTransform.ScaleY = _elasticZoom;
         }
@@ -134,6 +135,7 @@ namespace Oiraga
             => Leadersboard.ItemsSource = leaders;
 
         private Rect _worldBoundaries;
+
         public void WorldSize(Rect viewPort)
         {
             _worldBoundaries = !_worldBoundaries.IsEmpty
@@ -154,7 +156,14 @@ namespace Oiraga
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
-            => _zoom -= Math.Sign(e.Delta) * .1;
+        {
+            if (_betterZoom == null)
+                _zoom -= Math.Sign(e.Delta) * .1;
+        }
+
+        private double? _betterZoom;
+        private double _zoomElasticityTarget = 10;
+        private double _zoomElasticity = 10;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -166,7 +175,25 @@ namespace Oiraga
                 case Key.W:
                     _gameClient.Eject();
                     break;
+                case Key.F12:
+                    if (_betterZoom == null)
+                    {
+                        _betterZoom = .03;
+                        _zoomElasticityTarget = 2;
+                    }
+                    break;
             }
+        }
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.F12:
+                    _betterZoom = null;
+                    _zoomElasticityTarget = 10;
+                    break;
+            }
+            base.OnKeyUp(e);
         }
     }
 }
