@@ -10,6 +10,7 @@ namespace Oiraga
     {
         private readonly ILog _log;
         private const string InitKey = "154669603";
+        private readonly HttpClient _client = new HttpClient();
 
         public CentralServer(ILog windowAdapter)
         {
@@ -32,10 +33,11 @@ namespace Oiraga
         }
         private async Task<PlayServerKey> DoInner(string postData)
         {
-            var client = new HttpClient();
-            var content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
-            content.Headers.Add("Origin", "http://agar.io");
-            var response = await client.PostAsync("http://m.agar.io/", content);
+            var response = await _client.PostAsync("http://m.agar.io/",
+                new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded")
+                {
+                    Headers = { { "Origin", "http://agar.io" } }
+                });
             _log.Error(response.StatusCode.ToString());
             if (!response.IsSuccessStatusCode) return null;
             var text = await response.Content.ReadAsStringAsync();

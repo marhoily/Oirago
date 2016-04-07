@@ -5,6 +5,8 @@ using ApprovalTests.Reporters;
 using Newtonsoft.Json;
 using Oiraga;
 using Xunit;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -39,10 +41,30 @@ namespace Tests
             Approvals.Verify(JsonConvert.SerializeObject(
                 _gameEventsSink.Balls, Formatting.Indented));
         }
+        //[Fact]
+        public async Task TestMethod2()
+        {
+            var s = new CentralServer(new NullLog());
+            var list = new List<PlayServerKey>();
+            for (int i = 0; i < 100; i++)
+            {
+                list.Add(await s.GetFfaServer());
+            }
+            File.WriteAllText(@"c:\srcroot\Oirago\servers.json", 
+                JsonConvert.SerializeObject(list));
+        }
+        [Fact]
+        public async Task TestMethod3()
+        {
+            var list = JsonConvert.DeserializeObject<List<PlayServerKey>>(
+                File.ReadAllText(@"c:\srcroot\Oirago\servers.json"));
+                                
+        }
+
     }
 
-    public class NullLog : ILog
+        public class NullLog : ILog
     {
-        public void Error(string message) {  }
+        public void Error(string message) { }
     }
 }
