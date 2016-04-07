@@ -31,7 +31,7 @@ namespace Oiraga
             _webSocket.OnClose += OnWebSocketOnOnClose;
 
             Input = new CommandsSink(_webSocket);
-            Output = new EventsFeed(_webSocket, recorder, log);
+            Output = new EventsFeed(_webSocket, recorder);
             _webSocket.Connect();
         }
 
@@ -59,11 +59,6 @@ namespace Oiraga
             _webSocket.Send(Encoding.ASCII.GetBytes(_connection.Key));
         }
 
-        public void Dispose()
-        {
-            _webSocket.OnError -= OnWebSocketOnOnError;
-            _webSocket.OnClose -= OnWebSocketOnOnClose;
-            _webSocket.Close();
-        }
+        public void Dispose() => ((IDisposable)_webSocket).Dispose();
     }
 }
