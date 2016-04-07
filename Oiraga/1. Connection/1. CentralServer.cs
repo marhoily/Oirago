@@ -1,5 +1,6 @@
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,12 +8,12 @@ namespace Oiraga
 {
     public class CentralServer
     {
-        private readonly ILog _windowAdapter;
+        private readonly ILog _log;
         private const string InitKey = "154669603";
 
         public CentralServer(ILog windowAdapter)
         {
-            _windowAdapter = windowAdapter;
+            _log = windowAdapter;
         }
 
         public Task<PlayServerKey> GetFfaServer(string region = "EU-London")
@@ -29,36 +30,17 @@ namespace Oiraga
                 result = await DoInner(postData);
             return result;
         }
-        /*
-            if (!File.Exists("cache.json")) return await DoButCache(postData);
-            var deserializeObject = JsonConvert.DeserializeObject(File.ReadAllText("cache.json"));
-        */
         private async Task<PlayServerKey> DoInner(string postData)
         {
-            var request = (HttpWebRequest)
-                WebRequest.Create("http://m.agar.io/");
-            request.Method = "POST";
-            request.Headers.Add("Origin", "http://agar.io");
-            request.Referer = "http://agar.io";
-            var byteArray = Encoding.UTF8.GetBytes(postData);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteArray.Length;
-            using (var dataStream = request.GetRequestStream())
-                dataStream.Write(byteArray, 0, byteArray.Length);
-            using (var response = await request.GetResponseAsync())
-            {
-                var webResponse = (HttpWebResponse)response;
-                _windowAdapter.Error(webResponse.StatusDescription);
-                if (webResponse.StatusCode != HttpStatusCode.OK)
-                    return null;
-                using (var dataStream = response.GetResponseStream())
-                    if (dataStream != null)
-                        using (var reader = new StreamReader(dataStream))
-                            return new PlayServerKey(
-                                server: reader.ReadLine(),
-                                key: reader.ReadLine());
-            }
-            return null;
+            var client = new HttpClient();
+            var content = new StringContent(postData, Encoding.UTF8, "application/x-www-form-urlencoded");
+            content.Headers.Add("Origin", "http://agar.io");
+            var response = await client.PostAsync("http://m.agar.io/", content);
+            _log.Error(response.StatusCode.ToString());
+            if (!response.IsSuccessStatusCode) return null;
+            var text = await response.Content.ReadAsStringAsync();
+            var split = text.Split('\n');
+            return new PlayServerKey(server: split[0], key: split[1]);
         }
     }
 }
