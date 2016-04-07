@@ -20,7 +20,7 @@ val GetFfaServer : ((string -> unit) -> Async<(string * string) option>)
 val GetExperimentalServer :
   ((string -> unit) -> Async<(string * string) option>)
 val GetTeamsServer : ((string -> unit) -> Async<(string * string) option>)
-val Connect :
+val BeginConnecting :
   server:string * key:string -> log:(string -> unit) -> WebSocketSharp.WebSocket
 
 module Commands

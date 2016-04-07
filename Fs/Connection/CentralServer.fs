@@ -54,7 +54,7 @@ let GetExperimentalServer =
     getServer ("EU-London" + ":experimental\n" + initKey)
 let GetTeamsServer = getServer ("EU-London" + ":teams\n" + initKey)
 
-let Connect (server, key : string) log = 
+let BeginConnecting (server, key : string) log = 
     log "opening..."
     let webSocket = new WebSocket("ws://" + server)
     webSocket.Origin <- "http://agar.io"
