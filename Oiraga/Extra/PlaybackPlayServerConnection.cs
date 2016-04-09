@@ -6,7 +6,7 @@ namespace Oiraga
     {
         private readonly PlaybackEventsFeed _eventsFeed;
 
-        public ICommandsSink Input { get; } = new NullCommandsSink();
+        public ISendCommand Input { get; } = new NullSendCommand();
         public IEventsFeed Output => _eventsFeed;
 
         public PlaybackPlayServerConnection()

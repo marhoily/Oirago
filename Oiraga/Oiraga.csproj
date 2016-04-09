@@ -76,14 +76,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="- Utils\PointExtensions.cs" />
-    <Compile Include="1. Connection\CommandsSink.cs">
+    <Compile Include="1. Connection\SendCommand.cs">
       <DependentUpon>3. ICommandsSink.cs</DependentUpon>
     </Compile>
     <Compile Include="1. Connection\EventsFeed.cs">
       <DependentUpon>3. IEventsFeed.cs</DependentUpon>
     </Compile>
     <Compile Include="1. Connection\3. ICommandsSink.cs" />
-    <Compile Include="1. Connection\NullCommandsSink.cs">
+    <Compile Include="1. Connection\NullSendCommand.cs">
       <DependentUpon>3. ICommandsSink.cs</DependentUpon>
     </Compile>
     <Compile Include="1. Connection\PlayServerConnection.cs">

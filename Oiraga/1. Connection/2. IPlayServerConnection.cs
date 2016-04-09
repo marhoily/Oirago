@@ -4,7 +4,7 @@ namespace Oiraga
 {
     public interface IPlayServerConnection : IDisposable
     {
-        ICommandsSink Input { get; }
+        ISendCommand Input { get; }
         IEventsFeed Output { get; }
     }
 }

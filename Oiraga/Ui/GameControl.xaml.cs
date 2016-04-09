@@ -8,18 +8,19 @@ namespace Oiraga
 {
     public partial class GameControl : IReceiver
     {
-        private readonly ICommandsSink _gameClient;
+        private readonly ISendCommand _sendCommand;
         private readonly Elastic _elastic = new Elastic();
         private double _zoom = 5;
+        private Rect _worldBoundaries;
 
         private readonly Dictionary<IBall, BallUi>
             _map = new Dictionary<IBall, BallUi>();
 
         private readonly Stack<BallUi> _hidden = new Stack<BallUi>();
 
-        public GameControl(IEventsFeed eventsFeed, ICommandsSink input, ILog log)
+        public GameControl(IEventsFeed eventsFeed, ISendCommand input, ILog log)
         {
-            _gameClient = input;
+            _sendCommand = input;
             eventsFeed
                 .Attach(new EventDispatcher(this, log))
                 .LogErrors(log.LogError);
@@ -74,7 +75,7 @@ namespace Oiraga
             else
             {
                 _worldBoundaries = Rect.Empty;
-                _gameClient.Spawn("blah");
+                _sendCommand.Spawn("blah");
             }
         }
 
@@ -93,8 +94,6 @@ namespace Oiraga
         public void Leaders(IEnumerable<string> leaders)
             => Leadersboard.ItemsSource = leaders;
 
-        private Rect _worldBoundaries;
-
         public void WorldSize(Rect viewPort)
         {
             _worldBoundaries = !_worldBoundaries.IsEmpty
@@ -112,7 +111,7 @@ namespace Oiraga
             var sdy = position.Y - ActualHeight/2;
             if (sdx*sdx + sdy*sdy < 64) return;
             var z = zoom;
-            _gameClient.MoveTo(sdx/z + me.X, sdy/z + me.Y);
+            _sendCommand.MoveTo(sdx/z + me.X, sdy/z + me.Y);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -125,10 +124,10 @@ namespace Oiraga
             switch (e.Key)
             {
                 case Key.Space:
-                    _gameClient.Split();
+                    _sendCommand.Split();
                     break;
                 case Key.W:
-                    _gameClient.Eject();
+                    _sendCommand.Eject();
                     break;
                 case Key.F12:
                     if (!_elastic.IsOverriden)
@@ -141,12 +140,7 @@ namespace Oiraga
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-            switch (e.Key)
-            {
-                case Key.F12:
-                    _elastic.IsOverriden = false;
-                    break;
-            }
+            if (e.Key == Key.F12) _elastic.IsOverriden = false;
             base.OnKeyUp(e);
         }
     }

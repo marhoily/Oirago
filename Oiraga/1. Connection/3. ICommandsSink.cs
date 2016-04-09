@@ -1,6 +1,6 @@
 namespace Oiraga
 {
-    public interface ICommandsSink
+    public interface ISendCommand
     {
         void Spawn(string name);
         void MoveTo(double x, double y);
