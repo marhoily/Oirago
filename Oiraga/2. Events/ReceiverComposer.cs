@@ -14,12 +14,6 @@ namespace Oiraga
                 windowAdapter.Appears(newGuy);
         }
 
-        public void Eats(IBall eater, IBall eaten)
-        {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.Eats(eater, eaten);
-        }
-
         public void Remove(IBall dying)
         {
             foreach (var windowAdapter in Listeners)

@@ -28,7 +28,6 @@ namespace Oiraga
             InitializeComponent();
         }
 
-
         public void Appears(IBall newGuy)
         {
             BallUi ballUi;
@@ -44,10 +43,6 @@ namespace Oiraga
                 ballUi.Show();
             }
             _map[newGuy] = ballUi;
-        }
-
-        public void Eats(IBall eater, IBall eaten)
-        {
         }
 
         public void Remove(IBall dying)
@@ -79,9 +74,11 @@ namespace Oiraga
             }
         }
 
-        private void UpdateScale(IBalls balls) =>
+        private void UpdateScale(IBalls balls)
+        {
             ScaleTransform.ScaleX = ScaleTransform.ScaleY =
                 _elastic.Update(balls.Zoom() - Math.Log10(_zoom));
+        }
 
         private void UpdateCenter(Point myAverage)
         {
@@ -92,7 +89,9 @@ namespace Oiraga
         }
 
         public void Leaders(IEnumerable<string> leaders)
-            => Leadersboard.ItemsSource = leaders;
+        {
+            Leadersboard.ItemsSource = leaders;
+        }
 
         public void WorldSize(Rect viewPort)
         {
@@ -136,7 +135,6 @@ namespace Oiraga
             }
             base.OnKeyDown(e);
         }
-
 
         protected override void OnKeyUp(KeyEventArgs e)
         {

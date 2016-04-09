@@ -8,7 +8,6 @@ namespace Tests
     {
         public IBalls Balls { get; private set; }
         public void Appears(IBall newGuy) { }
-        public void Eats(IBall eater, IBall eaten) { } 
         public void Remove(IBall dying) { }
         public void AfterTick(IBalls balls) => Balls = balls;
         public void Leaders(IEnumerable<string> leaders) { }

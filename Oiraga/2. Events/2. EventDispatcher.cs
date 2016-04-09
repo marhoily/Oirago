@@ -81,7 +81,6 @@ namespace Oiraga
                 Ball eaten;
                 if (_gameState.All.TryGetValue(e.Eaten, out eaten))
                 {
-                    _sink.Eats(eater, eaten);
                     _gameState.All.Remove(e.Eaten);
                     _gameState.My.Remove(eaten);
                     _sink.Remove(eaten);
