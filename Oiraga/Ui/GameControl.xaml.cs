@@ -9,8 +9,8 @@ namespace Oiraga
     public partial class GameControl : IReceiver
     {
         private readonly ICommandsSink _gameClient;
+        private readonly Elastic _elastic = new Elastic();
         private double _zoom = 5;
-        private double _elasticZoom = 1;
 
         private readonly Dictionary<IBall, BallUi>
             _map = new Dictionary<IBall, BallUi>();
@@ -78,14 +78,9 @@ namespace Oiraga
             }
         }
 
-        private void UpdateScale(IBalls balls)
-        {
-            var scale = _betterZoom.GetValueOrDefault(balls.Zoom() - Math.Log10(_zoom));
-            _zoomElasticity = (_zoomElasticityTarget + _zoomElasticity)/2;
-            _elasticZoom = (_elasticZoom*(_zoomElasticity - 1) + scale)/_zoomElasticity;
-            ScaleTransform.ScaleX = _elasticZoom;
-            ScaleTransform.ScaleY = _elasticZoom;
-        }
+        private void UpdateScale(IBalls balls) =>
+            ScaleTransform.ScaleX = ScaleTransform.ScaleY =
+                _elastic.Update(balls.Zoom() - Math.Log10(_zoom));
 
         private void UpdateCenter(Point myAverage)
         {
@@ -94,7 +89,6 @@ namespace Oiraga
             TranslateTransform.X = (TranslateTransform.X + x)/2;
             TranslateTransform.Y = (TranslateTransform.Y + y)/2;
         }
-
 
         public void Leaders(IEnumerable<string> leaders)
             => Leadersboard.ItemsSource = leaders;
@@ -123,13 +117,8 @@ namespace Oiraga
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            if (_betterZoom == null)
-                _zoom -= Math.Sign(e.Delta)*.1;
+            if (!_elastic.IsOverriden) _zoom -= Math.Sign(e.Delta)*.1;
         }
-
-        private double? _betterZoom;
-        private double _zoomElasticityTarget = 10;
-        private double _zoomElasticity = 10;
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -142,22 +131,20 @@ namespace Oiraga
                     _gameClient.Eject();
                     break;
                 case Key.F12:
-                    if (_betterZoom == null)
-                    {
-                        _betterZoom = .03;
-                        _zoomElasticityTarget = 2;
-                    }
+                    if (!_elastic.IsOverriden)
+                        _elastic.IsOverriden = true;
                     break;
             }
+            base.OnKeyDown(e);
         }
+
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.F12:
-                    _betterZoom = null;
-                    _zoomElasticityTarget = 10;
+                    _elastic.IsOverriden = false;
                     break;
             }
             base.OnKeyUp(e);

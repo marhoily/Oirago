@@ -22,7 +22,8 @@ namespace Oiraga
         {
             var gameClientProvider = new PlayServerSelector(this);
             _gameClient = await gameClientProvider.GetGameClient();
-            var oiragaControl = new GameControl(_gameClient.Output, _gameClient.Input, this);
+            var oiragaControl = new GameControl(
+                _gameClient.Output, _gameClient.Input, this);
             oiragaControl.Loaded += (s, e) => oiragaControl.Focus();
             GameControlPlace.Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
@@ -47,7 +48,6 @@ namespace Oiraga
             }
         }
 
-        private void MainWindow_OnClosed(object sender, EventArgs e)
-            => _gameClient.Dispose();
+        private void OnClosed(object s, EventArgs e) => _gameClient.Dispose();
     }
 }

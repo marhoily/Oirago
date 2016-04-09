@@ -170,6 +170,7 @@
       <DependentUpon>3. IReceiver.cs</DependentUpon>
     </Compile>
     <Compile Include="- Utils\ILog.cs" />
+    <Compile Include="Ui\Elastic.cs" />
     <Compile Include="Ui\GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
