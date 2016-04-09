@@ -1,17 +1,16 @@
 using System.Linq;
-using static Oiraga.Event;
 
 namespace Oiraga
 {
     public sealed class EventDispatcher
     {
-        private readonly IReceiver _sink;
+        private readonly IReceiver _receiver;
         private readonly ILog _log;
         private readonly GameState _gameState;
 
-        public EventDispatcher(IReceiver sink, ILog log)
+        public EventDispatcher(IReceiver receiver, ILog log)
         {
-            _sink = sink;
+            _receiver = receiver;
             _log = log;
             _gameState = new GameState();
         }
@@ -35,7 +34,7 @@ namespace Oiraga
 
             var leadersBoard = msg as LeadersBoard;
             if (leadersBoard != null)
-                _sink.Leaders(leadersBoard.Leaders.Select(x => x.Name));
+                _receiver.Leaders(leadersBoard.Leaders.Select(x => x.Name));
 
             var unknown = msg as Unknown;
             if (unknown != null) _log.LogError(
@@ -44,7 +43,7 @@ namespace Oiraga
 
         private void Dispatch(ViewPort viewPort)
         {
-            _sink.WorldSize(viewPort.ToRectangle());
+            _receiver.WorldSize(viewPort.ToRectangle());
         }
 
         //private void Spectate(Spectate spectate)
@@ -65,7 +64,7 @@ namespace Oiraga
             Eat(tick.Eatings);
             Update(tick.Updates);
             Cleanup(tick.Disappearances);
-            _sink.AfterTick(_gameState);
+            _receiver.AfterTick(_gameState);
         }
         private void Eat(Eating[] eatings)
         {
@@ -76,14 +75,14 @@ namespace Oiraga
                 {
                     eater = new Ball(false);
                     _gameState.All.Add(e.Eater, eater);
-                    _sink.Appears(eater);
+                    _receiver.Appears(eater);
                 }
                 Ball eaten;
                 if (_gameState.All.TryGetValue(e.Eaten, out eaten))
                 {
                     _gameState.All.Remove(e.Eaten);
                     _gameState.My.Remove(eaten);
-                    _sink.Remove(eaten);
+                    _receiver.Remove(eaten);
                 }
             }
         }
@@ -96,7 +95,7 @@ namespace Oiraga
                 {
                     newGuy = new Ball(false);
                     _gameState.All.Add(state.Id, newGuy);
-                    _sink.Appears(newGuy);
+                    _receiver.Appears(newGuy);
                 }
                 newGuy.Pos = state.Pos;
                 newGuy.Size = state.Size;
@@ -116,7 +115,7 @@ namespace Oiraga
                 if (dying.IsMine) _gameState.My.Remove(dying);
                 _gameState.All.Remove(ballId);
                 _gameState.My.Remove(dying);
-                _sink.Remove(dying);
+                _receiver.Remove(dying);
             }
         }
         private void CreateMe(uint key)
@@ -124,16 +123,14 @@ namespace Oiraga
             var me = new Ball(true);
             _gameState.All.Add(key, me);
             _gameState.My.Add(me);
-            _sink.Appears(me);
+            _receiver.Appears(me);
         }
         private void DestroyAll()
         {
             foreach (var ball in _gameState.All)
-                _sink.Remove(ball.Value);
+                _receiver.Remove(ball.Value);
             _gameState.All.Clear();
             _gameState.My.Clear();
         }
-
     }
-
 }
