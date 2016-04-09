@@ -23,7 +23,7 @@ namespace Oiraga
             var newId = msg as NewId;
             if (newId != null) CreateMe(newId.Id);
 
-            //var spectate = msg as Spectate;
+            var spectate = msg as Spectate;
             //if (spectate != null) Spectate(spectate);
 
             var worldSize = msg as ViewPort;

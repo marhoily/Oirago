@@ -1,18 +1,17 @@
 using System.Diagnostics;
+using System.Windows;
 
 namespace Oiraga
 {
-    [DebuggerDisplay("{X}, {Y}: {Zoom}")]
+    [DebuggerDisplay("{Center}: {Zoom}")]
     public sealed class Spectate : Event
     {
-        public readonly double X;
-        public readonly double Y;
+        public readonly Point Center;
         public readonly double Zoom;
 
-        public Spectate(double x, double y, double zoom)
+        public Spectate(Point center, double zoom)
         {
-            X = x;
-            Y = y;
+            Center = center;
             Zoom = zoom;
         }
     }

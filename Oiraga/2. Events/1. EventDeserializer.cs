@@ -80,7 +80,7 @@ namespace Oiraga
             var x = p.ReadSingle();
             var y = p.ReadSingle();
             var zoom = p.ReadSingle();
-            return new Spectate(x, y, zoom);
+            return new Spectate(new Point(x, y), zoom);
         }
         private static NewId ReadNewId(this BinaryReader p)
         {
