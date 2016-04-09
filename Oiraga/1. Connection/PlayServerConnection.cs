@@ -21,7 +21,7 @@ namespace Oiraga
             _log = log;
             _connection = connection;
 
-            log.Error("opening...");
+            log.LogError("opening...");
             _webSocket = new WebSocket("ws://" + connection.Server)
             {
                 Origin = "http://agar.io"
@@ -36,7 +36,7 @@ namespace Oiraga
         }
 
         private void OnWebSocketOnOnError(object s, ErrorEventArgs e)
-            => _log.Error(e.Message);
+            => _log.LogError(e.Message);
 
         private void OnWebSocketOnOnClose(object s, CloseEventArgs e)
         {
@@ -44,7 +44,7 @@ namespace Oiraga
             timer[0] = new Timer(
                 _ =>
                 {
-                    _log.Error("another try at _webSocket.Connect()...");
+                    _log.LogError("another try at _webSocket.Connect()...");
                     _webSocket.Connect();
                     timer[0].Dispose();
                 },
@@ -54,7 +54,7 @@ namespace Oiraga
 
         private void OnOpen(object sender, EventArgs e)
         {
-            _log.Error("");
+            _log.LogError("");
             _webSocket.Send(new byte[] { 254, 5, 255, 35, 18, 56, 9, 80 });
             _webSocket.Send(Encoding.ASCII.GetBytes(_connection.Key));
         }

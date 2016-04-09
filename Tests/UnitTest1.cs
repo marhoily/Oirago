@@ -72,6 +72,6 @@ namespace Tests
 
     public class NullLog : ILog
     {
-        public void Error(string message) { }
+        public void LogError(string message) { }
     }
 }

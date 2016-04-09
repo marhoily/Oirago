@@ -189,6 +189,7 @@
     <Compile Include="- Utils\BallsExtension.cs" />
     <Compile Include="2. Events\2. EventDispatcher.cs" />
     <Compile Include="Ui\LinesGrid.cs" />
+    <Compile Include="Ui\TaskExtensions.cs" />
     <Page Include="Ui\GameControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

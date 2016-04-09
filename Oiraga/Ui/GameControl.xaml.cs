@@ -20,12 +20,9 @@ namespace Oiraga
         public GameControl(IEventsFeed eventsFeed, ICommandsSink input, ILog log)
         {
             _gameClient = input;
-            eventsFeed.Attach(new EventDispatcher(this, log))
-                .ContinueWith(t =>
-                {
-                    if (t.Exception != null)
-                        log.Error(t.Exception.InnerException.Message);
-                });
+            eventsFeed
+                .Attach(new EventDispatcher(this, log))
+                .LogErrors(log.LogError);
 
             InitializeComponent();
         }
@@ -84,18 +81,18 @@ namespace Oiraga
         private void UpdateScale(IBalls balls)
         {
             var scale = _betterZoom.GetValueOrDefault(balls.Zoom() - Math.Log10(_zoom));
-            _zoomElasticity = (_zoomElasticityTarget + _zoomElasticity) / 2;
-            _elasticZoom = (_elasticZoom * (_zoomElasticity - 1) + scale) / _zoomElasticity;
+            _zoomElasticity = (_zoomElasticityTarget + _zoomElasticity)/2;
+            _elasticZoom = (_elasticZoom*(_zoomElasticity - 1) + scale)/_zoomElasticity;
             ScaleTransform.ScaleX = _elasticZoom;
             ScaleTransform.ScaleY = _elasticZoom;
         }
 
         private void UpdateCenter(Point myAverage)
         {
-            var x = ActualWidth / 2 - myAverage.X;
-            var y = ActualHeight / 2 - myAverage.Y;
-            TranslateTransform.X = (TranslateTransform.X + x) / 2;
-            TranslateTransform.Y = (TranslateTransform.Y + y) / 2;
+            var x = ActualWidth/2 - myAverage.X;
+            var y = ActualHeight/2 - myAverage.Y;
+            TranslateTransform.X = (TranslateTransform.X + x)/2;
+            TranslateTransform.Y = (TranslateTransform.Y + y)/2;
         }
 
 
@@ -117,17 +114,17 @@ namespace Oiraga
         private void LeadBalls(Point me, double zoom)
         {
             var position = Mouse.GetPosition(this);
-            var sdx = position.X - ActualWidth / 2;
-            var sdy = position.Y - ActualHeight / 2;
-            if (sdx * sdx + sdy * sdy < 64) return;
+            var sdx = position.X - ActualWidth/2;
+            var sdy = position.Y - ActualHeight/2;
+            if (sdx*sdx + sdy*sdy < 64) return;
             var z = zoom;
-            _gameClient.MoveTo(sdx / z + me.X, sdy / z + me.Y);
+            _gameClient.MoveTo(sdx/z + me.X, sdy/z + me.Y);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             if (_betterZoom == null)
-                _zoom -= Math.Sign(e.Delta) * .1;
+                _zoom -= Math.Sign(e.Delta)*.1;
         }
 
         private double? _betterZoom;

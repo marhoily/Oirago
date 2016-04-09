@@ -15,12 +15,7 @@ namespace Oiraga
         public MainWindow()
         {
             InitializeComponent();
-            LoadClient()
-                .ContinueWith(t =>
-                {
-                    if (t.IsFaulted && t.Exception != null)
-                        Error(t.Exception.InnerExceptions[0].ToString());
-                });
+            LoadClient().LogErrors(LogError);
         }
 
         private async Task LoadClient()
@@ -32,12 +27,10 @@ namespace Oiraga
             GameControlPlace.Content = oiragaControl;
             _middleman.Listeners.Add(oiragaControl);
         }
-        public void Error(string message)
-        {
+
+        public void LogError(string message) =>
             Dispatcher.BeginInvoke(new Action(
                 () => ErrorLabel.Text = message));
-        }
-
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -55,8 +48,6 @@ namespace Oiraga
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
-        {
-            _gameClient.Dispose();
-        }
+            => _gameClient.Dispose();
     }
 }

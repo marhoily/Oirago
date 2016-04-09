@@ -34,7 +34,7 @@ namespace Oiraga
                     {
                         Headers = {{"Origin", "http://agar.io"}}
                     });
-                _log.Error(response.StatusCode.ToString());
+                _log.LogError(response.StatusCode.ToString());
                 if (!response.IsSuccessStatusCode) return null;
                 var text = await response.Content.ReadAsStringAsync();
                 var split = text.Split('\n');

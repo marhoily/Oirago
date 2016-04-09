@@ -38,7 +38,7 @@ namespace Oiraga
                 _sink.Leaders(leadersBoard.Leaders.Select(x => x.Name));
 
             var unknown = msg as Unknown;
-            if (unknown != null) _log.Error(
+            if (unknown != null) _log.LogError(
                 $"Unknown packet id {unknown.PacketId}");
         }
 
