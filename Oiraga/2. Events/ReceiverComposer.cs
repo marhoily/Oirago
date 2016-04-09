@@ -10,33 +10,39 @@ namespace Oiraga
 
         public void Appears(IBall newGuy)
         {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.Appears(newGuy);
+            foreach (var receiver in Listeners)
+                receiver.Appears(newGuy);
         }
 
         public void Remove(IBall dying)
         {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.Remove(dying);
+            foreach (var receiver in Listeners)
+                receiver.Remove(dying);
         }
 
         public void AfterTick(IBalls balls)
         {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.AfterTick(balls);
+            foreach (var receiver in Listeners)
+                receiver.AfterTick(balls);
         }
 
         public void Leaders(IEnumerable<string> leaders)
         {
             var arr = leaders.ToArray();
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.Leaders(arr);
+            foreach (var receiver in Listeners)
+                receiver.Leaders(arr);
         }
 
         public void WorldSize(Rect viewPort)
         {
-            foreach (var windowAdapter in Listeners)
-                windowAdapter.WorldSize(viewPort);
+            foreach (var receiver in Listeners)
+                receiver.WorldSize(viewPort);
+        }
+
+        public void Spectate(IBalls balls, Point center, double zoom)
+        {
+            foreach (var receiver in Listeners)
+                receiver.Spectate(balls, center, zoom);
         }
     }
 }

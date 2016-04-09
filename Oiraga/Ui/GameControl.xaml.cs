@@ -70,7 +70,7 @@ namespace Oiraga
             else
             {
                 _worldBoundaries = Rect.Empty;
-                _sendCommand.Spawn("blah");
+               // _sendCommand.Spawn("blah");
             }
         }
 
@@ -101,6 +101,11 @@ namespace Oiraga
             ViewPort.PlaceOnCanvas(viewPort);
             WorldBoundaries.PlaceOnCanvas(_worldBoundaries);
             Back.PlaceOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
+        }
+
+        public void Spectate(IBalls balls, Point center, double zoom)
+        {
+            AfterTick(balls);
         }
 
         private void LeadBalls(Point me, double zoom)

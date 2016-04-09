@@ -22,7 +22,8 @@ namespace Oiraga
             var credentials = await entryServer.GetFfaServer();
             var gameClient = new PlayServerConnection(
                 credentials, new EventsRecorder(), _log);
-            gameClient.Input.Spawn("blah");
+            //gameClient.Input.Spawn("blah");
+            gameClient.Input.Spectate();
             return gameClient;
         }
     }

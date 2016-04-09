@@ -12,5 +12,6 @@ namespace Tests
         public void AfterTick(IBalls balls) => Balls = balls;
         public void Leaders(IEnumerable<string> leaders) { }
         public void WorldSize(Rect viewPort) {  }
+        public void Spectate(IBalls balls, Point center, double zoom) { }
     }
 }

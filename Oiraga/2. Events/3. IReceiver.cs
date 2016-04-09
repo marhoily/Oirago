@@ -10,5 +10,6 @@ namespace Oiraga
         void AfterTick(IBalls balls);
         void Leaders(IEnumerable<string> leaders);
         void WorldSize(Rect viewPort);
+        void Spectate(IBalls balls, Point center, double zoom);
     }
 }

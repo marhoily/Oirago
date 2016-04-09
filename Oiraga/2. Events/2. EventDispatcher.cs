@@ -18,23 +18,46 @@ namespace Oiraga
         public void Dispatch(Event msg)
         {
             var tick = msg as Tick;
-            if (tick != null) Dispatch(tick);
-
-            var newId = msg as NewId;
-            if (newId != null) CreateMe(newId.Id);
-
-            var spectate = msg as Spectate;
-            //if (spectate != null) Spectate(spectate);
-
-            var worldSize = msg as ViewPort;
-            if (worldSize != null) Dispatch(worldSize);
-
-            var destroyAllBalls = msg as DestroyAllBalls;
-            if (destroyAllBalls != null) DestroyAll();
-
+            if (tick != null)
+            {
+                Dispatch(tick);
+                return;
+            }
             var leadersBoard = msg as LeadersBoard;
             if (leadersBoard != null)
+            {
                 _receiver.Leaders(leadersBoard.Leaders.Select(x => x.Name));
+                return;
+            }
+
+            var spectate = msg as Spectate;
+            if (spectate != null)
+            {
+                Spectate(spectate);
+                return;
+            }
+
+            var worldSize = msg as ViewPort;
+            if (worldSize != null)
+            {
+                Dispatch(worldSize);
+                return;
+            }
+
+            var destroyAllBalls = msg as DestroyAllBalls;
+            if (destroyAllBalls != null)
+            {
+                DestroyAll();
+                return;
+            }
+
+            var newId = msg as NewId;
+            if (newId != null)
+            {
+                CreateMe(newId.Id);
+                return;
+            }
+
 
             var unknown = msg as Unknown;
             if (unknown != null) _log.LogError(
@@ -46,19 +69,20 @@ namespace Oiraga
             _receiver.WorldSize(viewPort.ToRectangle());
         }
 
-        //private void Spectate(Spectate spectate)
-        //{
-        //    var zoom = spectate.Zoom;
-        //    var dx = _world.SpectateViewPort.X - spectate.X;
-        //    var dy = _world.SpectateViewPort.Y - spectate.Y;
-        //    _world.SpectateViewPort = spectate;
-        //    foreach (var ball in _world.Balls.Values)
-        //        if (ball.IsFood || ball.State.IsVirus)
-        //        {
-        //            ball.Move((int)(dx * zoom), (int)(dy * zoom));
-        //            _gameEventsSink.Update(ball);
-        //        }
-        //}
+        private void Spectate(Spectate spectate)
+        {
+            _receiver.Spectate(_gameState, spectate.Center, spectate.Zoom);
+            //var zoom = spectate.Zoom;
+            //var dx = _world.SpectateViewPort.X - spectate.X;
+            //var dy = _world.SpectateViewPort.Y - spectate.Y;
+            //_world.SpectateViewPort = spectate;
+            //foreach (var ball in _gameState.All.Values)
+            //    if (ball.IsFood() || ball.IsVirus)
+            //    {
+            //        ball.Move((int)(dx * zoom), (int)(dy * zoom));
+            //        _gameEventsSink.Update(ball);
+            //    }
+        }
         private void Dispatch(Tick tick)
         {
             Eat(tick.Eatings);
