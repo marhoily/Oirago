@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Oiraga
 {
@@ -13,57 +11,25 @@ namespace Oiraga
         private readonly ICommandsSink _gameClient;
         private double _zoom = 5;
         private double _elasticZoom = 1;
+
         private readonly Dictionary<IBall, BallUi>
             _map = new Dictionary<IBall, BallUi>();
+
         private readonly Stack<BallUi> _hidden = new Stack<BallUi>();
 
         public GameControl(IEventsFeed eventsFeed, ICommandsSink input, ILog log)
         {
             _gameClient = input;
-            eventsFeed.Attach(
-                new EventDispatcher(this, log)).ContinueWith(t =>
+            eventsFeed.Attach(new EventDispatcher(this, log))
+                .ContinueWith(t =>
                 {
                     if (t.Exception != null)
                         log.Error(t.Exception.InnerException.Message);
                 });
 
             InitializeComponent();
-
-            AddGrid();
         }
 
-        private void AddGrid()
-        {
-            const int k = 1000;
-            const int th = 30;
-            const int m = 15;
-            var brush = new SolidColorBrush(Color.FromRgb(20, 20, 20));
-            for (var i = -m; i <= m; i++)
-            {
-                LinesGrid.Children.Add(
-                    new Line
-                    {
-                        X1 = -m * k,
-                        X2 = m * k,
-                        Y1 = i * k,
-                        Y2 = i * k,
-                        Stroke = brush,
-                        StrokeThickness = th,
-                        UseLayoutRounding = true
-                    });
-                LinesGrid.Children.Add(
-                    new Line
-                    {
-                        Y1 = -m * k,
-                        Y2 = m * k,
-                        X1 = i * k,
-                        X2 = i * k,
-                        Stroke = brush,
-                        StrokeThickness = th,
-                        UseLayoutRounding = true
-                    });
-            }
-        }
 
         public void Appears(IBall newGuy)
         {
@@ -82,7 +48,9 @@ namespace Oiraga
             _map[newGuy] = ballUi;
         }
 
-        public void Eats(IBall eater, IBall eaten) { }
+        public void Eats(IBall eater, IBall eaten)
+        {
+        }
 
         public void Remove(IBall dying)
         {
@@ -139,7 +107,8 @@ namespace Oiraga
         public void WorldSize(Rect viewPort)
         {
             _worldBoundaries = !_worldBoundaries.IsEmpty
-                ? Rect.Union(_worldBoundaries, viewPort) : viewPort;
+                ? Rect.Union(_worldBoundaries, viewPort)
+                : viewPort;
             ViewPort.PlaceOnCanvas(viewPort);
             WorldBoundaries.PlaceOnCanvas(_worldBoundaries);
             Back.PlaceOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
@@ -184,6 +153,7 @@ namespace Oiraga
                     break;
             }
         }
+
         protected override void OnKeyUp(KeyEventArgs e)
         {
             switch (e.Key)

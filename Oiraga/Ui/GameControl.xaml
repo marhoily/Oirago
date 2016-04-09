@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:oiraga="clr-namespace:Oiraga"
              mc:Ignorable="d" Background="Black"
              Focusable="True" d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -16,7 +17,7 @@
             <Rectangle x:Name="Back" Fill="Purple"/>
             <Rectangle x:Name="WorldBoundaries" Fill="MidnightBlue"/>
             <Rectangle x:Name="ViewPort" Fill="Black"/>
-            <Canvas x:Name="LinesGrid"/>
+            <oiraga:LinesGrid />
         </Canvas>
         <ItemsControl x:Name="Leadersboard" VerticalAlignment="Top"
                       HorizontalAlignment="Right" Margin="10"
