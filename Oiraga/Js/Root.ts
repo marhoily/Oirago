@@ -1,5 +1,6 @@
 ﻿import * as gg from "Globals";
 import {Cell} from "Cell";
+import {MyNode} from "MyNode";
 
 var ctx;
 var rawMouseX = 0;
@@ -54,14 +55,17 @@ function buildQTree() {
                 d = Math.max(node.y, d);
             }
         }
-        gg.qTree = new Quad({
-            minX: a - (e + 100),
-            minY: b - (e + 100),
-            maxX: c + (e + 100),
-            maxY: d + (e + 100),
-            maxChildren: 2,
-            maxDepth: 4
-        });
+        let minX = a - (e + 100);
+        let minY = b - (e + 100);
+        let maxX = c + (e + 100);
+        let maxY = d + (e + 100);
+        gg.qTree = new MyNode({
+            x: minX,
+            y: minY,
+            w: maxX - minX,
+            h: maxY - minY
+        }, 0, 2, 4);
+
         for (i = 0; i < gg.nodelist.length; i++) {
             node = gg.nodelist[i];
             if (node.shouldRender() && !(20 >= node.size * gg.viewZoom)) {
@@ -170,7 +174,7 @@ function updateNodes(view, offset) {
         size = view.getInt16(offset, true);
         offset += 2;
         var r = view.getUint8(offset++);
-        var g:number = view.getUint8(offset++);
+        var g: number = view.getUint8(offset++);
         var b = view.getUint8(offset++);
         var color = (r << 16 | g << 8 | b).toString(16);
         for (; 6 > color.length;) color = `0${color}`;

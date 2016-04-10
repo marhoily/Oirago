@@ -1,52 +1,30 @@
-class MyNode {
-    constructor(args, x, y, w, h, depth) {
-        this.args = args;
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+export interface IRect {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+}
+export class MyNode {
+    private maxDepth: number;
+    private maxChildren: number;
+    private bounds: IRect;
+    private depth: number;
+    private items: IRect[] = [];
+    private nodes: MyNode[] = [];
+
+    constructor(bounds: IRect, depth: number,
+        maxChildren: number, maxDepth: number) {
+        this.maxDepth = maxDepth;
+        this.maxChildren = maxChildren;
         this.depth = depth;
-        this.items = [];
-        this.nodes = [];
     }
-    args = null;
-    x = 0;
-    y = 0;
-    w = 0;
-    h = 0;
-    depth = 0;
-    items = null;
-    nodes = null;
-    exists(selector) {
-        for (let i = 0; i < this.items.length; ++i) {
-            const item = this.items[i];
-            if (item.x >= selector.x &&
-                item.y >= selector.y &&
-                item.x < selector.x + selector.w &&
-                item.y < selector.y + selector.h) return true;
-        }
-        if (0 !== this.nodes.length) {
-            return this.findOverlappingNodes(selector,
-                dir => this.nodes[dir].exists(selector));
-        }
-        return false;
-    };
-    retrieve(item, callback) {
-        for (let i = 0; i < this.items.length; ++i)
-            callback(this.items[i]);
-        if (0 !== this.nodes.length) {
-            this.findOverlappingNodes(item,
-                dir => {
-                    this.nodes[dir].retrieve(item, callback);
-                });
-        }
-    }
+
     insert(a) {
-        if (0 !== this.nodes.length) {
+        if (this.nodes.length !== 0) {
             this.nodes[this.findInsertNode(a)].insert(a);
         } else {
-            const c = this.args.maxChildren || 2;
-            const d = this.args.maxDepth || 4;
+            const c = this.maxChildren || 2;
+            const d = this.maxDepth || 4;
             if (this.items.length >= c && this.depth < d) {
                 this.devide();
                 this.nodes[this.findInsertNode(a)].insert(a);
@@ -55,34 +33,46 @@ class MyNode {
             }
         }
     }
-    findInsertNode(a) {
-        return a.x < this.x + this.w / 2
-            ? a.y < this.y + this.h / 2 ? 0 : 2
-            : a.y < this.y + this.h / 2 ? 1 : 3;
+    retrieve(x, y, w, h, callback) { this.retrieveInner({ x: x, y: y, w: w, h: h }, callback); }
+
+    private retrieveInner(item, callback) {
+        for (let i = 0; i < this.items.length; ++i)
+            callback(this.items[i]);
+        if (0 !== this.nodes.length) {
+            this.findOverlappingNodes(item,
+                dir => this.nodes[dir].retrieveInner(item, callback));
+        }
     }
-    findOverlappingNodes(a, b) {
-        return a.x < this.x + this.w / 2 &&
-            (a.y < this.y + this.h / 2 && b(0) || a.y >= this.y + this.h / 2 && b(2)) ||
-            a.x >= this.x + this.w / 2 &&
-            (a.y < this.y + this.h / 2 && b(1) || a.y >= this.y + this.h / 2 && b(3))
-            ? true
-            : false;
+    private findOverlappingNodes(point, b) {
+        const x = point.x < this.bounds.x + this.bounds.w / 2;
+        const y = point.y < this.bounds.y + this.bounds.h / 2;
+        return !!(x && (y && b(0) || !y && b(2))
+            || !x && (y && b(1) || !y && b(3)));
     }
-    devide() {
-        var a = this.depth + 1,
-            c = this.w / 2,
-            d = this.h / 2;
-        this.nodes.push(new MyNode(this.args, this.x, this.y, c, d, a));
-        this.nodes.push(new MyNode(this.args, this.x + c, this.y, c, d, a));
-        this.nodes.push(new MyNode(this.args, this.x, this.y + d, c, d, a));
-        this.nodes.push(new MyNode(this.args, this.x + c, this.y + d, c, d, a));
-        var a2 = this.items;
+    private findInsertNode(point) {
+        const y = point.y < this.bounds.y + this.bounds.h / 2;
+        const x = point.x < this.bounds.x + this.bounds.w / 2;
+        return x ? (y ? 0 : 2) : (y ? 1 : 3);
+    }
+    private devide() {
+        const midW = this.bounds.w / 2;
+        const midH = this.bounds.h / 2;
+        const x = this.bounds.x;
+        const y = this.bounds.y;
+        this.nodes.push(this.childNode(x, y, midW, midH));
+        this.nodes.push(this.childNode(x + midW, y, midW, midH));
+        this.nodes.push(this.childNode(x, y + midH, midW, midH));
+        this.nodes.push(this.childNode(x + midW, y + midH, midW, midH));
+
         this.items = [];
-        for (c = 0; c < a2.length; c++) this.insert(a2[c]);
+        for (let i = 0; i < this.items.length; i++)
+            this.insert(this.items[i]);
     }
-    clear() {
-        for (var a = 0; a < this.nodes.length; a++) this.nodes[a].clear();
-        this.items.length = 0;
-        this.nodes.length = 0;
+    private childNode(x, y, w, h) {
+        return new MyNode(
+            { x: x, y: y, w: w, h: h },
+            this.depth + 1,
+            this.maxChildren,
+            this.maxDepth);
     }
 }

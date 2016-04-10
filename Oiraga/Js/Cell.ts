@@ -1,4 +1,4 @@
-import * as g from './Globals';
+import * as g from "Globals";
 
 var showSkin = true;
 var showName = true;
@@ -138,7 +138,7 @@ export class Cell {
                 var l = false;
                 var n = points[j].x;
                 var q = points[j].y;
-                g.qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
+                g.qTree.retrieve(n - 5, q - 5, 10, 10, function (a) {
                     if (a.ref !== ref && 25 >
                         (n - a.x) * (n - a.x) +
                         (q - a.y) * (q - a.y)) { l = true; }

@@ -1,6 +1,8 @@
-﻿export var canvasWidth;
+﻿import {MyNode} from "MyNode";
+
+export var canvasWidth;
 export var canvasHeight;
-export var qTree = null;
+export var qTree: MyNode = null;
 export var nodeX = 0;
 export var nodeY = 0;
 export var nodesOnScreen = [];
