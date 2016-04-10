@@ -1,5 +1,5 @@
 import * as g from "Globals";
-
+import {IPoint} from "Quad";
 var showSkin = true;
 var showName = true;
 var showColor = false;
@@ -14,9 +14,15 @@ var knownNameDict =
 var knownNameDictNoDisp = ["8", "nasa"];
 var ib = ["_canvas'blob"];;;
 
+export class Point implements IPoint {
+    ref : Cell = null;
+    size = 0;
+    x = 0;
+    y = 0;
+}
 export class Cell {
     id = 0;
-    points = null;
+    points: Point[] = null;
     x = 0;
     y = 0;
     size = 0;

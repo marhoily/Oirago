@@ -1,6 +1,8 @@
-export interface IRect {
+export interface IPoint {
     x: number;
     y: number;
+}
+export interface IRect extends IPoint {
     w: number;
     h: number;
 }
