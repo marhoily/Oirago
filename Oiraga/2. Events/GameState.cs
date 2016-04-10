@@ -2,13 +2,13 @@ using System.Collections.Generic;
 
 namespace Oiraga
 {
-    public sealed class GameState : IBalls
+    public sealed class GameState : Balls
     {
         public readonly Dictionary<uint, Ball> 
-            All = new Dictionary<uint, Ball>();
-        public readonly HashSet<Ball> My = new HashSet<Ball>();
+            AllBalls = new Dictionary<uint, Ball>();
+        public readonly HashSet<Ball> MyBalls = new HashSet<Ball>();
 
-        IEnumerable<IBall> IBalls.All => All.Values;
-        IEnumerable<IBall> IBalls.My => My;
+        public override IEnumerable<IBall> All => AllBalls.Values;
+        public override IEnumerable<IBall> My => MyBalls;
     }
 }

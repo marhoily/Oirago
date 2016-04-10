@@ -20,7 +20,7 @@ namespace Oiraga
                 receiver.Remove(dying);
         }
 
-        public void AfterTick(IBalls balls)
+        public void AfterTick(Balls balls)
         {
             foreach (var receiver in Listeners)
                 receiver.AfterTick(balls);
@@ -39,7 +39,7 @@ namespace Oiraga
                 receiver.WorldSize(viewPort);
         }
 
-        public void Spectate(IBalls balls, Point center, double zoom)
+        public void Spectate(Balls balls, Point center, double zoom)
         {
             foreach (var receiver in Listeners)
                 receiver.Spectate(balls, center, zoom);

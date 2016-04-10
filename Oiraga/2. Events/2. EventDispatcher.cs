@@ -95,17 +95,17 @@ namespace Oiraga
             foreach (var e in eatings)
             {
                 Ball eater;
-                if (!_gameState.All.TryGetValue(e.Eater, out eater))
+                if (!_gameState.AllBalls.TryGetValue(e.Eater, out eater))
                 {
                     eater = new Ball(false);
-                    _gameState.All.Add(e.Eater, eater);
+                    _gameState.AllBalls.Add(e.Eater, eater);
                     _receiver.Appears(eater);
                 }
                 Ball eaten;
-                if (_gameState.All.TryGetValue(e.Eaten, out eaten))
+                if (_gameState.AllBalls.TryGetValue(e.Eaten, out eaten))
                 {
-                    _gameState.All.Remove(e.Eaten);
-                    _gameState.My.Remove(eaten);
+                    _gameState.AllBalls.Remove(e.Eaten);
+                    _gameState.MyBalls.Remove(eaten);
                     _receiver.Remove(eaten);
                 }
             }
@@ -115,10 +115,10 @@ namespace Oiraga
             foreach (var state in updates)
             {
                 Ball newGuy;
-                if (!_gameState.All.TryGetValue(state.Id, out newGuy))
+                if (!_gameState.AllBalls.TryGetValue(state.Id, out newGuy))
                 {
                     newGuy = new Ball(false);
-                    _gameState.All.Add(state.Id, newGuy);
+                    _gameState.AllBalls.Add(state.Id, newGuy);
                     _receiver.Appears(newGuy);
                 }
                 newGuy.Pos = state.Pos;
@@ -134,27 +134,27 @@ namespace Oiraga
             foreach (var ballId in ballIds)
             {
                 Ball dying;
-                if (!_gameState.All.TryGetValue(ballId, out dying))
+                if (!_gameState.AllBalls.TryGetValue(ballId, out dying))
                     continue;
-                if (dying.IsMine) _gameState.My.Remove(dying);
-                _gameState.All.Remove(ballId);
-                _gameState.My.Remove(dying);
+                if (dying.IsMine) _gameState.MyBalls.Remove(dying);
+                _gameState.AllBalls.Remove(ballId);
+                _gameState.MyBalls.Remove(dying);
                 _receiver.Remove(dying);
             }
         }
         private void CreateMe(uint key)
         {
             var me = new Ball(true);
-            _gameState.All.Add(key, me);
-            _gameState.My.Add(me);
+            _gameState.AllBalls.Add(key, me);
+            _gameState.MyBalls.Add(me);
             _receiver.Appears(me);
         }
         private void DestroyAll()
         {
-            foreach (var ball in _gameState.All)
+            foreach (var ball in _gameState.AllBalls)
                 _receiver.Remove(ball.Value);
-            _gameState.All.Clear();
-            _gameState.My.Clear();
+            _gameState.AllBalls.Clear();
+            _gameState.MyBalls.Clear();
         }
     }
 }

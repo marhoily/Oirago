@@ -120,7 +120,7 @@
     <Compile Include="2. Events\IBall.cs">
       <DependentUpon>3. IReceiver.cs</DependentUpon>
     </Compile>
-    <Compile Include="2. Events\IBalls.cs">
+    <Compile Include="2. Events\Balls.cs">
       <DependentUpon>3. IReceiver.cs</DependentUpon>
     </Compile>
     <Compile Include="2. Events\Leader.cs">
@@ -187,7 +187,6 @@
     <Compile Include="2. Events\1. EventDeserializer.cs" />
     <Compile Include="1. Connection\1. CentralServer.cs" />
     <Compile Include="- Utils\BallExtensions.cs" />
-    <Compile Include="- Utils\BallsExtension.cs" />
     <Compile Include="2. Events\2. EventDispatcher.cs" />
     <Compile Include="Ui\LinesGrid.cs" />
     <Compile Include="Ui\TaskExtensions.cs" />

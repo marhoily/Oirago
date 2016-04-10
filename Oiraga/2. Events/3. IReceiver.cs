@@ -7,9 +7,9 @@ namespace Oiraga
     {
         void Appears(IBall newGuy);
         void Remove(IBall dying);
-        void AfterTick(IBalls balls);
+        void AfterTick(Balls balls);
         void Leaders(IEnumerable<string> leaders);
         void WorldSize(Rect viewPort);
-        void Spectate(IBalls balls, Point center, double zoom);
+        void Spectate(Balls balls, Point center, double zoom);
     }
 }

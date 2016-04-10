@@ -53,12 +53,12 @@ namespace Oiraga
             _hidden.Push(ballUi);
         }
 
-        public void AfterTick(IBalls balls)
+        public void AfterTick(Balls balls)
         {
             if (balls.My.Any())
             {
-                var myAverage = balls.MyAverage();
-                LeadBalls(myAverage, balls.Zoom04());
+                var myAverage = balls.MyAverage;
+                LeadBalls(myAverage, balls.Zoom04);
                 UpdateCenter(myAverage);
                 UpdateScale(balls);
                 var zIndex = 0;
@@ -74,10 +74,10 @@ namespace Oiraga
             }
         }
 
-        private void UpdateScale(IBalls balls)
+        private void UpdateScale(Balls balls)
         {
             ScaleTransform.ScaleX = ScaleTransform.ScaleY =
-                _elastic.Update(balls.Zoom() - Math.Log10(_zoom));
+                _elastic.Update(balls.Zoom - Math.Log10(_zoom));
         }
 
         private void UpdateCenter(Point myAverage)
@@ -103,7 +103,7 @@ namespace Oiraga
             Back.PlaceOnCanvas(Rect.Inflate(_worldBoundaries, 1000, 1000));
         }
 
-        public void Spectate(IBalls balls, Point center, double zoom)
+        public void Spectate(Balls balls, Point center, double zoom)
         {
             AfterTick(balls);
         }
