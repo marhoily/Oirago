@@ -70,7 +70,7 @@ namespace Oiraga
             else
             {
                 _worldBoundaries = Rect.Empty;
-               // _sendCommand.Spawn("blah");
+                _sendCommand.Spawn("blah");
             }
         }
 
