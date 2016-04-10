@@ -31,7 +31,7 @@ function buildQTree() {
                 d = Math.max(node.y, d);
             }
         }
-        qTree = Quad.init({
+        qTree = quad.init({
             minX: a - (e + 100),
             minY: b - (e + 100),
             maxX: c + (e + 100),
@@ -306,13 +306,6 @@ function Cell(uid, ux, uy, usize, ucolor, uname) {
     this.setName(uname);
 }
 
-function UText(usize, ucolor, ustroke, ustrokecolor) {
-    usize && (this._size = usize);
-    ucolor && (this._color = ucolor);
-    this._stroke = !!ustroke;
-    ustrokecolor && (this._strokeColor = ustrokecolor);
-}
-
 var nCanvas;
 var ctx;
 var mainCanvas;
@@ -421,17 +414,6 @@ Cell.prototype = {
     getNameSize: function () {
         return Math.max(~~(.3 * this.size), 24);
     },
-    setName: function (a) {
-        if (this.name === a) {
-            if (null == this.nameCache) {
-                this.nameCache = new UText(this.getNameSize(), "#FFFFFF", true, "#000000");
-                this.nameCache.setValue(this.name);
-            } else {
-                this.nameCache.setSize(this.getNameSize());
-                this.nameCache.setValue(this.name);
-            }
-        }
-    },
     createPoints: function () {
         var samplenum = this.getNumPoints();
         for (; this.points.length > samplenum;) {
@@ -490,9 +472,9 @@ Cell.prototype = {
                 e = points[(j - 1 + numpoints) % numpoints].size,
                 m = points[(j + 1) % numpoints].size;
             if (15 < this.size && null != qTree && 20 < this.size * viewZoom && 0 !== this.id) {
-                var l = false,
-                    n = points[j].x,
-                    q = points[j].y;
+                var l = false;
+                var n = points[j].x;
+                var q = points[j].y;
                 qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
                     if (a.ref !== ref && 25 >
                         (n - a.x) * (n - a.x) +
@@ -644,9 +626,6 @@ Cell.prototype = {
 
                 //draw mass
                 if (showMass && (c1 || 0 === playerCells.length && (!this.isVirus || this.isAgitated) && 20 < this.size)) {
-                    if (null == this.sizeCache) {
-                        this.sizeCache = new UText(this.getNameSize() / 2, "#FFFFFF", true, "#000000");
-                    }
                     var c6 = this.sizeCache;
                     c6.setSize(this.getNameSize() / 2);
                     c6.setValue(~~(this.size * this.size / 100));
@@ -663,7 +642,7 @@ Cell.prototype = {
     }
 };
 Date.now || (Date.now = () => (new Date).getTime());
-var Quad = {
+var quad = {
     init(args) {
         function Node(x, y, w, h, depth) {
             this.x = x;
