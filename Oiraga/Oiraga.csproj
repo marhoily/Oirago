@@ -253,7 +253,10 @@
     <Analyzer Include="..\packages\System.Security.Cryptography.Hashing.Algorithms.Analyzers.1.1.0\analyzers\dotnet\cs\System.Security.Cryptography.Hashing.Algorithms.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Js\Cell.ts" />
     <TypeScriptCompile Include="Js\Good.ts" />
+    <TypeScriptCompile Include="Js\MyNode.ts" />
+    <TypeScriptCompile Include="Js\Quad.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
