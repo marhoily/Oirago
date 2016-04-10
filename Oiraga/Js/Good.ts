@@ -204,7 +204,7 @@ function updateNodes(view, offset) {
         var node1 = nodes[nodeId];
         null != node1 && node1.destroy();
     }
-        
+
 }
 
 function sendMouseMove() {
@@ -274,7 +274,7 @@ function drawGameScene() {
             ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             ctx.globalAlpha = 1;
         }
-    } 
+    }
     nodelist.sort((a, b) =>
         (a.size === b.size ? a.id - b.id : a.size - b.size));
     ctx.save();
@@ -294,17 +294,6 @@ function drawGameScene() {
         nodelist[i3].drawOneCell(ctx);
 }
 
-function Cell(uid, ux, uy, usize, ucolor, uname) {
-    this.id = uid;
-    this.ox = this.x = ux;
-    this.oy = this.y = uy;
-    this.oSize = this.size = usize;
-    this.color = ucolor;
-    this.points = [];
-    this.pointsAcc = [];
-    this.createPoints();
-    this.setName(uname);
-}
 
 var nCanvas;
 var ctx;
@@ -368,31 +357,44 @@ var knownNameDict =
     "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;hitler;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;belarus;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook".split(";");
 var knownNameDictNoDisp = ["8", "nasa"];
 var ib = ["_canvas'blob"];
-Cell.prototype = {
-    id: 0,
-    points: null,
-    pointsAcc: null,
-    name: null,
-    nameCache: null,
-    sizeCache: null,
-    x: 0,
-    y: 0,
-    size: 0,
-    ox: 0,
-    oy: 0,
-    oSize: 0,
-    nx: 0,
-    ny: 0,
-    nSize: 0,
-    flag: 0, //what does this mean
-    updateTime: 0,
-    updateCode: 0,
-    drawTime: 0,
-    destroyed: false,
-    isVirus: false,
-    isAgitated: false,
-    wasSimpleDrawing: true,
-    destroy: function () {
+
+class Cell {
+    id = 0;
+    points = null;
+    pointsAcc = null;
+    name = null;
+    nameCache = null;
+    sizeCache = null;
+    x = 0;
+    y = 0;
+    size = 0;
+    ox = 0;
+    oy = 0;
+    oSize = 0;
+    nx = 0;
+    ny = 0;
+    nSize = 0;
+    flag = 0; //what does this mean
+    updateTime = 0;
+    updateCode = 0;
+    drawTime = 0;
+    destroyed = false;
+    isVirus = false;
+    isAgitated = false;
+    wasSimpleDrawing = true;
+    color = null;
+    constructor(uid, ux, uy, usize, ucolor, uname) {
+        this.id = uid;
+        this.ox = this.x = ux;
+        this.oy = this.y = uy;
+        this.oSize = this.size = usize;
+        this.color = ucolor;
+        this.points = [];
+        this.pointsAcc = [];
+        this.createPoints();
+    }
+
+    destroy() {
         var tmp;
         for (tmp = 0; tmp < nodelist.length; tmp++)
             if (nodelist[tmp] === this) {
@@ -411,11 +413,11 @@ Cell.prototype = {
         }
         this.destroyed = true;
         cells.push(this);
-    },
-    getNameSize: function () {
+    }
+    getNameSize() {
         return Math.max(~~(.3 * this.size), 24);
-    },
-    createPoints: function () {
+    }
+    createPoints() {
         var samplenum = this.getNumPoints();
         for (; this.points.length > samplenum;) {
             const rand = ~~(Math.random() * this.points.length);
@@ -442,8 +444,8 @@ Cell.prototype = {
             });
             this.pointsAcc.splice(rand2, 0, this.pointsAcc[rand2]);
         }
-    },
-    getNumPoints: function () {
+    }
+    getNumPoints() {
         if (0 === this.id) return 16;
         var a = 10;
         if (20 > this.size) a = 0;
@@ -453,8 +455,8 @@ Cell.prototype = {
         b *= z;
         if (this.flag & 32) (b *= .25);
         return ~~Math.max(b, a);
-    },
-    movePoints: function () {
+    }
+    movePoints() {
         this.createPoints();
         var points = this.points;
         var numpoints = points.length;
@@ -479,14 +481,14 @@ Cell.prototype = {
                 qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
                     if (a.ref !== ref && 25 >
                         (n - a.x) * (n - a.x) +
-                        (q - a.y) * (q - a.y)) {l = true; }
+                        (q - a.y) * (q - a.y)) { l = true; }
                 });
                 if (!l && points[j].x < leftPos || points[j].y < topPos || points[j].x > rightPos || points[j].y > bottomPos) {
                     l = true;
                 }
                 if (l) {
-                    if (0 < this.pointsacc[j]) {
-                        (this.pointsacc[j] = 0);
+                    if (0 < this.pointsAcc[j]) {
+                        (this.pointsAcc[j] = 0);
                     }
                     pointsacc[j] -= 1;
                 }
@@ -501,8 +503,8 @@ Cell.prototype = {
             points[j].x = this.x + Math.cos(e * j + isvirus) * m;
             points[j].y = this.y + Math.sin(e * j + isvirus) * m;
         }
-    },
-    updatePos: function () {
+    }
+    updatePos() {
         if (0 === this.id) return 1;
         var aaa = (timestamp - this.updateTime) / 120;
         var a = 0 > aaa ? 0 : 1 < aaa ? 1 : aaa;
@@ -516,15 +518,15 @@ Cell.prototype = {
         this.y = a * (this.ny - this.oy) + this.oy;
         this.size = b * (this.nSize - this.oSize) + this.oSize;
         return b;
-    },
-    shouldRender: function () {
+    }
+    shouldRender() {
         if (0 === this.id) {
             return true;
         } else {
             return !(this.x + this.size + 40 < nodeX - canvasWidth / 2 / viewZoom || this.y + this.size + 40 < nodeY - canvasHeight / 2 / viewZoom || this.x - this.size - 40 > nodeX + canvasWidth / 2 / viewZoom || this.y - this.size - 40 > nodeY + canvasHeight / 2 / viewZoom);
         }
-    },
-    drawOneCell: function (ctx) {
+    }
+    drawOneCell(ctx) {
         if (this.shouldRender()) {
             var b = (0 !== this.id
                 && !this.isVirus
@@ -643,6 +645,9 @@ Cell.prototype = {
 };
 var quad = {
     init(args) {
+        var c = args.maxChildren || 2,
+            d = args.maxDepth || 4;
+
         function Node(x, y, w, h, depth) {
             this.x = x;
             this.y = y;
@@ -653,8 +658,6 @@ var quad = {
             this.nodes = [];
         }
 
-        var c = args.maxChildren || 2,
-            d = args.maxDepth || 4;
         Node.prototype = {
             x: 0,
             y: 0,
