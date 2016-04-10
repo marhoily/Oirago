@@ -360,13 +360,14 @@ setTimeout(() => { }, 3E5);
 var data = { "action": "test" };
 var response = null;
 
-var oldX = -1,
-    oldY = -1,
-    z = 1,
-    skins = {},
-    knownNameDict = "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;hitler;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;belarus;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook".split(";"),
-    knownNameDictNoDisp = ["8", "nasa"],
-    ib = ["_canvas'blob"];
+var oldX = -1;
+var oldY = -1;
+var z = 1;
+var skins = {};
+var knownNameDict =
+    "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;hitler;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;belarus;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook".split(";");
+var knownNameDictNoDisp = ["8", "nasa"];
+var ib = ["_canvas'blob"];
 Cell.prototype = {
     id: 0,
     points: null,
@@ -568,7 +569,6 @@ Cell.prototype = {
                 var clanStart = skinName.indexOf('[');
                 var clanEnd = skinName.indexOf(']');
                 skinName = skinName.slice(clanStart + 1, clanEnd);
-                //console.log(skinName);
             }
             var c3;
             if (!this.isAgitated && showSkin && ':teams' !== gameMode) {
@@ -641,7 +641,6 @@ Cell.prototype = {
         }
     }
 };
-Date.now || (Date.now = () => (new Date).getTime());
 var quad = {
     init(args) {
         function Node(x, y, w, h, depth) {
