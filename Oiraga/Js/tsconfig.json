@@ -1,0 +1,19 @@
+﻿{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false
+  },
+  "filesGlob": [
+    "**/*.ts"
+  ],
+  "files": [
+    "globals.ts",
+    "root.ts",
+    "cell.ts",
+    "Quad.ts"
+  ]
+}

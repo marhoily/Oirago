@@ -1,9 +1,10 @@
+import * as g from './Globals';
+
 var showSkin = true;
 var showName = true;
 var showColor = false;
 var showMass = false;
 var smoothRender = .4;
-var transparentRender = false;
 var gameMode = "";
 
 var z = 1;
@@ -13,7 +14,7 @@ var knownNameDict =
 var knownNameDictNoDisp = ["8", "nasa"];
 var ib = ["_canvas'blob"];;;
 
-class Cell {
+export class Cell {
     id = 0;
     points = null;
     pointsAcc = null;
@@ -53,23 +54,23 @@ class Cell {
 
     destroy() {
         var tmp;
-        for (tmp = 0; tmp < nodelist.length; tmp++)
-            if (nodelist[tmp] === this) {
-                nodelist.splice(tmp, 1);
+        for (tmp = 0; tmp < g.nodelist.length; tmp++)
+            if (g.nodelist[tmp] === this) {
+                g.nodelist.splice(tmp, 1);
                 break;
             }
-        delete nodes[this.id];
-        tmp = playerCells.indexOf(this);
+        delete g.nodes[this.id];
+        tmp = g.playerCells.indexOf(this);
         if (-1 !== tmp) {
-            ua = true;
-            playerCells.splice(tmp, 1);
+            g.ua = true;
+            g.playerCells.splice(tmp, 1);
         }
-        tmp = nodesOnScreen.indexOf(this.id);
+        tmp = g.nodesOnScreen.indexOf(this.id);
         if (-1 !== tmp) {
-            nodesOnScreen.splice(tmp, 1);
+            g.nodesOnScreen.splice(tmp, 1);
         }
         this.destroyed = true;
-        cells.push(this);
+        g.cells.push(this);
     }
     getNameSize() {
         return Math.max(~~(.3 * this.size), 24);
@@ -108,7 +109,7 @@ class Cell {
         if (20 > this.size) a = 0;
         if (this.isVirus) a = 30;
         var b = this.size;
-        if (!this.isVirus) (b *= viewZoom);
+        if (!this.isVirus) (b *= g.viewZoom);
         b *= z;
         if (this.flag & 32) (b *= .25);
         return ~~Math.max(b, a);
@@ -127,20 +128,25 @@ class Cell {
             -10 > pointsacc[i] && (pointsacc[i] = -10);
             pointsacc[i] = (pos1 + pos2 + 8 * pointsacc[i]) / 10;
         }
-        for (var ref = this, isvirus = this.isVirus ? 0 : (this.id / 1E3 + timestamp / 1E4) % (2 * Math.PI), j = 0; j < numpoints; ++j) {
+        for (var ref = this, isvirus = this.isVirus ? 0
+            : (this.id / 1E3 + g.timestamp / 1E4) % (2 * Math.PI),
+            j = 0; j < numpoints; ++j) {
             var f = points[j].size,
                 e = points[(j - 1 + numpoints) % numpoints].size,
                 m = points[(j + 1) % numpoints].size;
-            if (15 < this.size && null != qTree && 20 < this.size * viewZoom && 0 !== this.id) {
+            if (15 < this.size && null != g.qTree && 20 < this.size * g.viewZoom && 0 !== this.id) {
                 var l = false;
                 var n = points[j].x;
                 var q = points[j].y;
-                qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
+                g.qTree.retrieve2(n - 5, q - 5, 10, 10, function (a) {
                     if (a.ref !== ref && 25 >
-                    (n - a.x) * (n - a.x) +
-                    (q - a.y) * (q - a.y)) { l = true; }
+                        (n - a.x) * (n - a.x) +
+                        (q - a.y) * (q - a.y)) { l = true; }
                 });
-                if (!l && points[j].x < leftPos || points[j].y < topPos || points[j].x > rightPos || points[j].y > bottomPos) {
+                if (!l && points[j].x < g.leftPos
+                    || points[j].y < g.topPos
+                    || points[j].x > g.rightPos
+                    || points[j].y > g.bottomPos) {
                     l = true;
                 }
                 if (l) {
@@ -163,13 +169,13 @@ class Cell {
     }
     updatePos() {
         if (0 === this.id) return 1;
-        var aaa = (timestamp - this.updateTime) / 120;
+        var aaa = (g.timestamp - this.updateTime) / 120;
         var a = 0 > aaa ? 0 : 1 < aaa ? 1 : aaa;
         const b = 0 > a ? 0 : 1 < a ? 1 : a;
         this.getNameSize();
         if (this.destroyed && 1 <= b) {
-            const c = cells.indexOf(this);
-            -1 !== c && cells.splice(c, 1);
+            const c = g.cells.indexOf(this);
+            -1 !== c && g.cells.splice(c, 1);
         }
         this.x = a * (this.nx - this.ox) + this.ox;
         this.y = a * (this.ny - this.oy) + this.oy;
@@ -180,7 +186,10 @@ class Cell {
         if (0 === this.id) {
             return true;
         } else {
-            return !(this.x + this.size + 40 < nodeX - canvasWidth / 2 / viewZoom || this.y + this.size + 40 < nodeY - canvasHeight / 2 / viewZoom || this.x - this.size - 40 > nodeX + canvasWidth / 2 / viewZoom || this.y - this.size - 40 > nodeY + canvasHeight / 2 / viewZoom);
+            return !(this.x + this.size + 40 < g.nodeX - g.canvasWidth / 2 / g.viewZoom
+                || this.y + this.size + 40 < g.nodeY - g.canvasHeight / 2 / g.viewZoom
+                || this.x - this.size - 40 > g.nodeX + g.canvasWidth / 2 / g.viewZoom
+                || this.y - this.size - 40 > g.nodeY + g.canvasHeight / 2 / g.viewZoom);
         }
     }
     drawOneCell(ctx) {
@@ -188,14 +197,14 @@ class Cell {
             var b = (0 !== this.id
                 && !this.isVirus
                 && !this.isAgitated
-                && smoothRender > viewZoom);
+                && smoothRender > g.viewZoom);
 
             if (5 > this.getNumPoints()) b = true;
             if (this.wasSimpleDrawing && !b)
                 for (var c = 0; c < this.points.length; c++) this.points[c].size = this.size;
             this.wasSimpleDrawing = b;
             ctx.save();
-            this.drawTime = timestamp;
+            this.drawTime = g.timestamp;
             var c5 = this.updatePos();
             this.destroyed && (ctx.globalAlpha *= 1 - c5);
             ctx.lineWidth = 10;
@@ -266,7 +275,7 @@ class Cell {
             if (null != e1 && c2) {
                 ctx.drawImage(e1, this.x - 2 * this.size, this.y - 2 * this.size, 4 * this.size, 4 * this.size);
             }
-            var c1 = -1 !== playerCells.indexOf(this);
+            var c1 = -1 !== g.playerCells.indexOf(this);
             //draw name
             if (0 !== this.id) {
                 var b1 = ~~this.y;
@@ -274,7 +283,7 @@ class Cell {
                     var ncache = this.nameCache;
                     ncache.setValue(this.name);
                     ncache.setSize(this.getNameSize());
-                    var ratio = Math.ceil(10 * viewZoom) / 10;
+                    var ratio = Math.ceil(10 * g.viewZoom) / 10;
                     ncache.setScale(ratio);
                     var rnchache = ncache.render(),
                         m = ~~(rnchache.width / ratio),
@@ -284,11 +293,13 @@ class Cell {
                 }
 
                 //draw mass
-                if (showMass && (c1 || 0 === playerCells.length && (!this.isVirus || this.isAgitated) && 20 < this.size)) {
+                if (showMass && (c1 || 0 === g.playerCells.length
+                    && (!this.isVirus || this.isAgitated)
+                    && 20 < this.size)) {
                     var c6 = this.sizeCache;
                     c6.setSize(this.getNameSize() / 2);
                     c6.setValue(~~(this.size * this.size / 100));
-                    var ratio1 = Math.ceil(10 * viewZoom) / 10;
+                    var ratio1 = Math.ceil(10 * g.viewZoom) / 10;
                     c6.setScale(ratio1);
                     var e2 = c6.render();
                     var m1 = ~~(e2.width / ratio1);

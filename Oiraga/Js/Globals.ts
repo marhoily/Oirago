@@ -1,0 +1,18 @@
+﻿export var canvasWidth;
+export var canvasHeight;
+export var qTree = null;
+export var nodeX = 0;
+export var nodeY = 0;
+export var nodesOnScreen = [];
+export var playerCells = [];
+export var nodes = {};
+export var nodelist = [];
+export var cells = [];
+export var timestamp = 0;
+export var leftPos = 0;
+export var topPos = 0;
+export var rightPos = 1E4;
+export var bottomPos = 1E4;
+export var viewZoom = 1;
+export var ua = false;
+export var transparentRender = false;

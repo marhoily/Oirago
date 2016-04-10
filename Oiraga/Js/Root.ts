@@ -1,12 +1,15 @@
-﻿var ctx;
+﻿import * as gg from "Globals";
+import {Cell} from "Cell";
+
+var ctx;
 var rawMouseX = 0;
 var rawMouseY = 0;
 var currX = -1;
 var currY = -1;
 var szoom = false;
 var showDarkTheme = false;
-var posX = nodeX = ~~((leftPos + rightPos) / 2);
-var posY = nodeY = ~~((topPos + bottomPos) / 2);
+var posX = gg.nodeX = ~~((gg.leftPos + gg.rightPos) / 2);
+var posY = gg.nodeY = ~~((gg.topPos + gg.bottomPos) / 2);
 var posSize = 1;
 var drawLine = false;
 var lineX = 0;
@@ -22,17 +25,17 @@ function handleWheel(event) {
     if (szoom) {
         zoom *= Math.pow(.9, event.wheelDelta / -120 || event.detail || 0);
         0.4 > zoom && (zoom = 0.4);
-        zoom > 10 / viewZoom && (zoom = 10 / viewZoom);
+        zoom > 10 / gg.viewZoom && (zoom = 10 / gg.viewZoom);
     }
     else {
         zoom *= Math.pow(.9, event.wheelDelta / -120 || event.detail || 0);
         0.6 > zoom && (zoom = 0.6);
-        zoom > 6 / viewZoom && (zoom = 6 / viewZoom);
+        zoom > 6 / gg.viewZoom && (zoom = 6 / gg.viewZoom);
     }
 }
 
 function buildQTree() {
-    if (.4 > viewZoom) qTree = null;
+    if (.4 > gg.viewZoom) gg.qTree = null;
     else {
         let a = Number.POSITIVE_INFINITY;
         let b = Number.POSITIVE_INFINITY;
@@ -41,9 +44,9 @@ function buildQTree() {
         let e = 0;
         let i: number;
         let node;
-        for (i = 0; i < nodelist.length; i++) {
-            node = nodelist[i];
-            if (node.shouldRender() && !node.prepareData && 20 < node.size * viewZoom) {
+        for (i = 0; i < gg.nodelist.length; i++) {
+            node = gg.nodelist[i];
+            if (node.shouldRender() && !node.prepareData && 20 < node.size * gg.viewZoom) {
                 e = Math.max(node.size, e);
                 a = Math.min(node.x, a);
                 b = Math.min(node.y, b);
@@ -51,7 +54,7 @@ function buildQTree() {
                 d = Math.max(node.y, d);
             }
         }
-        qTree = new Quad({
+        gg.qTree = new Quad({
             minX: a - (e + 100),
             minY: b - (e + 100),
             maxX: c + (e + 100),
@@ -59,13 +62,17 @@ function buildQTree() {
             maxChildren: 2,
             maxDepth: 4
         });
-        for (i = 0; i < nodelist.length; i++) {
-            node = nodelist[i];
-            if (node.shouldRender() && !(20 >= node.size * viewZoom)) {
+        for (i = 0; i < gg.nodelist.length; i++) {
+            node = gg.nodelist[i];
+            if (node.shouldRender() && !(20 >= node.size * gg.viewZoom)) {
                 for (a = 0; a < node.points.length; ++a) {
                     b = node.points[a].x;
                     c = node.points[a].y;
-                    b < nodeX - canvasWidth / 2 / viewZoom || c < nodeY - canvasHeight / 2 / viewZoom || b > nodeX + canvasWidth / 2 / viewZoom || c > nodeY + canvasHeight / 2 / viewZoom || qTree.insert(node.points[a]);
+                    b < gg.nodeX - gg.canvasWidth / 2 / gg.viewZoom
+                        || c < gg.nodeY - gg.canvasHeight / 2 / gg.viewZoom
+                        || b > gg.nodeX + gg.canvasWidth / 2 / gg.viewZoom
+                        || c > gg.nodeY + gg.canvasHeight / 2 / gg.viewZoom
+                        || gg.qTree.insert(node.points[a]);
                 }
             }
         }
@@ -73,8 +80,8 @@ function buildQTree() {
 }
 
 function mouseCoordinateChange() {
-    currX = (rawMouseX - canvasWidth / 2) / viewZoom + nodeX;
-    currY = (rawMouseY - canvasHeight / 2) / viewZoom + nodeY;
+    currX = (rawMouseX - gg.canvasWidth / 2) / gg.viewZoom + gg.nodeX;
+    currY = (rawMouseY - gg.canvasHeight / 2) / gg.viewZoom + gg.nodeY;
 }
 
 function handleWsMessage(msg) {
@@ -92,8 +99,8 @@ function handleWsMessage(msg) {
             posSize = msg.getFloat32(offset, true);
             break;
         case 20: // clear nodes
-            playerCells = [];
-            nodesOnScreen = [];
+            gg.playerCells = [];
+            gg.nodesOnScreen = [];
             break;
         case 21: // draw line
             lineX = msg.getInt16(offset, true);
@@ -106,37 +113,37 @@ function handleWsMessage(msg) {
             }
             break;
         case 32: // add node
-            nodesOnScreen.push(msg.getUint32(offset, true));
+            gg.nodesOnScreen.push(msg.getUint32(offset, true));
             break;
         case 64: // set border
-            leftPos = msg.getFloat64(offset, true);
+            gg.leftPos = msg.getFloat64(offset, true);
             offset += 8;
-            topPos = msg.getFloat64(offset, true);
+            gg.topPos = msg.getFloat64(offset, true);
             offset += 8;
-            rightPos = msg.getFloat64(offset, true);
+            gg.rightPos = msg.getFloat64(offset, true);
             offset += 8;
-            bottomPos = msg.getFloat64(offset, true);
-            posX = (rightPos + leftPos) / 2;
-            posY = (bottomPos + topPos) / 2;
+            gg.bottomPos = msg.getFloat64(offset, true);
+            posX = (gg.rightPos + gg.leftPos) / 2;
+            posY = (gg.bottomPos + gg.topPos) / 2;
             posSize = 1;
-            if (0 === playerCells.length) {
-                nodeX = posX;
-                nodeY = posY;
-                viewZoom = posSize;
+            if (0 === gg.playerCells.length) {
+                gg.nodeX = posX;
+                gg.nodeY = posY;
+                gg.viewZoom = posSize;
             }
             break;
     }
 }
 
 function updateNodes(view, offset) {
-    timestamp = +new Date;
+    gg.timestamp = +new Date;
     var code = Math.random();
-    ua = false;
+    gg.ua = false;
     var queueLength = view.getUint16(offset, true);
     offset += 2;
     for (var i = 0; i < queueLength; ++i) {
-        var killer = nodes[view.getUint32(offset, true)],
-            killedNode = nodes[view.getUint32(offset + 4, true)];
+        var killer = gg.nodes[view.getUint32(offset, true)],
+            killedNode = gg.nodes[view.getUint32(offset + 4, true)];
         offset += 8;
         if (killer && killedNode) {
             killedNode.destroy();
@@ -146,7 +153,7 @@ function updateNodes(view, offset) {
             killedNode.nx = killer.x;
             killedNode.ny = killer.y;
             killedNode.nSize = killedNode.size;
-            killedNode.updateTime = timestamp;
+            killedNode.updateTime = gg.timestamp;
         }
     }
     var i2 = 0;
@@ -162,9 +169,9 @@ function updateNodes(view, offset) {
         offset += 2;
         size = view.getInt16(offset, true);
         offset += 2;
-        var r = view.getUint8(offset++),
-            g = view.getUint8(offset++),
-            b = view.getUint8(offset++);
+        var r = view.getUint8(offset++);
+        var g:number = view.getUint8(offset++);
+        var b = view.getUint8(offset++);
         var color = (r << 16 | g << 8 | b).toString(16);
         for (; 6 > color.length;) color = `0${color}`;
         var colorstr = `#${color}`,
@@ -182,8 +189,8 @@ function updateNodes(view, offset) {
             name += String.fromCharCode(char);
         }
         var node = null;
-        if (nodes.hasOwnProperty(nodeid)) {
-            node = nodes[nodeid];
+        if (gg.nodes.hasOwnProperty(nodeid)) {
+            node = gg.nodes[nodeid];
             node.updatePos();
             node.ox = node.x;
             node.oy = node.y;
@@ -193,8 +200,8 @@ function updateNodes(view, offset) {
             node = new Cell(
                 nodeid, posX, posY,
                 size, colorstr, name);
-            nodelist.push(node);
-            nodes[nodeid] = node;
+            gg.nodelist.push(node);
+            gg.nodes[nodeid] = node;
             node.ka = posX;
             node.la = posY;
         }
@@ -204,15 +211,15 @@ function updateNodes(view, offset) {
         node.ny = posY;
         node.nSize = size;
         node.updateCode = code;
-        node.updateTime = timestamp;
+        node.updateTime = gg.timestamp;
         node.flag = flags;
         name && node.setName(name);
-        if (-1 !== nodesOnScreen.indexOf(nodeid) && -1 === playerCells.indexOf(node)) {
+        if (-1 !== gg.nodesOnScreen.indexOf(nodeid) && -1 === gg.playerCells.indexOf(node)) {
             document.getElementById("overlays").style.display = "none";
-            playerCells.push(node);
-            if (1 === playerCells.length) {
-                nodeX = node.x;
-                nodeY = node.y;
+            gg.playerCells.push(node);
+            if (1 === gg.playerCells.length) {
+                gg.nodeX = node.x;
+                gg.nodeY = node.y;
             }
         }
     }
@@ -221,7 +228,7 @@ function updateNodes(view, offset) {
     for (var i1 = 0; i1 < queueLength; i1++) {
         var nodeId = view.getUint32(offset, true);
         offset += 4;
-        var node1 = nodes[nodeId];
+        var node1 = gg.nodes[nodeId];
         null != node1 && node1.destroy();
     }
 
@@ -229,8 +236,8 @@ function updateNodes(view, offset) {
 
 function sendMouseMove() {
     if (true) {
-        var msg = rawMouseX - canvasWidth / 2;
-        var b = rawMouseY - canvasHeight / 2;
+        var msg = rawMouseX - gg.canvasWidth / 2;
+        var b = rawMouseY - gg.canvasHeight / 2;
         if (64 <= msg * msg + b * b) {
             if (!(.01 > Math.abs(oldX - currX) && .01 > Math.abs(oldY - currY))) {
                 oldX = currX;
@@ -242,18 +249,18 @@ function sendMouseMove() {
 
 function viewRange() {
     const ratio = Math.max(
-        canvasHeight / 1080,
-        canvasWidth / 1920);
+        gg.canvasHeight / 1080,
+        gg.canvasWidth / 1920);
     return ratio * zoom;
 }
 
 function calcViewZoom() {
-    if (0 !== playerCells.length) {
+    if (0 !== gg.playerCells.length) {
         let newViewZoom = 0;
-        for (let i = 0; i < playerCells.length; i++)
-            newViewZoom += playerCells[i].size;
+        for (let i = 0; i < gg.playerCells.length; i++)
+            newViewZoom += gg.playerCells[i].size;
         newViewZoom = Math.pow(Math.min(64 / newViewZoom, 1), .4) * viewRange();
-        viewZoom = (9 * viewZoom + newViewZoom) / 10;
+        gg.viewZoom = (9 * gg.viewZoom + newViewZoom) / 10;
     }
 }
 
@@ -261,74 +268,56 @@ function drawGameScene() {
     var a, oldtime = Date.now();
     var cb = 0;
     ++cb;
-    timestamp = oldtime;
-    if (0 < playerCells.length) {
+    gg.timestamp = oldtime;
+    if (0 < gg.playerCells.length) {
         calcViewZoom();
         var c = a = 0;
-        for (var i1 = 0; i1 < playerCells.length; i1++) {
-            playerCells[i1].updatePos();
-            a += playerCells[i1].x / playerCells.length;
-            c += playerCells[i1].y / playerCells.length;
+        for (var i1 = 0; i1 < gg.playerCells.length; i1++) {
+            gg.playerCells[i1].updatePos();
+            a += gg.playerCells[i1].x / gg.playerCells.length;
+            c += gg.playerCells[i1].y / gg.playerCells.length;
         }
         posX = a;
         posY = c;
-        posSize = viewZoom;
-        nodeX = (nodeX + a) / 2;
-        nodeY = (nodeY + c) / 2;
+        posSize = gg.viewZoom;
+        gg.nodeX = (gg.nodeX + a) / 2;
+        gg.nodeY = (gg.nodeY + c) / 2;
     } else {
-        nodeX = (29 * nodeX + posX) / 30;
-        nodeY = (29 * nodeY + posY) / 30;
-        viewZoom = (9 * viewZoom + posSize * viewRange()) / 10;
+        gg.nodeX = (29 * gg.nodeX + posX) / 30;
+        gg.nodeY = (29 * gg.nodeY + posY) / 30;
+        gg.viewZoom = (9 * gg.viewZoom + posSize * viewRange()) / 10;
     }
     buildQTree();
     mouseCoordinateChange();
-    xa || ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    xa || ctx.clearRect(0, 0, gg.canvasWidth, gg.canvasHeight);
     if (xa) {
         if (showDarkTheme) {
             ctx.fillStyle = '#111111';
             ctx.globalAlpha = .05;
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillRect(0, 0, gg.canvasWidth, gg.canvasHeight);
             ctx.globalAlpha = 1;
         } else {
             ctx.fillStyle = '#F2FBFF';
             ctx.globalAlpha = .05;
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillRect(0, 0, gg.canvasWidth, gg.canvasHeight);
             ctx.globalAlpha = 1;
         }
     }
-    nodelist.sort((a, b) =>
+    gg.nodelist.sort((a, b) =>
         (a.size === b.size ? a.id - b.id : a.size - b.size));
     ctx.save();
-    ctx.translate(canvasWidth / 2, canvasHeight / 2);
-    ctx.scale(viewZoom, viewZoom);
-    ctx.translate(-nodeX, -nodeY);
-    for (var i2 = 0; i2 < cells.length; i2++)
-        cells[i2].drawOneCell(ctx);
+    ctx.translate(gg.canvasWidth / 2, gg.canvasHeight / 2);
+    ctx.scale(gg.viewZoom, gg.viewZoom);
+    ctx.translate(-gg.nodeX, -gg.nodeY);
+    for (var i2 = 0; i2 < gg.cells.length; i2++)
+        gg.cells[i2].drawOneCell(ctx);
 
-    if (transparentRender) {
+    if (gg.transparentRender) {
         ctx.globalAlpha = 0.6;
     } else {
         ctx.globalAlpha = 1;
     }
 
-    for (var i3 = 0; i3 < nodelist.length; i3++)
-        nodelist[i3].drawOneCell(ctx);
+    for (var i3 = 0; i3 < gg.nodelist.length; i3++)
+        gg.nodelist[i3].drawOneCell(ctx);
 }
-
-var canvasWidth;
-var canvasHeight;
-var qTree = null;
-var nodeX = 0;
-var nodeY = 0;
-var nodesOnScreen = [];
-var playerCells = [];
-var nodes = {};
-var nodelist = [];
-var cells = [];
-var timestamp = 0;
-var leftPos = 0;
-var topPos = 0;
-var rightPos = 1E4;
-var bottomPos = 1E4;
-var viewZoom = 1;
-var ua = false;
