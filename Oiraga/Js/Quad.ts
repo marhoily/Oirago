@@ -19,17 +19,17 @@ export class Quad {
         this.depth = depth;
     }
 
-    insert(a) {
+    insert(point) {
         if (this.nodes.length !== 0) {
-            this.nodes[this.findInsertNode(a)].insert(a);
+            this.nodes[this.findInsertNode(point)].insert(point);
         } else {
             const c = this.maxChildren || 2;
             const d = this.maxDepth || 4;
             if (this.items.length >= c && this.depth < d) {
                 this.devide();
-                this.nodes[this.findInsertNode(a)].insert(a);
+                this.nodes[this.findInsertNode(point)].insert(point);
             } else {
-                this.items.push(a);
+                this.items.push(point);
             }
         }
     }

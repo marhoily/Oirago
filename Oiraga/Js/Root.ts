@@ -33,46 +33,62 @@ function handleWheel(event) {
     }
 }
 
+function calcBounds() {
+    const res = {
+        minX: Number.POSITIVE_INFINITY,
+        minY: Number.POSITIVE_INFINITY,
+        maxX: Number.NEGATIVE_INFINITY,
+        maxY: Number.NEGATIVE_INFINITY,
+        size: 0
+    };
+    for (let i = 0; i < gg.nodelist.length; i++) {
+        const node = gg.nodelist[i];
+        if (node.shouldRender() && 20 < node.size * gg.viewZoom) {
+            res.size = Math.max(node.size, res.size);
+            res.minX = Math.min(node.x,    res.minX);
+            res.minY = Math.min(node.y,    res.minY);
+            res.maxX = Math.max(node.x,    res.maxX);
+            res.maxY = Math.max(node.y,    res.maxY);
+        }
+    }
+    return res;
+}
+
+function inflateToRect(bounds, d) {
+    return {
+        x: bounds.minX - d,
+        y: bounds.minY - d,
+        w: bounds.maxX + d - (bounds.minX - d),
+        h: bounds.maxY + d - (bounds.minY - d)
+    };
+}
+
 function buildQTree() {
     if (.4 > gg.viewZoom) {
         gg.qTree = null;
         return;
     }
 
-    let a = Number.POSITIVE_INFINITY;
-    let b = Number.POSITIVE_INFINITY;
-    let c = Number.NEGATIVE_INFINITY;
-    let d = Number.NEGATIVE_INFINITY;
-    let e = 0;
-    for (var i = 0; i < gg.nodelist.length; i++) {
-        let node = gg.nodelist[i];
-        if (node.shouldRender() && 20 < node.size * gg.viewZoom) {
-            e = Math.max(node.size, e);
-            a = Math.min(node.x, a);
-            b = Math.min(node.y, b);
-            c = Math.max(node.x, c);
-            d = Math.max(node.y, d);
-        }
-    }
-    let minX = a - (e + 100);
-    let minY = b - (e + 100);
-    let maxX = c + (e + 100);
-    let maxY = d + (e + 100);
-    let bounds = { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
-    gg.qTree = new MyNode(bounds, 0, 2, 4);
+    const b = calcBounds();
+    const rect = inflateToRect(b, b.size + 100);
+    gg.qTree = new MyNode(rect, 0, 2, 4);
 
-    for (var i1 = 0; i1 < gg.nodelist.length; i1++) {
-        var node1 = gg.nodelist[i1];
-        if (node1.shouldRender() && !(20 >= node1.size * gg.viewZoom)) {
-            for (a = 0; a < node1.points.length; ++a) {
-                b = node1.points[a].x;
-                c = node1.points[a].y;
-                b < gg.nodeX - gg.canvasWidth / 2 / gg.viewZoom ||
-                    c < gg.nodeY - gg.canvasHeight / 2 / gg.viewZoom ||
-                    b > gg.nodeX + gg.canvasWidth / 2 / gg.viewZoom ||
-                    c > gg.nodeY + gg.canvasHeight / 2 / gg.viewZoom ||
-                    gg.qTree.insert(node1.points[a]);
-            }
+    const w = gg.canvasWidth / 2 / gg.viewZoom;
+    const h = gg.canvasHeight / 2 / gg.viewZoom;
+    for (let i = 0; i < gg.nodelist.length; i++) {
+        const cell = gg.nodelist[i];
+        if (!cell.shouldRender() || 20 >= cell.size * gg.viewZoom)
+            continue;
+        for (let j = 0; j < cell.points.length; ++j) {
+            const point = cell.points[j];
+            b.minY = point.x;
+            b.maxX = point.y;
+            const x =
+                b.minY < gg.nodeX - w ||
+                b.maxX < gg.nodeY - h ||
+                b.minY > gg.nodeX + w ||
+                b.maxX > gg.nodeY + h;
+            if (!x) gg.qTree.insert(point);
         }
     }
 }
