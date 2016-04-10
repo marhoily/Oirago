@@ -53,7 +53,7 @@ export class Cell {
     }
 
     destroy() {
-        var tmp;
+        let tmp: number;
         for (tmp = 0; tmp < g.nodelist.length; tmp++)
             if (g.nodelist[tmp] === this) {
                 g.nodelist.splice(tmp, 1);
@@ -169,8 +169,8 @@ export class Cell {
     }
     updatePos() {
         if (0 === this.id) return 1;
-        var aaa = (g.timestamp - this.updateTime) / 120;
-        var a = 0 > aaa ? 0 : 1 < aaa ? 1 : aaa;
+        const aaa = (g.timestamp - this.updateTime) / 120;
+        const a = 0 > aaa ? 0 : 1 < aaa ? 1 : aaa;
         const b = 0 > a ? 0 : 1 < a ? 1 : a;
         this.getNameSize();
         if (this.destroyed && 1 <= b) {
