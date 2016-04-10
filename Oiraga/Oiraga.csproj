@@ -254,7 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Js\Cell.ts" />
-    <TypeScriptCompile Include="Js\Good.ts" />
+    <TypeScriptCompile Include="Js\Root.ts" />
     <TypeScriptCompile Include="Js\MyNode.ts" />
     <TypeScriptCompile Include="Js\Quad.ts" />
   </ItemGroup>

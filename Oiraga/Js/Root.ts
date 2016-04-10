@@ -1,4 +1,24 @@
-﻿function handleWheel(event) {
+﻿var ctx;
+var rawMouseX = 0;
+var rawMouseY = 0;
+var currX = -1;
+var currY = -1;
+var szoom = false;
+var showDarkTheme = false;
+var posX = nodeX = ~~((leftPos + rightPos) / 2);
+var posY = nodeY = ~~((topPos + bottomPos) / 2);
+var posSize = 1;
+var drawLine = false;
+var lineX = 0;
+var lineY = 0;
+var drawLineX = 0;
+var drawLineY = 0;
+var xa = false;
+var zoom = 1;
+var oldX = -1;
+var oldY = -1;
+
+function handleWheel(event) {
     if (szoom) {
         zoom *= Math.pow(.9, event.wheelDelta / -120 || event.detail || 0);
         0.4 > zoom && (zoom = 0.4);
@@ -239,6 +259,7 @@ function calcViewZoom() {
 
 function drawGameScene() {
     var a, oldtime = Date.now();
+    var cb = 0;
     ++cb;
     timestamp = oldtime;
     if (0 < playerCells.length) {
@@ -294,8 +315,6 @@ function drawGameScene() {
         nodelist[i3].drawOneCell(ctx);
 }
 
-
-var ctx;
 var canvasWidth;
 var canvasHeight;
 var qTree = null;
@@ -306,52 +325,10 @@ var playerCells = [];
 var nodes = {};
 var nodelist = [];
 var cells = [];
-var rawMouseX = 0;
-var rawMouseY = 0;
-var currX = -1;
-var currY = -1;
-var cb = 0;
 var timestamp = 0;
 var leftPos = 0;
 var topPos = 0;
 var rightPos = 1E4;
 var bottomPos = 1E4;
 var viewZoom = 1;
-var w = null;
-var showSkin = true;
-var showName = true;
-var showColor = false;
-var szoom = false;
 var ua = false;
-var showDarkTheme = false;
-var showMass = false;
-var smoothRender = .4;
-var transparentRender = false;
-var posX = nodeX = ~~((leftPos + rightPos) / 2);
-var posY = nodeY = ~~((topPos + bottomPos) / 2);
-var posSize = 1;
-var gameMode = "";
-var ma = false;
-var drawLine = false;
-var lineX = 0;
-var lineY = 0;
-var drawLineX = 0;
-var drawLineY = 0;
-var ra = 0;
-var xa = false;
-var zoom = 1;
-
-setTimeout(() => { }, 3E5);
-
-//This part is for loading custon skins
-var data = { "action": "test" };
-var response = null;
-
-var oldX = -1;
-var oldY = -1;
-var z = 1;
-var skins = {};
-var knownNameDict =
-    "poland;usa;china;russia;canada;australia;spain;brazil;germany;ukraine;france;sweden;hitler;north korea;south korea;japan;united kingdom;earth;greece;latvia;lithuania;estonia;finland;norway;cia;maldivas;austria;nigeria;reddit;yaranaika;confederate;9gag;indiana;4chan;italy;bulgaria;tumblr;2ch.hk;hong kong;portugal;jamaica;german empire;mexico;sanik;switzerland;croatia;chile;indonesia;bangladesh;thailand;iran;iraq;peru;moon;botswana;bosnia;netherlands;european union;taiwan;pakistan;hungary;satanist;qing dynasty;matriarchy;patriarchy;feminism;ireland;texas;facepunch;prodota;cambodia;steam;piccolo;india;kc;denmark;quebec;ayy lmao;sealand;bait;tsarist russia;origin;vinesauce;stalin;belgium;luxembourg;stussy;prussia;8ch;argentina;scotland;sir;romania;belarus;wojak;doge;nasa;byzantium;imperial japan;french kingdom;somalia;turkey;mars;pokerface;8;irs;receita federal;facebook".split(";");
-var knownNameDictNoDisp = ["8", "nasa"];
-var ib = ["_canvas'blob"];;;
