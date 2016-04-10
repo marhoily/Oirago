@@ -383,12 +383,14 @@ class Cell {
     isAgitated = false;
     wasSimpleDrawing = true;
     color = null;
+    uname = null;
     constructor(uid, ux, uy, usize, ucolor, uname) {
         this.id = uid;
         this.ox = this.x = ux;
         this.oy = this.y = uy;
         this.oSize = this.size = usize;
         this.color = ucolor;
+        this.uname = uname;
         this.points = [];
         this.pointsAcc = [];
         this.createPoints();
@@ -645,28 +647,25 @@ class Cell {
 };
 var quad = {
     init(args) {
-        var c = args.maxChildren || 2,
-            d = args.maxDepth || 4;
+        class Node {
+            constructor(x, y, w, h, depth) {
+                this.x = x;
+                this.y = y;
+                this.w = w;
+                this.h = h;
+                this.depth = depth;
+                this.items = [];
+                this.nodes = [];
+            }
 
-        function Node(x, y, w, h, depth) {
-            this.x = x;
-            this.y = y;
-            this.w = w;
-            this.h = h;
-            this.depth = depth;
-            this.items = [];
-            this.nodes = [];
-        }
-
-        Node.prototype = {
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0,
-            depth: 0,
-            items: null,
-            nodes: null,
-            exists: function (selector) {
+            x = 0;
+            y = 0;
+            w = 0;
+            h = 0;
+            depth = 0;
+            items = null;
+            nodes = null;
+            exists(selector) {
                 for (let i = 0; i < this.items.length; ++i) {
                     const item = this.items[i];
                     if (item.x >= selector.x &&
@@ -679,8 +678,8 @@ var quad = {
                         dir => this.nodes[dir].exists(selector));
                 }
                 return false;
-            },
-            retrieve: function (item, callback) {
+            };
+            retrieve(item, callback) {
                 for (let i = 0; i < this.items.length; ++i)
                     callback(this.items[i]);
                 if (0 !== this.nodes.length) {
@@ -689,11 +688,13 @@ var quad = {
                             this.nodes[dir].retrieve(item, callback);
                         });
                 }
-            },
-            insert: function (a) {
+            }
+            insert(a) {
                 if (0 !== this.nodes.length) {
                     this.nodes[this.findInsertNode(a)].insert(a);
                 } else {
+                    const c = args.maxChildren || 2;
+                    const d = args.maxDepth || 4;
                     if (this.items.length >= c && this.depth < d) {
                         this.devide();
                         this.nodes[this.findInsertNode(a)].insert(a);
@@ -701,21 +702,21 @@ var quad = {
                         this.items.push(a);
                     }
                 }
-            },
-            findInsertNode: function (a) {
+            }
+            findInsertNode(a) {
                 return a.x < this.x + this.w / 2
                     ? a.y < this.y + this.h / 2 ? 0 : 2
                     : a.y < this.y + this.h / 2 ? 1 : 3;
-            },
-            findOverlappingNodes: function (a, b) {
+            }
+            findOverlappingNodes(a, b) {
                 return a.x < this.x + this.w / 2 &&
                     (a.y < this.y + this.h / 2 && b(0) || a.y >= this.y + this.h / 2 && b(2)) ||
                     a.x >= this.x + this.w / 2 &&
                     (a.y < this.y + this.h / 2 && b(1) || a.y >= this.y + this.h / 2 && b(3))
                     ? true
                     : false;
-            },
-            devide: function () {
+            }
+            devide() {
                 var a = this.depth + 1,
                     c = this.w / 2,
                     d = this.h / 2;
@@ -723,11 +724,11 @@ var quad = {
                 this.nodes.push(new Node(this.x + c, this.y, c, d, a));
                 this.nodes.push(new Node(this.x, this.y + d, c, d, a));
                 this.nodes.push(new Node(this.x + c, this.y + d, c, d, a));
-                a = this.items;
+                var a2 = this.items;
                 this.items = [];
-                for (c = 0; c < a.length; c++) this.insert(a[c]);
-            },
-            clear: function () {
+                for (c = 0; c < a2.length; c++) this.insert(a2[c]);
+            }
+            clear() {
                 for (var a = 0; a < this.nodes.length; a++) this.nodes[a].clear();
                 this.items.length = 0;
                 this.nodes.length = 0;
