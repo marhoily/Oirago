@@ -1,5 +1,6 @@
 import * as g from "Globals";
 import {IPoint} from "Quad";
+
 var showSkin = true;
 var showName = true;
 var showColor = false;
@@ -15,7 +16,7 @@ var knownNameDictNoDisp = ["8", "nasa"];
 var ib = ["_canvas'blob"];;;
 
 export class Point implements IPoint {
-    ref : Cell = null;
+    ref: Cell = null;
     size = 0;
     x = 0;
     y = 0;
@@ -282,16 +283,18 @@ export class Cell {
             -10 > pointsacc[i] && (pointsacc[i] = -10);
             pointsacc[i] = (pos1 + pos2 + 8 * pointsacc[i]) / 10;
         }
-        for (var ref = this, isvirus = this.isVirus ? 0
-            : (this.id / 1E3 + g.timestamp / 1E4) % (2 * Math.PI),
-            j = 0; j < numpoints; ++j) {
-            var f = points[j].size,
-                e = points[(j - 1 + numpoints) % numpoints].size,
-                m = points[(j + 1) % numpoints].size;
+        var isvirus = this.isVirus
+            ? 0
+            : (this.id / 1E3 + g.timestamp / 1E4) % (2 * Math.PI);
+        for (var j = 0; j < numpoints; ++j) {
+            var f = points[j].size;
+            var e = points[(j - 1 + numpoints) % numpoints].size;
+            var m = points[(j + 1) % numpoints].size;
             if (15 < this.size && null != g.qTree && 20 < this.size * g.viewZoom && 0 !== this.id) {
                 var l = false;
                 var n = points[j].x;
                 var q = points[j].y;
+                var ref = this;
                 g.qTree.retrieve(n - 5, q - 5, 10, 10, function (a) {
                     if (a.ref !== ref && 25 >
                         (n - a.x) * (n - a.x) +

@@ -37,19 +37,19 @@ export class Quad {
     }
     retrieve(x, y, w, h, callback) { this.retrieveInner({ x: x, y: y, w: w, h: h }, callback); }
 
-    private retrieveInner(item, callback) {
+    private retrieveInner(item: IRect, callback: (rect: IRect) => void) {
         for (let i = 0; i < this.items.length; ++i)
             callback(this.items[i]);
-        if (0 !== this.nodes.length) {
+
+        if (this.nodes.length > 0)
             this.findOverlappingNodes(item,
                 dir => this.nodes[dir].retrieveInner(item, callback));
-        }
     }
-    private findOverlappingNodes(point, b) {
+    private findOverlappingNodes(point: IPoint, inner: (index: number) => void) {
         const x = point.x < this.bounds.x + this.bounds.w / 2;
         const y = point.y < this.bounds.y + this.bounds.h / 2;
-        return !!(x && (y && b(0) || !y && b(2))
-            || !x && (y && b(1) || !y && b(3)));
+        return !!(x && (y && inner(0) || !y && inner(2))
+            || !x && (y && inner(1) || !y && inner(3)));
     }
     private findInsertNode(point) {
         const y = point.y < this.bounds.y + this.bounds.h / 2;
@@ -71,10 +71,8 @@ export class Quad {
             this.insert(this.items[i]);
     }
     private childNode(x, y, w, h) {
-        return new Quad(
-            { x: x, y: y, w: w, h: h },
-            this.depth + 1,
-            this.maxChildren,
-            this.maxDepth);
+        const bounds = { x: x, y: y, w: w, h: h };
+        return new Quad(bounds,
+            this.depth + 1, this.maxChildren, this.maxDepth);
     }
 }
