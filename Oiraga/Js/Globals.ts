@@ -1,15 +1,15 @@
-﻿import {MyNode} from "MyNode";
-
+﻿import {Quad as MyNode} from "Quad";
+import {Cell} from "Cell";
 export var canvasWidth;
 export var canvasHeight;
 export var qTree: MyNode = null;
 export var nodeX = 0;
 export var nodeY = 0;
 export var nodesOnScreen = [];
-export var playerCells = [];
-export var nodes = {};
-export var nodelist = [];
-export var cells = [];
+export var playerCells :Cell[]= [];
+export var nodes: { [key:number]:Cell; } = { };
+export var nodelist: Cell[] = [];
+export var cells: Cell[]= [];
 export var timestamp = 0;
 export var leftPos = 0;
 export var topPos = 0;

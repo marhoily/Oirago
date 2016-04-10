@@ -1,6 +1,6 @@
 ﻿import * as gg from "Globals";
 import {Cell} from "Cell";
-import {MyNode} from "MyNode";
+import {Quad as MyNode} from "Quad";
 
 var ctx;
 var rawMouseX = 0;
@@ -44,10 +44,10 @@ function buildQTree() {
         let d = Number.NEGATIVE_INFINITY;
         let e = 0;
         let i: number;
-        let node;
+        let node : Cell;
         for (i = 0; i < gg.nodelist.length; i++) {
             node = gg.nodelist[i];
-            if (node.shouldRender() && !node.prepareData && 20 < node.size * gg.viewZoom) {
+            if (node.shouldRender() && 20 < node.size * gg.viewZoom) {
                 e = Math.max(node.size, e);
                 a = Math.min(node.x, a);
                 b = Math.min(node.y, b);
@@ -192,7 +192,7 @@ function updateNodes(view, offset) {
             if (0 === char) break;
             name += String.fromCharCode(char);
         }
-        var node = null;
+        var node : Cell = null;
         if (gg.nodes.hasOwnProperty(nodeid)) {
             node = gg.nodes[nodeid];
             node.updatePos();
@@ -206,8 +206,8 @@ function updateNodes(view, offset) {
                 size, colorstr, name);
             gg.nodelist.push(node);
             gg.nodes[nodeid] = node;
-            node.ka = posX;
-            node.la = posY;
+            //node.ka = posX;
+            //node.la = posY;
         }
         node.isVirus = flagVirus;
         node.isAgitated = flagAgitated;
@@ -217,7 +217,7 @@ function updateNodes(view, offset) {
         node.updateCode = code;
         node.updateTime = gg.timestamp;
         node.flag = flags;
-        name && node.setName(name);
+       // name && node.setName(name);
         if (-1 !== gg.nodesOnScreen.indexOf(nodeid) && -1 === gg.playerCells.indexOf(node)) {
             document.getElementById("overlays").style.display = "none";
             gg.playerCells.push(node);

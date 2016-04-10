@@ -40,6 +40,7 @@ export class Cell {
     wasSimpleDrawing = true;
     color = null;
     uname = null;
+
     constructor(uid, ux, uy, usize, ucolor, uname) {
         this.id = uid;
         this.ox = this.x = ux;
@@ -72,110 +73,14 @@ export class Cell {
         this.destroyed = true;
         g.cells.push(this);
     }
-    getNameSize() {
-        return Math.max(~~(.3 * this.size), 24);
-    }
-    createPoints() {
-        var samplenum = this.getNumPoints();
-        for (; this.points.length > samplenum;) {
-            const rand = ~~(Math.random() * this.points.length);
-            this.points.splice(rand, 1);
-            this.pointsAcc.splice(rand, 1);
-        }
-        if (0 === this.points.length && 0 < samplenum) {
-            this.points.push({
-                ref: this,
-                size: this.size,
-                x: this.x,
-                y: this.y
-            });
-            this.pointsAcc.push(Math.random() - .5);
-        }
-        while (this.points.length < samplenum) {
-            var rand2 = ~~(Math.random() * this.points.length),
-                point = this.points[rand2];
-            this.points.splice(rand2, 0, {
-                ref: this,
-                size: point.size,
-                x: point.x,
-                y: point.y
-            });
-            this.pointsAcc.splice(rand2, 0, this.pointsAcc[rand2]);
-        }
-    }
-    getNumPoints() {
-        if (0 === this.id) return 16;
-        var a = 10;
-        if (20 > this.size) a = 0;
-        if (this.isVirus) a = 30;
-        var b = this.size;
-        if (!this.isVirus) (b *= g.viewZoom);
-        b *= z;
-        if (this.flag & 32) (b *= .25);
-        return ~~Math.max(b, a);
-    }
-    movePoints() {
-        this.createPoints();
-        var points = this.points;
-        var numpoints = points.length;
-        var pointsacc = this.pointsAcc;
-        for (var i = 0; i < numpoints; ++i) {
-            var pos1 = pointsacc[(i - 1 + numpoints) % numpoints],
-                pos2 = pointsacc[(i + 1) % numpoints];
-            pointsacc[i] += (Math.random() - .5) * (this.isAgitated ? 3 : 1);
-            pointsacc[i] *= .7;
-            10 < pointsacc[i] && (pointsacc[i] = 10);
-            -10 > pointsacc[i] && (pointsacc[i] = -10);
-            pointsacc[i] = (pos1 + pos2 + 8 * pointsacc[i]) / 10;
-        }
-        for (var ref = this, isvirus = this.isVirus ? 0
-            : (this.id / 1E3 + g.timestamp / 1E4) % (2 * Math.PI),
-            j = 0; j < numpoints; ++j) {
-            var f = points[j].size,
-                e = points[(j - 1 + numpoints) % numpoints].size,
-                m = points[(j + 1) % numpoints].size;
-            if (15 < this.size && null != g.qTree && 20 < this.size * g.viewZoom && 0 !== this.id) {
-                var l = false;
-                var n = points[j].x;
-                var q = points[j].y;
-                g.qTree.retrieve(n - 5, q - 5, 10, 10, function (a) {
-                    if (a.ref !== ref && 25 >
-                        (n - a.x) * (n - a.x) +
-                        (q - a.y) * (q - a.y)) { l = true; }
-                });
-                if (!l && points[j].x < g.leftPos
-                    || points[j].y < g.topPos
-                    || points[j].x > g.rightPos
-                    || points[j].y > g.bottomPos) {
-                    l = true;
-                }
-                if (l) {
-                    if (0 < this.pointsAcc[j]) {
-                        (this.pointsAcc[j] = 0);
-                    }
-                    pointsacc[j] -= 1;
-                }
-            }
-            f += pointsacc[j];
-            0 > f && (f = 0);
-            f = this.isAgitated ? (19 * f + this.size) / 20 : (12 * f + this.size) / 13;
-            points[j].size = (e + m + 8 * f) / 10;
-            e = 2 * Math.PI / numpoints;
-            m = this.points[j].size;
-            this.isVirus && 0 === j % 2 && (m += 5);
-            points[j].x = this.x + Math.cos(e * j + isvirus) * m;
-            points[j].y = this.y + Math.sin(e * j + isvirus) * m;
-        }
-    }
     updatePos() {
         if (0 === this.id) return 1;
         const aaa = (g.timestamp - this.updateTime) / 120;
         const a = 0 > aaa ? 0 : 1 < aaa ? 1 : aaa;
         const b = 0 > a ? 0 : 1 < a ? 1 : a;
-        this.getNameSize();
         if (this.destroyed && 1 <= b) {
             const c = g.cells.indexOf(this);
-            -1 !== c && g.cells.splice(c, 1);
+            if (c !== -1) g.cells.splice(c, 1);
         }
         this.x = a * (this.nx - this.ox) + this.ox;
         this.y = a * (this.ny - this.oy) + this.oy;
@@ -183,14 +88,17 @@ export class Cell {
         return b;
     }
     shouldRender() {
-        if (0 === this.id) {
-            return true;
-        } else {
-            return !(this.x + this.size + 40 < g.nodeX - g.canvasWidth / 2 / g.viewZoom
-                || this.y + this.size + 40 < g.nodeY - g.canvasHeight / 2 / g.viewZoom
-                || this.x - this.size - 40 > g.nodeX + g.canvasWidth / 2 / g.viewZoom
-                || this.y - this.size - 40 > g.nodeY + g.canvasHeight / 2 / g.viewZoom);
-        }
+        if (0 === this.id) { return true; }
+        const w = g.canvasWidth / 2 / g.viewZoom;
+        const h = g.canvasHeight / 2 / g.viewZoom;
+        const right = this.x + this.size + 40;
+        const bottom = this.y + this.size + 40;
+        const left = this.x - this.size - 40;
+        const top = this.y - this.size - 40;
+        return !(right < g.nodeX - w
+            || bottom < g.nodeY - h
+            || left > g.nodeX + w
+            || top > g.nodeY + h);
     }
     drawOneCell(ctx) {
         if (this.shouldRender()) {
@@ -308,6 +216,102 @@ export class Cell {
                 }
             }
             ctx.restore();
+        }
+    }
+
+    private getNameSize() {
+        return Math.max(~~(.3 * this.size), 24);
+    }
+    private createPoints() {
+        var samplenum = this.getNumPoints();
+        for (; this.points.length > samplenum;) {
+            const rand = ~~(Math.random() * this.points.length);
+            this.points.splice(rand, 1);
+            this.pointsAcc.splice(rand, 1);
+        }
+        if (0 === this.points.length && 0 < samplenum) {
+            this.points.push({
+                ref: this,
+                size: this.size,
+                x: this.x,
+                y: this.y
+            });
+            this.pointsAcc.push(Math.random() - .5);
+        }
+        while (this.points.length < samplenum) {
+            var rand2 = ~~(Math.random() * this.points.length),
+                point = this.points[rand2];
+            this.points.splice(rand2, 0, {
+                ref: this,
+                size: point.size,
+                x: point.x,
+                y: point.y
+            });
+            this.pointsAcc.splice(rand2, 0, this.pointsAcc[rand2]);
+        }
+    }
+    private getNumPoints() {
+        if (0 === this.id) return 16;
+        var a = 10;
+        if (20 > this.size) a = 0;
+        if (this.isVirus) a = 30;
+        var b = this.size;
+        if (!this.isVirus) (b *= g.viewZoom);
+        b *= z;
+        if (this.flag & 32) (b *= .25);
+        return ~~Math.max(b, a);
+    }
+    private movePoints() {
+        this.createPoints();
+        var points = this.points;
+        var numpoints = points.length;
+        var pointsacc = this.pointsAcc;
+        for (var i = 0; i < numpoints; ++i) {
+            var pos1 = pointsacc[(i - 1 + numpoints) % numpoints],
+                pos2 = pointsacc[(i + 1) % numpoints];
+            pointsacc[i] += (Math.random() - .5) * (this.isAgitated ? 3 : 1);
+            pointsacc[i] *= .7;
+            10 < pointsacc[i] && (pointsacc[i] = 10);
+            -10 > pointsacc[i] && (pointsacc[i] = -10);
+            pointsacc[i] = (pos1 + pos2 + 8 * pointsacc[i]) / 10;
+        }
+        for (var ref = this, isvirus = this.isVirus ? 0
+            : (this.id / 1E3 + g.timestamp / 1E4) % (2 * Math.PI),
+            j = 0; j < numpoints; ++j) {
+            var f = points[j].size,
+                e = points[(j - 1 + numpoints) % numpoints].size,
+                m = points[(j + 1) % numpoints].size;
+            if (15 < this.size && null != g.qTree && 20 < this.size * g.viewZoom && 0 !== this.id) {
+                var l = false;
+                var n = points[j].x;
+                var q = points[j].y;
+                g.qTree.retrieve(n - 5, q - 5, 10, 10, function (a) {
+                    if (a.ref !== ref && 25 >
+                        (n - a.x) * (n - a.x) +
+                        (q - a.y) * (q - a.y)) { l = true; }
+                });
+                if (!l && points[j].x < g.leftPos
+                    || points[j].y < g.topPos
+                    || points[j].x > g.rightPos
+                    || points[j].y > g.bottomPos) {
+                    l = true;
+                }
+                if (l) {
+                    if (0 < this.pointsAcc[j]) {
+                        (this.pointsAcc[j] = 0);
+                    }
+                    pointsacc[j] -= 1;
+                }
+            }
+            f += pointsacc[j];
+            0 > f && (f = 0);
+            f = this.isAgitated ? (19 * f + this.size) / 20 : (12 * f + this.size) / 13;
+            points[j].size = (e + m + 8 * f) / 10;
+            e = 2 * Math.PI / numpoints;
+            m = this.points[j].size;
+            this.isVirus && 0 === j % 2 && (m += 5);
+            points[j].x = this.x + Math.cos(e * j + isvirus) * m;
+            points[j].y = this.y + Math.sin(e * j + isvirus) * m;
         }
     }
 }

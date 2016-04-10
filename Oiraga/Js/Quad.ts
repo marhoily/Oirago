@@ -4,13 +4,13 @@ export interface IRect {
     w: number;
     h: number;
 }
-export class MyNode {
+export class Quad {
     private maxDepth: number;
     private maxChildren: number;
     private bounds: IRect;
     private depth: number;
     private items: IRect[] = [];
-    private nodes: MyNode[] = [];
+    private nodes: Quad[] = [];
 
     constructor(bounds: IRect, depth: number,
         maxChildren: number, maxDepth: number) {
@@ -69,7 +69,7 @@ export class MyNode {
             this.insert(this.items[i]);
     }
     private childNode(x, y, w, h) {
-        return new MyNode(
+        return new Quad(
             { x: x, y: y, w: w, h: h },
             this.depth + 1,
             this.maxChildren,
