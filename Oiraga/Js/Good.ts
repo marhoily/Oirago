@@ -31,7 +31,7 @@ function buildQTree() {
                 d = Math.max(node.y, d);
             }
         }
-        qTree = quad.init({
+        qTree = new Quad({
             minX: a - (e + 100),
             minY: b - (e + 100),
             maxX: c + (e + 100),
@@ -719,10 +719,10 @@ class MyNode {
         var a = this.depth + 1,
             c = this.w / 2,
             d = this.h / 2;
-        this.nodes.push(new MyNode(this.args,this.x, this.y, c, d, a));
-        this.nodes.push(new MyNode(this.args,this.x + c, this.y, c, d, a));
-        this.nodes.push(new MyNode(this.args,this.x, this.y + d, c, d, a));
-        this.nodes.push(new MyNode(this.args,this.x + c, this.y + d, c, d, a));
+        this.nodes.push(new MyNode(this.args, this.x, this.y, c, d, a));
+        this.nodes.push(new MyNode(this.args, this.x + c, this.y, c, d, a));
+        this.nodes.push(new MyNode(this.args, this.x, this.y + d, c, d, a));
+        this.nodes.push(new MyNode(this.args, this.x + c, this.y + d, c, d, a));
         var a2 = this.items;
         this.items = [];
         for (c = 0; c < a2.length; c++) this.insert(a2[c]);
@@ -734,35 +734,39 @@ class MyNode {
     }
 };
 
-var quad = {
-    init(args) {
-        var internalSelector = {
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0
-        };
-        return {
-            root: new MyNode(args, args.minX, args.minY, args.maxX - args.minX, args.maxY - args.minY, 0),
-            insert: function (a) {
-                this.root.insert(a);
-            },
-            retrieve: function (a, b) {
-                this.root.retrieve(a, b);
-            },
-            retrieve2: function (a, b, c, d, callback) {
-                internalSelector.x = a;
-                internalSelector.y = b;
-                internalSelector.w = c;
-                internalSelector.h = d;
-                this.root.retrieve(internalSelector, callback);
-            },
-            exists: function (a) {
-                return this.root.exists(a);
-            },
-            clear: function () {
-                this.root.clear();
-            }
-        }
+class Quad {
+    root = null;
+    constructor(args) {
+        this.root = new MyNode(args,
+            args.minX, args.minY,
+            args.maxX - args.minX,
+            args.maxY - args.minY, 0);
     }
-};
+
+    internalSelector = {
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0
+    };
+
+    insert(a) {
+        this.root.insert(a);
+    }
+    retrieve(a, b) {
+        this.root.retrieve(a, b);
+    }
+    retrieve2(a, b, c, d, callback) {
+        this.internalSelector.x = a;
+        this.internalSelector.y = b;
+        this.internalSelector.w = c;
+        this.internalSelector.h = d;
+        this.root.retrieve(this.internalSelector, callback);
+    }
+    exists(a) {
+        return this.root.exists(a);
+    }
+    clear() {
+        this.root.clear();
+    }
+}
