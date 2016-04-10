@@ -17,10 +17,6 @@ var ib = ["_canvas'blob"];;;
 export class Cell {
     id = 0;
     points = null;
-    pointsAcc = null;
-    name = null;
-    nameCache = null;
-    sizeCache = null;
     x = 0;
     y = 0;
     size = 0;
@@ -33,13 +29,18 @@ export class Cell {
     flag = 0; //what does this mean
     updateTime = 0;
     updateCode = 0;
-    drawTime = 0;
-    destroyed = false;
     isVirus = false;
     isAgitated = false;
-    wasSimpleDrawing = true;
     color = null;
-    uname = null;
+
+    private pointsAcc = null;
+    private name = null;
+    private nameCache = null;
+    private sizeCache = null;
+    private drawTime = 0;
+    private destroyed = false;
+    private wasSimpleDrawing = true;
+    private uname = null;
 
     constructor(uid, ux, uy, usize, ucolor, uname) {
         this.id = uid;

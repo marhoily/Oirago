@@ -235,20 +235,17 @@ function updateNodes(view, offset) {
         var node1 = gg.nodes[nodeId];
         null != node1 && node1.destroy();
     }
-
 }
 
 function sendMouseMove() {
-    if (true) {
-        var msg = rawMouseX - gg.canvasWidth / 2;
-        var b = rawMouseY - gg.canvasHeight / 2;
-        if (64 <= msg * msg + b * b) {
-            if (!(.01 > Math.abs(oldX - currX) && .01 > Math.abs(oldY - currY))) {
-                oldX = currX;
-                oldY = currY;
-            }
-        }
-    }
+    const x = rawMouseX - gg.canvasWidth / 2;
+    const y = rawMouseY - gg.canvasHeight / 2;
+    if (64 > x * x + y * y) return;
+    const nx = .01 > Math.abs(oldX - currX);
+    const ny = .01 > Math.abs(oldY - currY);
+    if (nx && ny) return;
+    oldX = currX;
+    oldY = currY;
 }
 
 function viewRange() {
@@ -269,14 +266,15 @@ function calcViewZoom() {
 }
 
 function drawGameScene() {
-    var a, oldtime = Date.now();
-    var cb = 0;
+    const oldtime = Date.now();
+    let cb = 0;
     ++cb;
     gg.timestamp = oldtime;
     if (0 < gg.playerCells.length) {
         calcViewZoom();
-        var c = a = 0;
-        for (var i1 = 0; i1 < gg.playerCells.length; i1++) {
+        let a = 0;
+        let c = 0;
+        for (let i1 = 0; i1 < gg.playerCells.length; i1++) {
             gg.playerCells[i1].updatePos();
             a += gg.playerCells[i1].x / gg.playerCells.length;
             c += gg.playerCells[i1].y / gg.playerCells.length;
@@ -293,20 +291,7 @@ function drawGameScene() {
     }
     buildQTree();
     mouseCoordinateChange();
-    xa || ctx.clearRect(0, 0, gg.canvasWidth, gg.canvasHeight);
-    if (xa) {
-        if (showDarkTheme) {
-            ctx.fillStyle = '#111111';
-            ctx.globalAlpha = .05;
-            ctx.fillRect(0, 0, gg.canvasWidth, gg.canvasHeight);
-            ctx.globalAlpha = 1;
-        } else {
-            ctx.fillStyle = '#F2FBFF';
-            ctx.globalAlpha = .05;
-            ctx.fillRect(0, 0, gg.canvasWidth, gg.canvasHeight);
-            ctx.globalAlpha = 1;
-        }
-    }
+    
     gg.nodelist.sort((a, b) =>
         (a.size === b.size ? a.id - b.id : a.size - b.size));
     ctx.save();
@@ -315,12 +300,6 @@ function drawGameScene() {
     ctx.translate(-gg.nodeX, -gg.nodeY);
     for (var i2 = 0; i2 < gg.cells.length; i2++)
         gg.cells[i2].drawOneCell(ctx);
-
-    if (gg.transparentRender) {
-        ctx.globalAlpha = 0.6;
-    } else {
-        ctx.globalAlpha = 1;
-    }
 
     for (var i3 = 0; i3 < gg.nodelist.length; i3++)
         gg.nodelist[i3].drawOneCell(ctx);
