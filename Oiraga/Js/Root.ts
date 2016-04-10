@@ -8,7 +8,6 @@ var rawMouseY = 0;
 var currX = -1;
 var currY = -1;
 var szoom = false;
-var showDarkTheme = false;
 var posX = gg.nodeX = ~~((gg.leftPos + gg.rightPos) / 2);
 var posY = gg.nodeY = ~~((gg.topPos + gg.bottomPos) / 2);
 var posSize = 1;
@@ -17,7 +16,6 @@ var lineX = 0;
 var lineY = 0;
 var drawLineX = 0;
 var drawLineY = 0;
-var xa = false;
 var zoom = 1;
 var oldX = -1;
 var oldY = -1;
@@ -36,48 +34,44 @@ function handleWheel(event) {
 }
 
 function buildQTree() {
-    if (.4 > gg.viewZoom) gg.qTree = null;
-    else {
-        let a = Number.POSITIVE_INFINITY;
-        let b = Number.POSITIVE_INFINITY;
-        let c = Number.NEGATIVE_INFINITY;
-        let d = Number.NEGATIVE_INFINITY;
-        let e = 0;
-        let i: number;
-        let node : Cell;
-        for (i = 0; i < gg.nodelist.length; i++) {
-            node = gg.nodelist[i];
-            if (node.shouldRender() && 20 < node.size * gg.viewZoom) {
-                e = Math.max(node.size, e);
-                a = Math.min(node.x, a);
-                b = Math.min(node.y, b);
-                c = Math.max(node.x, c);
-                d = Math.max(node.y, d);
-            }
-        }
-        let minX = a - (e + 100);
-        let minY = b - (e + 100);
-        let maxX = c + (e + 100);
-        let maxY = d + (e + 100);
-        gg.qTree = new MyNode({
-            x: minX,
-            y: minY,
-            w: maxX - minX,
-            h: maxY - minY
-        }, 0, 2, 4);
+    if (.4 > gg.viewZoom) {
+        gg.qTree = null;
+        return;
+    }
 
-        for (i = 0; i < gg.nodelist.length; i++) {
-            node = gg.nodelist[i];
-            if (node.shouldRender() && !(20 >= node.size * gg.viewZoom)) {
-                for (a = 0; a < node.points.length; ++a) {
-                    b = node.points[a].x;
-                    c = node.points[a].y;
-                    b < gg.nodeX - gg.canvasWidth / 2 / gg.viewZoom
-                        || c < gg.nodeY - gg.canvasHeight / 2 / gg.viewZoom
-                        || b > gg.nodeX + gg.canvasWidth / 2 / gg.viewZoom
-                        || c > gg.nodeY + gg.canvasHeight / 2 / gg.viewZoom
-                        || gg.qTree.insert(node.points[a]);
-                }
+    let a = Number.POSITIVE_INFINITY;
+    let b = Number.POSITIVE_INFINITY;
+    let c = Number.NEGATIVE_INFINITY;
+    let d = Number.NEGATIVE_INFINITY;
+    let e = 0;
+    for (var i = 0; i < gg.nodelist.length; i++) {
+        let node = gg.nodelist[i];
+        if (node.shouldRender() && 20 < node.size * gg.viewZoom) {
+            e = Math.max(node.size, e);
+            a = Math.min(node.x, a);
+            b = Math.min(node.y, b);
+            c = Math.max(node.x, c);
+            d = Math.max(node.y, d);
+        }
+    }
+    let minX = a - (e + 100);
+    let minY = b - (e + 100);
+    let maxX = c + (e + 100);
+    let maxY = d + (e + 100);
+    let bounds = { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+    gg.qTree = new MyNode(bounds, 0, 2, 4);
+
+    for (var i1 = 0; i1 < gg.nodelist.length; i1++) {
+        var node1 = gg.nodelist[i1];
+        if (node1.shouldRender() && !(20 >= node1.size * gg.viewZoom)) {
+            for (a = 0; a < node1.points.length; ++a) {
+                b = node1.points[a].x;
+                c = node1.points[a].y;
+                b < gg.nodeX - gg.canvasWidth / 2 / gg.viewZoom ||
+                    c < gg.nodeY - gg.canvasHeight / 2 / gg.viewZoom ||
+                    b > gg.nodeX + gg.canvasWidth / 2 / gg.viewZoom ||
+                    c > gg.nodeY + gg.canvasHeight / 2 / gg.viewZoom ||
+                    gg.qTree.insert(node1.points[a]);
             }
         }
     }
@@ -192,7 +186,7 @@ function updateNodes(view, offset) {
             if (0 === char) break;
             name += String.fromCharCode(char);
         }
-        var node : Cell = null;
+        var node: Cell = null;
         if (gg.nodes.hasOwnProperty(nodeid)) {
             node = gg.nodes[nodeid];
             node.updatePos();
@@ -217,7 +211,7 @@ function updateNodes(view, offset) {
         node.updateCode = code;
         node.updateTime = gg.timestamp;
         node.flag = flags;
-       // name && node.setName(name);
+        // name && node.setName(name);
         if (-1 !== gg.nodesOnScreen.indexOf(nodeid) && -1 === gg.playerCells.indexOf(node)) {
             document.getElementById("overlays").style.display = "none";
             gg.playerCells.push(node);
@@ -249,10 +243,9 @@ function sendMouseMove() {
 }
 
 function viewRange() {
-    const ratio = Math.max(
+    return Math.max(
         gg.canvasHeight / 1080,
-        gg.canvasWidth / 1920);
-    return ratio * zoom;
+        gg.canvasWidth / 1920) * zoom;
 }
 
 function calcViewZoom() {
@@ -291,16 +284,16 @@ function drawGameScene() {
     }
     buildQTree();
     mouseCoordinateChange();
-    
+
     gg.nodelist.sort((a, b) =>
         (a.size === b.size ? a.id - b.id : a.size - b.size));
     ctx.save();
     ctx.translate(gg.canvasWidth / 2, gg.canvasHeight / 2);
     ctx.scale(gg.viewZoom, gg.viewZoom);
     ctx.translate(-gg.nodeX, -gg.nodeY);
-    for (var i2 = 0; i2 < gg.cells.length; i2++)
+    for (let i2 = 0; i2 < gg.cells.length; i2++)
         gg.cells[i2].drawOneCell(ctx);
 
-    for (var i3 = 0; i3 < gg.nodelist.length; i3++)
+    for (let i3 = 0; i3 < gg.nodelist.length; i3++)
         gg.nodelist[i3].drawOneCell(ctx);
 }
